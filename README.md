@@ -1,6 +1,7 @@
 ------------------------------------------------
 # PyGameUI
-------------------------------------------------
+
+The Python library that makes making pygame-based-UIs easy!
 
 ## Short overview
 
