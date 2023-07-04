@@ -1,19 +1,19 @@
 import pygame
 pygame.init()
 
-VERSION = 1.1
+VERSION = 1.11
 
 class text():
     def __init__(self, position: tuple, content:str, color:tuple, **extra ):
         # Extras are addition arguments the user can input to further customize the text
         # The values in the array underneath are the values used if the user does not specify them
-        self.extras = {"font": "freesansbold.ttf", "fontSize": 20, "centerMode": True}
+        self.e = {"font": "freesansbold.ttf", "fontSize": 20, "centerMode": True}
         for key in extra:
-            if key in self.extras:
-                self.extras[key] = extra[key]
+            if key in self.e:
+                self.e[key] = extra[key]
             else: # Sends an error if the function has been passed a non recognizable argument
                 extras_keys = []
-                for extraKey in self.extras:
+                for extraKey in self.e:
                     extras_keys.append(extraKey)
                 error = f"Argument error: Argument '{key}' not recognized. The extra arguments available are: {extras_keys}"
                 raise Exception(error)
@@ -22,11 +22,11 @@ class text():
         # Show
         self.show = True
         # Text
-        self.font = pygame.font.SysFont(self.extras["font"], self.extras["fontSize"])  # Load font
+        self.font = pygame.font.SysFont(self.e["font"], self.e["fontSize"])  # Load font
         self.text = self.font.render(content, True, color) # Create surface object
         self.textRect = self.text.get_rect() # Get rect
         # centerMode
-        self.textRect.topleft = (self.x - (self.textRect.width // 2), self.y - (self.textRect.height // 2)) if self.extras["centerMode"] else (self.x, self.y)
+        self.textRect.topleft = (self.x - (self.textRect.width // 2), self.y - (self.textRect.height // 2)) if self.e["centerMode"] else (self.x, self.y)
         # Flowing
         self.flowing = False
         self.currentFlowPos = None
@@ -51,15 +51,25 @@ class text():
     def update(self):
         if self.flowing: # If flowing
             # Check if flow has reached a flowpoint
-            if (self.Xstep == 0 or self.Ystep == 0):
-                if ((self.Xstep > 0) and (self.textRect.x > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.textRect.x < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.textRect.y < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.textRect.y > self.currentFlowPos[1])):
-                    self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
-                    self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+            if self.e["centerMode"]: # If centermode is activated we will use the rects centerposition, if not the topleft
+                if (self.Xstep == 0 or self.Ystep == 0):
+                    if ((self.Xstep > 0) and (self.textRect.centerx > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.textRect.centerx < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.textRect.centery < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.textRect.centery > self.currentFlowPos[1])):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+                else:
+                    if (((self.Xstep > 0) and (self.textRect.centerx > self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.textRect.centery > self.currentFlowPos[1]))) or (((self.Xstep > 0) and (self.textRect.centerx > self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.textRect.centery < self.currentFlowPos[1]))) or (((self.Xstep < 0) and (self.textRect.centerx < self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.textRect.centery > self.currentFlowPos[1])))or (((self.Xstep < 0) and (self.textRect.centerx < self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.textRect.centery < self.currentFlowPos[1]))):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
             else:
-                if (((self.Xstep > 0) and (self.textRect.x > self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.textRect.y > self.currentFlowPos[1]))) or (((self.Xstep > 0) and (self.textRect.x > self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.textRect.y < self.currentFlowPos[1]))) or (((self.Xstep < 0) and (self.textRect.x < self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.textRect.y > self.currentFlowPos[1])))or (((self.Xstep < 0) and (self.textRect.x < self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.textRect.y < self.currentFlowPos[1]))):
-                    self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
-                    self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
-                
+                if (self.Xstep == 0 or self.Ystep == 0):
+                    if ((self.Xstep > 0) and (self.textRect.x > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.textRect.x < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.textRect.y < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.textRect.y > self.currentFlowPos[1])):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+                else:
+                    if (((self.Xstep > 0) and (self.textRect.x > self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.textRect.y > self.currentFlowPos[1]))) or (((self.Xstep > 0) and (self.textRect.x > self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.textRect.y < self.currentFlowPos[1]))) or (((self.Xstep < 0) and (self.textRect.x < self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.textRect.y > self.currentFlowPos[1])))or (((self.Xstep < 0) and (self.textRect.x < self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.textRect.y < self.currentFlowPos[1]))):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+
             self.move(self.Xstep, self.Ystep) # Apply movement
         
         elif self.jumping: # If jumping
@@ -71,7 +81,7 @@ class text():
 
     # Moves to specific cordinates
     def move_to(self, x: int, y: int):
-        if self.extras["centerMode"]:
+        if self.e["centerMode"]:
             self.x = x - (self.textRect.width // 2)
             self.y = y - (self.textRect.height // 2)
             self.textRect.topleft = (self.x, self.y)
@@ -233,15 +243,25 @@ class element():
     def update(self):
         if self.flowing: # If flowing
             # Check if flow has reached a flowpoint
-            if (self.Xstep == 0 or self.Ystep == 0):
-                if ((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1])):
-                    self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
-                    self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+            if self.e["centerMode"]: # If centermode is activated we will use the rects centerposition, if not the topleft
+                if (self.Xstep == 0 or self.Ystep == 0):
+                    if ((self.Xstep > 0) and (self.rect.centerx > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.rect.centerx < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.rect.centery < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.rect.centery > self.currentFlowPos[1])):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+                else:
+                    if (((self.Xstep > 0) and (self.rect.centerx > self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.centery > self.currentFlowPos[1]))) or (((self.Xstep > 0) and (self.rect.centerx > self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.centery < self.currentFlowPos[1]))) or (((self.Xstep < 0) and (self.rect.centerx < self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.centery > self.currentFlowPos[1])))or (((self.Xstep < 0) and (self.rect.centerx < self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.centery < self.currentFlowPos[1]))):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
             else:
-                if (((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1]))) or (((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1]))) or (((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1])))or (((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1]))):
-                    self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
-                    self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
-                
+                if (self.Xstep == 0 or self.Ystep == 0):
+                    if ((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1])):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+                else:
+                    if (((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1]))) or (((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1]))) or (((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1])))or (((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1]))):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+
             self.move(self.Xstep, self.Ystep) # Apply movement
         
         elif self.jumping: # If jumping
@@ -412,15 +432,25 @@ class input():
     def update(self):
         if self.flowing: # If flowing
             # Check if flow has reached a flowpoint
-            if (self.Xstep == 0 or self.Ystep == 0):
-                if ((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1])):
-                    self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
-                    self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+            if self.e["centerMode"]: # If centermode is activated we will use the rects centerposition, if not the topleft
+                if (self.Xstep == 0 or self.Ystep == 0):
+                    if ((self.Xstep > 0) and (self.rect.centerx > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.rect.centerx < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.rect.centery < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.rect.centery > self.currentFlowPos[1])):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+                else:
+                    if (((self.Xstep > 0) and (self.rect.centerx > self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.centery > self.currentFlowPos[1]))) or (((self.Xstep > 0) and (self.rect.centerx > self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.centery < self.currentFlowPos[1]))) or (((self.Xstep < 0) and (self.rect.centerx < self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.centery > self.currentFlowPos[1])))or (((self.Xstep < 0) and (self.rect.centerx < self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.centery < self.currentFlowPos[1]))):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
             else:
-                if (((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1]))) or (((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1]))) or (((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1])))or (((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1]))):
-                    self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
-                    self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
-                
+                if (self.Xstep == 0 or self.Ystep == 0):
+                    if ((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1])):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+                else:
+                    if (((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1]))) or (((self.Xstep > 0) and (self.rect.x > self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1]))) or (((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) and ((self.Ystep > 0) and (self.rect.y > self.currentFlowPos[1])))or (((self.Xstep < 0) and (self.rect.x < self.currentFlowPos[0])) and ((self.Ystep < 0) and (self.rect.y < self.currentFlowPos[1]))):
+                        self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
+                        self.currentFlowPos, self.otherFlowPos = self.otherFlowPos, self.currentFlowPos
+
             self.move(self.Xstep, self.Ystep) # Apply movement
         
         elif self.jumping: # If jumping
