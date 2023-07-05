@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 
-VERSION = 1.11
+VERSION = 1.12
 
 class text():
     def __init__(self, position: tuple, content:str, color:tuple, **extra ):
@@ -39,8 +39,6 @@ class text():
         self.otherJumpPos = None
         self.frames = 0
         self.frames_counter = 0
-        # Clicking
-        self.clicked = False
     
     # Draws text on screen
     def draw(self, win):
@@ -193,7 +191,7 @@ class element():
         self.frames = 0
         self.frames_counter = 0
         # Clicking
-        self.clicked = False
+        self.clicked = True
 
     def draw(self, win):
         if self.show:
