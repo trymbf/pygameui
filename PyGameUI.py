@@ -459,7 +459,7 @@ class input():
                 if self.active:
                     if event.key == pygame.K_BACKSPACE:
                         self.userText = self.userText[0: -1] # Removes last character
-                    elif len(self.userText) <= self.characterLimit: # Keep text under character limit
+                    elif (len(self.userText) <= self.characterLimit) and event.key != pygame.K_RETURN: # Keep text under character limit and don't enterperate enter as a key
                         self.userText += event.unicode # Adds the userinput to the text
                     self.userTextSurface = self.font.render(self.userText, True, self.normalTextColor) # Create surface object for the userText
                     self.userTextRect = self.userTextSurface.get_rect() # Get rect
