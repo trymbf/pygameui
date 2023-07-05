@@ -97,6 +97,14 @@ class text():
         self.textRect.x = self.x
         self.textRect.y = self.y
 
+    def is_hovered(self):
+        # Get mouse pos
+        mouse_pos = pygame.mouse.get_pos()
+
+        # Check mouse over and clicked conditions
+        if self.textRect.collidepoint(mouse_pos):
+            return True 
+
     # Flow lets the text flow between two points
     def flow(self, position1: tuple, position2: tuple, iterations: int):
         # Move to flowpoint
@@ -125,7 +133,7 @@ class element():
     def __init__(self, position: tuple, **extra ):
         # Extras are addition arguments the user can input to further customize the text
         # The values in the array underneath are the values used if the user does not specify them
-        self.e = {"font": "freesansbold.ttf", "fontSize": 50, "content": None, "textColor": (231, 111, 81), "rectWidth": 200, "rectHeight": 75, "rectColor": (233, 196, 106), "rectBorderRadius": 10, "centerMode": True}
+        self.e = {"font": "freesansbold.ttf", "fontSize": 50, "content": None, "textColor": (231, 111, 81), "rectWidth": 200, "rectHeight": 75, "rectColor": (233, 196, 106), "rectBorderRadius": 10, "centerMode": True, "centerText": True}
         for key in extra:
             if key in self.e:
                 self.e[key] = extra[key]
@@ -147,7 +155,10 @@ class element():
             self.text = self.font.render(self.e["content"], True, self.e["textColor"]) # Create surface object
             self.textRect = self.text.get_rect() # Get rect
             # centering the text
-            self.textRect.center = self.rect.center
+            if self.e["centerText"]:
+                self.textRect.center = self.rect.center
+            else:
+                self.textRect.topleft = self.rect.topleft
         # If there is no text or image
         elif not self.e["content"]:
             # Pos
@@ -198,6 +209,14 @@ class element():
             else:
                 # Draw img
                 win.blit(self.image, self.rect)
+
+    def is_hovered(self):
+        # Get mouse pos
+        mouse_pos = pygame.mouse.get_pos()
+
+        # Check mouse over and clicked conditions
+        if self.rect.collidepoint(mouse_pos):
+            return True 
 
     def is_clicked(self, button_elements: list):
         # Get mouse pos
@@ -277,12 +296,18 @@ class element():
             self.rect.center = (x, y)
             self.x, self.y = self.rect.center
             if isinstance(self.e["content"], str): # Only affect the textRect if there is text
-                self.textRect.center = (x, y)
+                if self.e["centerText"]:
+                    self.textRect.center = self.rect.center
+                else:
+                    self.textRect.topleft = self.rect.topleft
         else:
-            self.rect.topleft = (self.x, self.y)
+            self.rect.topleft = (x, y)
             self.x, self.y = self.rect.topleft
             if isinstance(self.e["content"], str): # Only affect the textRect if there is text
-                self.textRect.topleft = (self.x, self.y)
+                if self.e["centerText"]:
+                    self.textRect.center = self.rect.center
+                else:
+                    self.textRect.topleft = self.rect.topleft
     
     # Moves in x and y direction
     def move(self, xMovement: float, yMovement: float):
@@ -292,11 +317,17 @@ class element():
         if self.e["centerMode"]:
             self.rect.center = (self.x, self.y)
             if isinstance(self.e["content"], str): # Only affect the textRect if there is text
-                self.textRect.center = (self.x, self.y)
+                if self.e["centerText"]:
+                    self.textRect.center = self.rect.center
+                else:
+                    self.textRect.topleft = self.rect.topleft
         else:
             self.rect.topleft = (self.x, self.y)
             if isinstance(self.e["content"], str): # Only affect the textRect if there is text
-                self.textRect.topleft = (self.x, self.y)
+                if self.e["centerText"]:
+                    self.textRect.center = self.rect.center
+                else:
+                    self.textRect.topleft = self.rect.topleft
 
     # Flow lets the text flow between two points
     def flow(self, position1: tuple, position2: tuple, iterations: int):
@@ -468,7 +499,7 @@ class input():
             self.userTextRect.center = (x, y)
             self.exampleTextRect.center = (x, y)
         else:
-            self.rect.topleft = (self.x, self.y)
+            self.rect.topleft = (x, y)
             self.x, self.y = self.rect.topleft
             self.userTextRect.topleft = (self.x, self.y)
             self.exampleTextRect.topleft = (self.x, self.y)
@@ -486,6 +517,14 @@ class input():
             self.rect.topleft = (self.x, self.y)
             self.userTextRect.topleft = (self.x, self.y)
             self.exampleTextRect.topleft = (self.x, self.y)
+    
+    def is_hovered(self):
+        # Get mouse pos
+        mouse_pos = pygame.mouse.get_pos()
+
+        # Check mouse over and clicked conditions
+        if self.rect.collidepoint(mouse_pos):
+            return True 
 
     # Flow lets the text flow between two points
     def flow(self, position1: tuple, position2: tuple, iterations: int):
