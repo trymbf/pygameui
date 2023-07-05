@@ -1,7 +1,7 @@
 import pygame
 pygame.init()
 
-VERSION = 1.12
+VERSION = 1.11
 
 class text():
     def __init__(self, position: tuple, content:str, color:tuple, **extra ):
@@ -40,6 +40,12 @@ class text():
         self.frames = 0
         self.frames_counter = 0
     
+    def change_content(self, newContent, color):
+        self.text = self.font.render(newContent, True, color) # Create surface object
+        self.textRect = self.text.get_rect() # Get rect
+        # centerMode
+        self.textRect.topleft = (self.x - (self.textRect.width // 2), self.y - (self.textRect.height // 2)) if self.e["centerMode"] else (self.x, self.y)
+
     # Draws text on screen
     def draw(self, win):
         if self.show:
@@ -147,6 +153,7 @@ class element():
             self.x, self.y = (position[0] - (self.e["rectWidth"] // 2), position[1] - (self.e["rectHeight"] // 2)) if self.e["centerMode"] else (position[0], position[1])
             # Rect
             self.rect = pygame.rect.Rect(self.x, self.y, self.e["rectWidth"], self.e["rectHeight"])
+            self.rectColor = self.e["rectColor"]
             self.borderRadius = self.e["rectBorderRadius"]
             # Text
             self.font = pygame.font.SysFont(self.e["font"], self.e["fontSize"])  # Load font
@@ -164,6 +171,7 @@ class element():
             # Rect
             self.rect = pygame.rect.Rect(self.x, self.y, self.e["rectWidth"], self.e["rectHeight"])
             self.borderRadius = self.e["rectBorderRadius"]
+            self.rectColor = self.e["rectColor"]
         # If there is an image
         else:
             self.image = self.e["content"]
@@ -198,11 +206,11 @@ class element():
             # If the element has text
             if isinstance(self.e["content"], str):
                 # Draw text
-                pygame.draw.rect(win, self.e["rectColor"], self.rect, border_radius = self.borderRadius)
+                pygame.draw.rect(win, self.rectColor, self.rect, border_radius = self.borderRadius)
                 win.blit(self.text, self.textRect)
             # If there is no text or image
             elif not self.e["content"]:
-                pygame.draw.rect(win, self.e["rectColor"], self.rect, border_radius = self.borderRadius)
+                pygame.draw.rect(win, self.rectColor, self.rect, border_radius = self.borderRadius)
             # If the element has an image
             else:
                 # Draw img
