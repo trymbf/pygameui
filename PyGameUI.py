@@ -1,5 +1,7 @@
 import pygame
+
 pygame.init()
+
 
 VERSION = 1.11
 
@@ -431,6 +433,8 @@ class input():
                 pygame.draw.rect(win, self.rectColorPassive, self.rect, self.rectBorderWidth, border_radius = self.borderRadius)
 
     def work(self, events: list, clickable_elements: list):
+        pygame.scrap.init()
+        pygame.scrap.set_mode(pygame.SCRAP_CLIPBOARD)
         # Make activating work
         # Get mouse pos
         mouse_pos = pygame.mouse.get_pos()
@@ -457,7 +461,10 @@ class input():
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if self.active:
-                    if event.key == pygame.K_BACKSPACE:
+                    if event.key == pygame.K_v and event.mod & pygame.KMOD_CTRL:
+                        self.userText = pygame.scrap.get("text/plain;charset=utf-8").decode()
+                        self.userText = self.userText.replace("\x00", "")
+                    elif event.key == pygame.K_BACKSPACE:
                         self.userText = self.userText[0: -1] # Removes last character
                     elif (len(self.userText) <= self.characterLimit) and event.key != pygame.K_RETURN: # Keep text under character limit and don't enterperate enter as a key
                         self.userText += event.unicode # Adds the userinput to the text
