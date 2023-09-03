@@ -363,6 +363,9 @@ class element():
 
 class input():
     def __init__(self, position: tuple, **extra ):
+        pygame.scrap.init()
+        pygame.scrap.set_mode(pygame.SCRAP_CLIPBOARD)
+        
         # Extras are addition arguments the user can input to further customize the text
         # The values in the array underneath are the values used if the user does not specify them
         self.e = {"font": "freesansbold.ttf", "fontSize": 30, "exampleContent": "Click me to input!", "prefilledContent": "", "characterLimit": 100, "normalTextColor": (231, 111, 81), "exampleTextColor": (100, 100, 100), "rectWidth": 200, "rectHeight": 50, "rectColorActive": (233, 196, 106), "rectColorPassive": (200, 200, 200), "rectBorderRadius": 1, "rectBorderWidth": 5, "centerMode": True}
@@ -433,8 +436,6 @@ class input():
                 pygame.draw.rect(win, self.rectColorPassive, self.rect, self.rectBorderWidth, border_radius = self.borderRadius)
 
     def work(self, events: list, clickable_elements: list):
-        pygame.scrap.init()
-        pygame.scrap.set_mode(pygame.SCRAP_CLIPBOARD)
         # Make activating work
         # Get mouse pos
         mouse_pos = pygame.mouse.get_pos()
