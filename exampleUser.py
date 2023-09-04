@@ -1,5 +1,5 @@
 import pygame, sys
-import pygameUI as PGU
+import PyGameUI as PGU
 
 pygame.init()
 
