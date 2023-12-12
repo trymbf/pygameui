@@ -2,11 +2,85 @@
 <html>
     <head>
         <title>PyGameUI Documentation</title>
+        <link href="mainsite.css" rel="stylesheet">
     </head>
     <body>
         <hr>
         <h1>PyGameUI Documentation</h1>
-        <a href = exampleUser.py download>Example file</a>
+        <a href = exampleUser.py download>Example file download</a>
+        <a href = "#creating_text">Creating text</a>
+        <a href = "#customizing_text">Customizing text</a>
         <hr>
+        <img class = "gif" src="assets\\gifs\\button.gif">
+        <img class = "gif" src="assets\\gifs\\input.gif">
+        <p>With PyGameUI, all of this can be created with just a few lines of code!</p>
+
+        <h2 id = "creating_text">Creating a text element</h2>
+        <p>To use PyGameUI, you need to start with a basic pygame script:</p>
+        <pre>
+            <code>
+                import pygame, sys, PyGameUI <br><br>
+
+                pygame.init()<br><br>
+
+                win = pygame.display.set_mode((500, 500))<br><br>
+
+                clock = pygame.time.Clock()<br>
+                while True:<br>
+                    win.fill((0, 0, 0)) <br>
+                    for event in pygame.event.get():<br>
+                        if event.type == pygame.QUIT:<br>
+                            pygame.quit()<br>
+                            sys.exit()<br><br>
+
+                    pygame.display.flip()<br>
+                    clock.tick(60)
+            </code>
+        </pre>
+        <p>Adding a text element only requires 1 line of code: <br>
+        The three arguments are position (x, y), content and color (r, g, b).</p>
+        <pre>
+            <code>
+                example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 255))
+            </code>
+        </pre>
+        <p>Drawing the text only requires 1 line of code too: </p>
+        <pre>
+            <code>
+                example_text.draw(win)
+            </code>
+        </pre>
+        <p>Final code:</p>
+        <pre>
+            <code>
+                import pygame, sys, PyGameUI <br><br>
+
+                pygame.init()<br><br>
+
+                win = pygame.display.set_mode((500, 500))<br><br>
+
+                # Create text element<br>
+                example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 255))<br><br>
+
+                clock = pygame.time.Clock()<br>
+                while True:<br>
+                    win.fill((0, 0, 0))<br>
+                    for event in pygame.event.get():<br>
+                        if event.type == pygame.QUIT:<br>
+                            pygame.quit()<br>
+                            sys.exit()<br><br>
+                    
+                    # Draw text <br>
+                    example_text.draw(win)<br><br>
+
+                    pygame.display.flip()<br>
+                    clock.tick(60)<br>
+            </code>
+            <p>Result:</p>
+            <img class = "exampleIMG" src = "assets\\imgs\\simple_text.PNG">
+        </pre>
+
+        <h2 id = "customizing_text">Customizing our text element</h2>
+        <p>More documentation comming soon</p>
     </body>
 </html>

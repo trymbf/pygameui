@@ -1,0 +1,14 @@
+html {
+    scroll-behavior: smooth;
+  }
+
+.gif {
+    width: 30%;
+    place-items: left;
+}
+
+pre code {
+    background-color: #eee;
+    border: 1px solid #999;
+    display: block;
+}
