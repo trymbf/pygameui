@@ -3,6 +3,7 @@
     <head>
         <title>PyGameUI Documentation</title>
         <link href="mainsite.css" rel="stylesheet">
+        <link href="prism.css" rel = "stylesheet">
         <style>
             table {
               font-family: arial, sans-serif;
@@ -12,6 +13,7 @@
             
             td, th {
               border: 1px solid #dddddd;
+              border-color: rgb(45, 45, 45);
               text-align: left;
               padding: 8px;
             }
@@ -24,80 +26,97 @@
     <body>
         <hr>
         <h1>PyGameUI Documentation</h1>
-        <a href = exampleUser.py download>Example file download</a>
         <a href = "#creating_text">Creating text</a>
         <a href = "#customizing_text">Customizing text</a>
+        <a href = "#creating_elements">Creating elements</a>
+        <a href = "#customizing_elements">Customizing elements</a>
+        <a class = "download_link" href = exampleUser.py download>Example file</a>
+        <a class = "download_link" href = "example_files\\PDCQ.zip" download>Project using PyGameUI</a>
         <hr>
-        <img class = "gif" src="assets\\gifs\\button.gif">
+        <img class = "gif" src="assets\\gifs\\button.gif">  
         <img class = "gif" src="assets\\gifs\\input.gif">
         <p>With PyGameUI, all of this can be created with just a few lines of code!</p>
 
-        <h2 id = "creating_text">Creating a text element</h2>
+        <a href="#top" id="myBtn" title="Go to top">Back to top</a>
+        
+        <hr>
+        
+        <h2 style = "text-decoration: underline;">Basics: Getting started</h2>
         <p>To use PyGameUI, you need to start with a basic pygame script:</p>
         <pre>
             <code>
-                import pygame, sys, PyGameUI <br><br>
+    import pygame, sys, PyGameUI
 
-                pygame.init()<br><br>
+    pygame.init()
 
-                win = pygame.display.set_mode((500, 500))<br><br>
+    win = pygame.display.set_mode((500, 500))
 
-                clock = pygame.time.Clock()<br>
-                while True:<br>
-                    win.fill((0, 0, 0)) <br>
-                    for event in pygame.event.get():<br>
-                        if event.type == pygame.QUIT:<br>
-                            pygame.quit()<br>
-                            sys.exit()<br><br>
+    clock = pygame.time.Clock()
+    while True:
+        win.fill((0, 0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
-                    pygame.display.flip()<br>
-                    clock.tick(60)
+        pygame.display.flip()
+        clock.tick(60)
             </code>
         </pre>
+
+        <hr>
+
+        <h2 style = "text-decoration: underline;">Basics: Text elements</h2>
+
+
+        <h3 id = "creating_text">Creating a text element</h3>
+
         <p>Adding a text element only requires 1 line of code: <br>
         The three arguments are position (x, y), content and color (r, g, b).</p>
         <pre>
             <code>
-                example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 255))
+    example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 255))
             </code>
         </pre>
         <p>Drawing the text only requires 1 line of code too: </p>
         <pre>
             <code>
-                example_text.draw(win)
+    example_text.draw(win)
             </code>
         </pre>
-        <p>Final code:</p>
+        <p style = "text-decoration: underline;">Final code:</p>
         <pre>
             <code>
-                import pygame, sys, PyGameUI <br><br>
+    import pygame, sys, PyGameUI
 
-                pygame.init()<br><br>
+    pygame.init()
 
-                win = pygame.display.set_mode((500, 500))<br><br>
+    win = pygame.display.set_mode((500, 500))
 
-                # Create text element<br>
-                example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 255))<br><br>
+    # Create text element
+    example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 255))
 
-                clock = pygame.time.Clock()<br>
-                while True:<br>
-                    win.fill((0, 0, 0))<br>
-                    for event in pygame.event.get():<br>
-                        if event.type == pygame.QUIT:<br>
-                            pygame.quit()<br>
-                            sys.exit()<br><br>
-                    
-                    # Draw text <br>
-                    example_text.draw(win)<br><br>
+    clock = pygame.time.Clock()
+    while True:
+        win.fill((0, 0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        
+        # Draw text
+        example_text.draw(win)
 
-                    pygame.display.flip()<br>
-                    clock.tick(60)<br>
+        pygame.display.flip()
+        clock.tick(60)
             </code>
-            <p>Result:</p>
-            <img class = "exampleIMG" src = "assets\\imgs\\simple_text.PNG">
         </pre>
+        <p style = "text-decoration: underline;">Result:</p>
+        <img class = "exampleIMG" src = "assets\\imgs\\simple_text.PNG">
 
-        <h2 id = "customizing_text">Customizing our text element</h2>
+        <hr>
+
+        <h3 id = "customizing_text">Customizing our text element</h3>
         <p>In addition to the required parameters, we can pass in optional ones. This allows even more customizing!</p>
         <p>The text element has so far three optional parameters: font, fontSize and centerMode.</p>
         <table>
@@ -126,11 +145,97 @@
         Example:</p>
         <pre>
             <code>
-                # Adding one parameter<br>
-                example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 200), font = "elephant")<br>
-                # Adding multiple parameters<br>
-                example_text_2 = PyGameUI.text((200, 200), "My cool not centermoded text", (255, 255, 200), fontSize = 50, centerMode = False)<br>
+    # Adding one parameter
+    example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 200), font = "elephant")
+    # Adding multiple parameters
+    example_text_2 = PyGameUI.text((200, 200), "My cool not centermoded text", (255, 255, 100), fontSize = 50, centerMode = False)
             </code>
         </pre>
+        <p style = "text-decoration: underline;">Final code: </p>
+        <pre>
+            <code>
+    import pygame, sys, PyGameUI
+
+    pygame.init()
+
+    win = pygame.display.set_mode((500, 500))
+
+    # Adding one parameter
+    example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 200), font = "elephant")
+    # Adding multiple parameters
+    example_text_2 = PyGameUI.text((200, 200), "My cool not centermoded text", (255, 255, 100), fontSize = 50, centerMode = False)
+
+    clock = pygame.time.Clock()
+    while True:
+        win.fill((0, 0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        
+        example_text.draw(win)
+        example_text_2.draw(win)
+
+        pygame.display.flip()
+        clock.tick(60)
+            </code>
+        </pre>
+        <p style = "text-decoration: underline;"> Result:</p>
+        <img class = "exampleIMG" src = "assets\\imgs\\cutomized_text.PNG">
+        <p>Notice how the both text elements have the same position but still are placed at different locations. <br>This is because the larger one has centerMode set to false.</p>
+
+        <hr>
+
+        <h2 style = "text-decoration: underline;">Basics: General elements</h2>
+
+        <h3 id = "creating_elements">Creating a general element</h3>
+
+        <p>A general element can be anything from just a decorative rectangle to an image or button. <br>They are created in the same way as text elements but only requires a position:</p>
+
+        <pre>
+            <code>
+    example_element = PyGameUI.element((300, 300))
+            </code>
+        </pre>
+
+        <p>General elements are drawn in the same way as text elements:</p>
+
+        <pre>
+            <code>
+    example_element.draw(win)
+            </code>
+        </pre>
+
+        <p style="text-decoration: underline;">Final code:</p>
+
+        <pre>
+            <code>
+    import pygame, sys, PyGameUI
+
+    pygame.init()
+
+    win = pygame.display.set_mode((500, 500))
+
+    example_element = PyGameUI.element((300, 300))
+
+    clock = pygame.time.Clock()
+    while True:
+        win.fill((0, 0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        
+        example_element.draw(win)
+
+        pygame.display.flip()
+        clock.tick(60)
+            </code>
+        </pre>
+
+        <p style="text-decoration: underline;">Result:</p>
+        <img class = "exampleIMG" src = "assets\\imgs\\creating_general_element.PNG">
+
+        <h3 id = "customizing_elements">Customizing general elements</h3>
     </body>
 </html>
