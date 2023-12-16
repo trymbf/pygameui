@@ -3,6 +3,23 @@
     <head>
         <title>PyGameUI Documentation</title>
         <link href="mainsite.css" rel="stylesheet">
+        <style>
+            table {
+              font-family: arial, sans-serif;
+              border-collapse: collapse;
+              width: 100%;
+            }
+            
+            td, th {
+              border: 1px solid #dddddd;
+              text-align: left;
+              padding: 8px;
+            }
+            
+            tr:nth-child(even) {
+              background-color: #dddddd;
+            }
+        </style>
     </head>
     <body>
         <hr>
@@ -81,6 +98,39 @@
         </pre>
 
         <h2 id = "customizing_text">Customizing our text element</h2>
-        <p>More documentation comming soon</p>
+        <p>In addition to the required parameters, we can pass in optional ones. This allows even more customizing!</p>
+        <p>The text element has so far three optional parameters: font, fontSize and centerMode.</p>
+        <table>
+            <tr>
+                <th>Argument</th>
+                <th>Explanation</th>
+                <th>Default</th>
+            </tr>
+            <tr>
+              <td>font</td>
+              <td>Sets a font for the text</td>
+              <td>freesansbold.ttf</td>
+            </tr>
+            <tr>
+              <td>fontSize</td>
+              <td>Sets the size of the font</td>
+              <td>20</td>
+            </tr>
+            <tr>
+                <td>centerMode</td>
+                <td>If True the textrect's center is at the provided position, if not is the textrect's topleft used</td>
+                <td>True</td>
+            </tr>   
+        </table>
+        <p>To edit an optional argument just add another parameter when creating the element.<br>
+        Example:</p>
+        <pre>
+            <code>
+                # Adding one parameter<br>
+                example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 200), font = "elephant")<br>
+                # Adding multiple parameters<br>
+                example_text_2 = PyGameUI.text((200, 200), "My cool not centermoded text", (255, 255, 200), fontSize = 50, centerMode = False)<br>
+            </code>
+        </pre>
     </body>
 </html>
