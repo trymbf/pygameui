@@ -3,7 +3,7 @@ import pygame
 pygame.init()
 
 
-VERSION = 1.11
+VERSION = 1.12
 
 class text():
     def __init__(self, position: tuple, content:str, color:tuple, **extra ):
@@ -177,7 +177,10 @@ class element():
         # If there is an image
         else:
             self.image = self.e["content"]
-            self.rect = self.image.get_rect()
+            try:
+                self.rect = self.image.get_rect()
+            except:
+                raise Exception(f"{self.image} is not a pygame image")
             if self.e["centerMode"]:
                 self.rect.center = (position[0], position[1])
                 # Pos

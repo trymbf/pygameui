@@ -42,10 +42,15 @@
         <hr>
         
         <h2 style = "text-decoration: underline;">Basics: Getting started</h2>
-        <p>To use PyGameUI, you need to start with a basic pygame script:</p>
+        <p>Start by downloading the PyGameUI python file:</p>
+        <a href="PyGameUI.py" download>Click me to download PyGameUI</a>
+        <p>Than place the PyGameUI file in the same folder as your project files.</p>
+        <img class = "gif" src="assets\\gifs\\add_pygameui.gif">
+        <p>To use PyGameUI in a project, the projects needs to have at least a basic pygame script with PyGameUI imported as any other library:</p>
         <pre>
             <code>
-    import pygame, sys, PyGameUI
+    import pygame, sys
+    import PyGameUI
 
     pygame.init()
 
@@ -63,6 +68,8 @@
         clock.tick(60)
             </code>
         </pre>
+
+        <p>With this done you are ready to get started using PyGameUI!</p>
 
         <hr>
 
@@ -237,5 +244,25 @@
         <img class = "exampleIMG" src = "assets\\imgs\\creating_general_element.PNG">
 
         <h3 id = "customizing_elements">Customizing general elements</h3>
+
+        <p>General elements are customized in the same way as text elements, but have a lot more posible parameters.</p>
+        
+        <table>
+            <tr>
+                <th>Argument</th>
+                <th>Explanation</th>
+                <th>Default</th>
+            </tr>
+            <tr><td>content</td><td>What the element should contain. Can either be a pygame image, a string or left as nothing.</td><td>None</td></tr>
+            <tr><td>centerMode</td><td></td><td>True</td></tr>
+            <tr><td>centerText</td><td></td><td>True</td></tr>
+            <tr><td>font</td><td></td><td>freesansbold.ttf</td></tr>
+            <tr><td>fontSize</td><td></td><td>50</td></tr>
+            <tr><td>textColor</td><td></td><td>(231, 111, 81)</td></tr>
+            <tr><td>rectWidth</td><td></td><td>200</td></tr>
+            <tr><td>rectHeight</td><td></td><td>75</td></tr>
+            <tr><td>rectColor</td><td></td><td>(233, 196, 106)</td></tr>
+            <tr><td>rectBorderRadius</td><td></td><td>10</td></tr>
+        </table>
     </body>
 </html>

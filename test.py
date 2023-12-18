@@ -4,7 +4,7 @@ pygame.init()
 
 win = pygame.display.set_mode((500, 500))
 
-example_element = PyGameUI.element((300, 300))
+example_element = PyGameUI.element((300, 300), content= 10)
 
 clock = pygame.time.Clock()
 while True:
