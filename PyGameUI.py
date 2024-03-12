@@ -5,30 +5,28 @@ pygame.init()
 
 VERSION = 1.12
 
-class text():
-    def __init__(self, position: tuple, content:str, color:tuple, **extra ):
-        # Extras are addition arguments the user can input to further customize the text
-        # The values in the array underneath are the values used if the user does not specify them
-        self.e = {"font": "freesansbold.ttf", "fontSize": 20, "centerMode": True}
-        for key in extra:
-            if key in self.e:
-                self.e[key] = extra[key]
-            else: # Sends an error if the function has been passed a non recognizable argument
-                extras_keys = []
-                for extraKey in self.e:
-                    extras_keys.append(extraKey)
-                error = f"Argument error: Argument '{key}' not recognized. The extra arguments available are: {extras_keys}"
-                raise Exception(error)
+class Text():
+    def __init__(self, position: tuple, content:str, color:tuple, centerMode = True, fontName = "freesansbold.ttf", fontSize = 20):
+        # Basic variables
         # Pos
         self.x, self.y = position
-        # Show
-        self.show = True
+        # Show, if false the text will not be drawn
+        self.hide = False
+        # Font
+        self.fontName = fontName
+        self.fontSize = fontSize
+        self.font = pygame.font.SysFont(self.fontName, self.fontSize)  # Load font
         # Text
-        self.font = pygame.font.SysFont(self.e["font"], self.e["fontSize"])  # Load font
-        self.text = self.font.render(content, True, color) # Create surface object
-        self.textRect = self.text.get_rect() # Get rect
+        self.color = color
+        self.content = content
+        self.text = self.font.render(self.content, True, color) # Create surface object
+        self.textRect = self.text.get_rect() # Get rect of text
         # centerMode
-        self.textRect.topleft = (self.x - (self.textRect.width // 2), self.y - (self.textRect.height // 2)) if self.e["centerMode"] else (self.x, self.y)
+        self.centerMode = centerMode
+        # Position textRect based on centerMode
+        self.textRect.topleft = (self.x - (self.textRect.width // 2), self.y - (self.textRect.height // 2)) if self.centerMode else (self.x, self.y)
+        
+        # Other moving variables
         # Flowing
         self.flowing = False
         self.currentFlowPos = None
@@ -42,22 +40,32 @@ class text():
         self.frames = 0
         self.frames_counter = 0
     
-    def change_content(self, newContent, color):
-        self.text = self.font.render(newContent, True, color) # Create surface object
+    def hide_toggle(self):
+        self.hide = not self.hide
+
+    def change(self, newContent = None, newColor = None, newFont = None, newFontSize = None):
+        # If no new values are given, the old ones will be used
+        if not newContent: newContent = self.content
+        if not newColor: newColor = self.color
+        if not newFont: newFont = self.fontName
+        if not newFontSize: newFontSize = self.fontSize
+
+        # Create new surface object 
+        self.font = pygame.font.SysFont(newFont, newFontSize)  # Load font
+        self.text = self.font.render(newContent, True, self.color)
         self.textRect = self.text.get_rect() # Get rect
         # centerMode
-        self.textRect.topleft = (self.x - (self.textRect.width // 2), self.y - (self.textRect.height // 2)) if self.e["centerMode"] else (self.x, self.y)
+        self.textRect.topleft = (self.x - (self.textRect.width // 2), self.y - (self.textRect.height // 2)) if self.centerMode else (self.x, self.y)
 
-    # Draws text on screen
+    # Draws text on screen if not hidden
     def draw(self, win):
-        if self.show:
-            win.blit(self.text, self.textRect)
+        if not self.hide: win.blit(self.text, self.textRect)
     
     # Updates and moves the text if needed
     def update(self):
         if self.flowing: # If flowing
             # Check if flow has reached a flowpoint
-            if self.e["centerMode"]: # If centermode is activated we will use the rects centerposition, if not the topleft
+            if self.centerMode: # If centermode is activated we will use the rects centerposition, if not the topleft
                 if (self.Xstep == 0 or self.Ystep == 0):
                     if ((self.Xstep > 0) and (self.textRect.centerx > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.textRect.centerx < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.textRect.centery < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.textRect.centery > self.currentFlowPos[1])):
                         self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
@@ -87,7 +95,7 @@ class text():
 
     # Moves to specific cordinates
     def move_to(self, x: int, y: int):
-        if self.e["centerMode"]:
+        if self.centerMode:
             self.x = x - (self.textRect.width // 2)
             self.y = y - (self.textRect.height // 2)
             self.textRect.topleft = (self.x, self.y)
@@ -135,62 +143,16 @@ class text():
         # Activate jumping
         self.jumping = True
 
-class element():
-    def __init__(self, position: tuple, **extra ):
-        # Extras are addition arguments the user can input to further customize the text
-        # The values in the array underneath are the values used if the user does not specify them
-        self.e = {"font": "freesansbold.ttf", "fontSize": 50, "content": None, "textColor": (231, 111, 81), "rectWidth": 200, "rectHeight": 75, "rectColor": (233, 196, 106), "rectBorderRadius": 10, "centerMode": True, "centerText": True}
-        for key in extra:
-            if key in self.e:
-                self.e[key] = extra[key]
-            else: # Sends an error if the function has been passed a non recognizable argument
-                extras_keys = []
-                for extraKey in self.e:
-                    extras_keys.append(extraKey)
-                error = f"Argument error: Argument '{key}' not recognized. The extra arguments available are: {extras_keys}"
-                raise Exception(error)
-        
-        if isinstance(self.e["content"], str):
-            # Pos
-            self.x, self.y = (position[0] - (self.e["rectWidth"] // 2), position[1] - (self.e["rectHeight"] // 2)) if self.e["centerMode"] else (position[0], position[1])
-            # Rect
-            self.rect = pygame.rect.Rect(self.x, self.y, self.e["rectWidth"], self.e["rectHeight"])
-            self.rectColor = self.e["rectColor"]
-            self.borderRadius = self.e["rectBorderRadius"]
-            # Text
-            self.font = pygame.font.SysFont(self.e["font"], self.e["fontSize"])  # Load font
-            self.text = self.font.render(self.e["content"], True, self.e["textColor"]) # Create surface object
-            self.textRect = self.text.get_rect() # Get rect
-            # centering the text
-            if self.e["centerText"]:
-                self.textRect.center = self.rect.center
-            else:
-                self.textRect.topleft = self.rect.topleft
-        # If there is no text or image
-        elif not self.e["content"]:
-            # Pos
-            self.x, self.y = (position[0] - (self.e["rectWidth"] // 2), position[1] - (self.e["rectHeight"] // 2)) if self.e["centerMode"] else (position[0], position[1])
-            # Rect
-            self.rect = pygame.rect.Rect(self.x, self.y, self.e["rectWidth"], self.e["rectHeight"])
-            self.borderRadius = self.e["rectBorderRadius"]
-            self.rectColor = self.e["rectColor"]
-        # If there is an image
-        else:
-            self.image = self.e["content"]
-            try:
-                self.rect = self.image.get_rect()
-            except:
-                raise Exception(f"{self.image} is not a pygame image")
-            if self.e["centerMode"]:
-                self.rect.center = (position[0], position[1])
-                # Pos
-                self.x, self.y = self.rect.center
-            else:
-                self.rect.topleft = (position[0], position[1])
-                self.x, self.y = self.rect.topleft
-
+class Element():     
+    def __init__(self, position: tuple, content=None, textColor=(231, 111, 81), centerText=True, centerMode=True, fontName="freesansbold.ttf", fontSize=20, rectWidth=200, rectHeight=75, rectColor=(233, 196, 106), rectBorderRadius=10):
+        # Common variables
+        self.centerMode = centerMode
+        self.content = content
+        # Rect
+        self.rectWidth = rectWidth
+        self.rectHeight = rectHeight
         # Show
-        self.show = True
+        self.hide = False
         # Flowing
         self.flowing = False
         self.currentFlowPos = None
@@ -206,20 +168,69 @@ class element():
         # Clicking
         self.clicked = True
 
+        if isinstance(self.content, str):
+            self.type = "text"
+            # Pos
+            self.x, self.y = (position[0] - (rectWidth // 2), position[1] - (rectHeight // 2)) if self.centerMode else (position[0], position[1])
+            # Rect
+            self.rect = pygame.rect.Rect(self.x, self.y, rectWidth, rectHeight)
+            self.rectColor = rectColor
+            self.borderRadius = rectBorderRadius
+            # Load font
+            self.fontName = fontName
+            self.fontSize = fontSize
+            self.font = pygame.font.SysFont(self.fontName, self.fontSize)  # Load font
+            # Text
+            self.centerText = centerText
+            self.text = self.font.render(content, True, textColor) # Create surface object
+            self.textRect = self.text.get_rect() # Get rect
+            # centering the text
+            if centerText: self.textRect.center = self.rect.center
+            else: self.textRect.topleft = self.rect.topleft
+        # If there is an image
+        elif self.content:
+            self.type = "image"
+            try:
+                self.content = pygame.transform.scale(self.content, (self.rectWidth, self.rectHeight))
+                self.rect = self.content.get_rect()
+            except:
+                raise Exception(f"{self.content} is not a pygame image")
+            
+            if self.centerMode:
+                # Pos
+                self.rect.center = (position[0], position[1])
+                # Pos
+                self.x, self.y = self.rect.center
+            else:
+                self.rect.topleft = (position[0], position[1])
+                self.x, self.y = self.rect.topleft
+        # If there is no content (only a rectangle)
+        else:
+            self.type = "rectangle"
+            # Pos
+            self.x, self.y = (position[0] - (self.rectWidth // 2), position[1] - (self.rectHeight // 2)) if self.centerMode else (position[0], position[1])
+            # Rect
+            self.rect = pygame.rect.Rect(self.x, self.y, self.rectWidth, self.rectHeight)
+            self.borderRadius = rectBorderRadius
+            self.rectColor = rectColor
+
+    def hide_toggle(self):
+        self.hide = not self.hide
+
     def draw(self, win):
-        if self.show:
+        if not self.hide:
             # If the element has text
-            if isinstance(self.e["content"], str):
+            if self.type == "text":
                 # Draw text
                 pygame.draw.rect(win, self.rectColor, self.rect, border_radius = self.borderRadius)
                 win.blit(self.text, self.textRect)
-            # If there is no text or image
-            elif not self.e["content"]:
-                pygame.draw.rect(win, self.rectColor, self.rect, border_radius = self.borderRadius)
             # If the element has an image
-            else:
+            elif self.type == "image":
                 # Draw img
-                win.blit(self.image, self.rect)
+                win.blit(self.content, self.rect)
+            # If the element is a just rectangle
+            elif self.type == "rectangle":
+                pygame.draw.rect(win, self.rectColor, self.rect, border_radius = self.borderRadius)
 
     def is_hovered(self):
         # Get mouse pos
@@ -273,7 +284,7 @@ class element():
     def update(self):
         if self.flowing: # If flowing
             # Check if flow has reached a flowpoint
-            if self.e["centerMode"]: # If centermode is activated we will use the rects centerposition, if not the topleft
+            if self.centerMode: # If centermode is activated we will use the rects centerposition, if not the topleft
                 if (self.Xstep == 0 or self.Ystep == 0):
                     if ((self.Xstep > 0) and (self.rect.centerx > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.rect.centerx < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.rect.centery < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.rect.centery > self.currentFlowPos[1])):
                         self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
@@ -303,19 +314,19 @@ class element():
 
     # Moves to specific cordinates
     def move_to(self, x: int, y:  int):
-        if self.e["centerMode"]:
+        if self.centerMode:
             self.rect.center = (x, y)
             self.x, self.y = self.rect.center
-            if isinstance(self.e["content"], str): # Only affect the textRect if there is text
-                if self.e["centerText"]:
+            if self.type == "text": # Only affect the textRect if there is text
+                if self.centerText:
                     self.textRect.center = self.rect.center
                 else:
                     self.textRect.topleft = self.rect.topleft
         else:
             self.rect.topleft = (x, y)
             self.x, self.y = self.rect.topleft
-            if isinstance(self.e["content"], str): # Only affect the textRect if there is text
-                if self.e["centerText"]:
+            if self.type == "text": # Only affect the textRect if there is text
+                if self.centerText:
                     self.textRect.center = self.rect.center
                 else:
                     self.textRect.topleft = self.rect.topleft
@@ -325,17 +336,17 @@ class element():
         # Used to make small movements posible (self.x is a float, self.textRect.x is an int)
         self.x += xMovement
         self.y += yMovement
-        if self.e["centerMode"]:
+        if self.centerMode:
             self.rect.center = (self.x, self.y)
-            if isinstance(self.e["content"], str): # Only affect the textRect if there is text
-                if self.e["centerText"]:
+            if self.type == "text": # Only affect the textRect if there is text
+                if self.centerText:
                     self.textRect.center = self.rect.center
                 else:
                     self.textRect.topleft = self.rect.topleft
         else:
             self.rect.topleft = (self.x, self.y)
-            if isinstance(self.e["content"], str): # Only affect the textRect if there is text
-                if self.e["centerText"]:
+            if self.type == "text": # Only affect the textRect if there is text
+                if self.centerText:
                     self.textRect.center = self.rect.center
                 else:
                     self.textRect.topleft = self.rect.topleft
@@ -364,40 +375,31 @@ class element():
         # Activate jumping
         self.jumping = True
 
-class input():
-    def __init__(self, position: tuple, **extra ):
+class Input():
+    def __init__(self, position: tuple, fontName = "freesansbold.ttf", fontSize = 30, exampleContent = "Click me to input!", prefilledContent = "", characterLimit = 100, normalTextColor = (231, 111, 81), exampleTextColor = (100, 100, 100), rectWidth = 200, rectHeight = 50, rectColorActive = (233, 196, 106), rectColorPassive = (200, 200, 200), rectBorderRadius = 1, rectBorderWidth = 5, centerMode = True):
         pygame.scrap.init()
         pygame.scrap.set_mode(pygame.SCRAP_CLIPBOARD)
         
-        # Extras are addition arguments the user can input to further customize the text
-        # The values in the array underneath are the values used if the user does not specify them
-        self.e = {"font": "freesansbold.ttf", "fontSize": 30, "exampleContent": "Click me to input!", "prefilledContent": "", "characterLimit": 100, "normalTextColor": (231, 111, 81), "exampleTextColor": (100, 100, 100), "rectWidth": 200, "rectHeight": 50, "rectColorActive": (233, 196, 106), "rectColorPassive": (200, 200, 200), "rectBorderRadius": 1, "rectBorderWidth": 5, "centerMode": True}
-        for key in extra:
-            if key in self.e:
-                self.e[key] = extra[key]
-            else: # Sends an error if the function has been passed a non recognizable argument
-                extras_keys = []
-                for extraKey in self.e:
-                    extras_keys.append(extraKey)
-                error = f"Argument error: Argument '{key}' not recognized. The extra arguments available are: {extras_keys}"
-                raise Exception(error)
-        
         # Create position variables and font
+        self.centerMode = centerMode
         # Pos
-        self.x, self.y = (position[0] - (self.e["rectWidth"] // 2), position[1] - (self.e["rectHeight"] // 2)) if self.e["centerMode"] else (position[0], position[1])
+        self.x, self.y = (position[0] - (rectWidth // 2), position[1] - (rectHeight // 2)) if centerMode else (position[0], position[1])
         # Rect
-        self.rect = pygame.rect.Rect(self.x, self.y, self.e["rectWidth"], self.e["rectHeight"])
-        self.borderRadius = self.e["rectBorderRadius"]
-        self.rectBorderWidth = self.e["rectBorderWidth"]
-        self.rectColorPassive = self.e["rectColorPassive"]
-        self.rectColorActive = self.e["rectColorActive"]
+        self.rect = pygame.rect.Rect(self.x, self.y, rectWidth, rectHeight)
+        self.borderRadius = rectBorderRadius
+        self.rectBorderWidth = rectBorderWidth
+        self.rectColorPassive = rectColorPassive
+        self.rectColorActive = rectColorActive
         # Text
-        self.normalTextColor = self.e["normalTextColor"]
-        self.exampleTextColor = self.e["exampleTextColor"]
-        self.characterLimit = self.e["characterLimit"]
-        self.font = pygame.font.SysFont(self.e["font"], self.e["fontSize"])  # Load font
-        self.userText = self.e["prefilledContent"]
-        self.exampleContent = self.e["exampleContent"]
+        self.normalTextColor = normalTextColor
+        self.exampleTextColor = exampleTextColor
+        self.characterLimit = characterLimit
+        self.fontName = fontName
+        self.fontSize = fontSize
+        self.font = pygame.font.SysFont(self.fontName, self.fontSize)  # Load font
+        self.prefilledContent = prefilledContent
+        self.userText = self.prefilledContent
+        self.exampleContent = exampleContent
         self.userTextSurface = self.font.render(self.userText, True, self.normalTextColor) # Create surface object for the userText
         self.exampleTextSurface = self.font.render(self.exampleContent, True, self.exampleTextColor) # Create surface object the exampleText
 
@@ -406,9 +408,8 @@ class input():
         # centering the text
         self.userTextRect.center = self.rect.center
         self.exampleTextRect.center = self.rect.center
-        
         # Show
-        self.show = True
+        self.hide = False
         # Flowing
         self.flowing = False
         self.currentFlowPos = None
@@ -425,8 +426,11 @@ class input():
         self.clicked = False
         self.active = False
 
+    def hide_toggle(self):
+        self.hide = not self.hide
+
     def draw(self, win):
-        if self.show:
+        if not self.hide:
             if self.userText != "":
                 win.blit(self.userTextSurface, self.userTextRect)
             else:
@@ -480,7 +484,7 @@ class input():
     def update(self):
         if self.flowing: # If flowing
             # Check if flow has reached a flowpoint
-            if self.e["centerMode"]: # If centermode is activated we will use the rects centerposition, if not the topleft
+            if self.centerMode: # If centermode is activated we will use the rects centerposition, if not the topleft
                 if (self.Xstep == 0 or self.Ystep == 0):
                     if ((self.Xstep > 0) and (self.rect.centerx > self.currentFlowPos[0])) or ((self.Xstep < 0) and (self.rect.centerx < self.currentFlowPos[0])) or ((self.Ystep < 0) and (self.rect.centery < self.currentFlowPos[1])) or ((self.Ystep > 0) and (self.rect.centery > self.currentFlowPos[1])):
                         self.Xstep, self.Ystep = -self.Xstep, -self.Ystep # Switch direction
@@ -510,7 +514,7 @@ class input():
 
     # Moves to specific cordinates
     def move_to(self, x: int, y:  int):
-        if self.e["centerMode"]:
+        if self.centerMode:
             self.rect.center = (x, y)
             self.x, self.y = self.rect.center
             self.userTextRect.center = (x, y)
@@ -526,7 +530,7 @@ class input():
         # Used to make small movements posible (self.x is a float, self.textRect.x is an int)
         self.x += xMovement
         self.y += yMovement
-        if self.e["centerMode"]:
+        if self.centerMode:
             self.rect.center = (self.x, self.y)
             self.userTextRect.center = (self.x, self.y)
             self.exampleTextRect.center = (self.x, self.y)

@@ -81,12 +81,12 @@
         <hr>
         <h1>PyGameUI Documentation</h1>
         <select onchange="location = this.value;">
-            <option value="">Text elements</option>
+            <option value="#text">Text elements</option>
             <option value="#creating_text">Creating text</option>
             <option value="#customizing_text">Customizing text</option>
         </select>
         <select onchange="location = this.value;">
-            <option value="">General elements</option>
+            <option value="#general_elements">General elements</option>
             <option value="#creating_elements">Creating elements</option>
             <option value="#customizing_elements">Customizing elements</option>
         </select>
@@ -110,23 +110,23 @@
         <p>To use PyGameUI in a project, the projects needs to have at least a basic pygame script with PyGameUI imported as any other library:</p>
         <pre>
             <code>
-    import pygame, sys
-    import PyGameUI
+import pygame, sys
+import pygameui
 
-    pygame.init()
+pygame.init()
 
-    win = pygame.display.set_mode((500, 500))
+win = pygame.display.set_mode((500, 500))
 
-    clock = pygame.time.Clock()
-    while True:
-        win.fill((0, 0, 0))
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+clock = pygame.time.Clock()
+while True:
+    win.fill((0, 0, 0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 
-        pygame.display.flip()
-        clock.tick(60)
+    pygame.display.flip()
+    clock.tick(60)
             </code>
         </pre>
 
@@ -134,7 +134,7 @@
 
         <hr>
 
-        <h2 style = "text-decoration: underline;">Basics: Text elements</h2>
+        <h2 style = "text-decoration: underline;", id = "text">Basics: Text elements</h2>
 
 
         <h3 id = "creating_text">Creating a text element</h3>
@@ -143,40 +143,40 @@
         The three arguments are position (x, y), content and color (r, g, b).</p>
         <pre>
             <code>
-    example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 255))
+example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 255))
             </code>
         </pre>
         <p>Drawing the text only requires 1 line of code too: </p>
         <pre>
             <code>
-    example_text.draw(win)
+example_text.draw(win)
             </code>
         </pre>
         <p style = "text-decoration: underline;">Final code:</p>
         <pre>
             <code>
-    import pygame, sys, PyGameUI
+import pygame, sys, pygameui
 
-    pygame.init()
+pygame.init()
 
-    win = pygame.display.set_mode((500, 500))
+win = pygame.display.set_mode((500, 500))
 
-    # Create text element
-    example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 255))
+# Create text element
+example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 255))
 
-    clock = pygame.time.Clock()
-    while True:
-        win.fill((0, 0, 0))
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-        
-        # Draw text
-        example_text.draw(win)
+clock = pygame.time.Clock()
+while True:
+    win.fill((0, 0, 0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+    
+    # Draw text
+    example_text.draw(win)
 
-        pygame.display.flip()
-        clock.tick(60)
+    pygame.display.flip()
+    clock.tick(60)
             </code>
         </pre>
         <p style = "text-decoration: underline;">Result:</p>
@@ -194,8 +194,8 @@
                 <th>Default</th>
             </tr>
             <tr>
-              <td>font</td>
-              <td>Sets a font for the text</td>
+              <td>fontName</td>
+              <td>Sets the font for the text</td>
               <td>freesansbold.ttf</td>
             </tr>
             <tr>
@@ -213,39 +213,39 @@
         Example:</p>
         <pre>
             <code>
-    # Adding one parameter
-    example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 200), font = "elephant")
-    # Adding multiple parameters
-    example_text_2 = PyGameUI.text((200, 200), "My cool not centermoded text", (255, 255, 100), fontSize = 50, centerMode = False)
+# Adding one parameter
+example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 200), fontName = "elephant")
+# Adding multiple parameters
+example_text_2 = pygameui.Text((200, 200), "My cool not centermoded text", (255, 255, 100), fontSize = 50, centerMode = False)
             </code>
         </pre>
         <p style = "text-decoration: underline;">Final code: </p>
         <pre>
             <code>
-    import pygame, sys, PyGameUI
+import pygame, sys, pygameui
 
-    pygame.init()
+pygame.init()
 
-    win = pygame.display.set_mode((500, 500))
+win = pygame.display.set_mode((500, 500))
 
-    # Adding one parameter
-    example_text = PyGameUI.text((200, 200), "My cool text", (255, 255, 200), font = "elephant")
-    # Adding multiple parameters
-    example_text_2 = PyGameUI.text((200, 200), "My cool not centermoded text", (255, 255, 100), fontSize = 50, centerMode = False)
+# Adding one parameter
+example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 200), fontName = "elephant")
+# Adding multiple parameters
+example_text_2 = pygameui.Text((200, 200), "My cool not centermoded text", (255, 255, 100), fontSize = 50, centerMode = False)
 
-    clock = pygame.time.Clock()
-    while True:
-        win.fill((0, 0, 0))
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-        
-        example_text.draw(win)
-        example_text_2.draw(win)
+clock = pygame.time.Clock()
+while True:
+    win.fill((0, 0, 0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+    
+    example_text.draw(win)
+    example_text_2.draw(win)
 
-        pygame.display.flip()
-        clock.tick(60)
+    pygame.display.flip()
+    clock.tick(60)
             </code>
         </pre>
         <p style = "text-decoration: underline;"> Result:</p>
@@ -254,7 +254,7 @@
 
         <hr>
 
-        <h2 style = "text-decoration: underline;">Basics: General elements</h2>
+        <h2 style = "text-decoration: underline;", id = "general_elements">Basics: General elements</h2>
 
         <h3 id = "creating_elements">Creating a general element</h3>
 
@@ -262,7 +262,7 @@
 
         <pre>
             <code>
-    example_element = PyGameUI.element((300, 300))
+example_element = pygameui.Element((300, 300))
             </code>
         </pre>
 
@@ -270,7 +270,7 @@
 
         <pre>
             <code>
-    example_element.draw(win)
+example_element.draw(win)
             </code>
         </pre>
 
@@ -278,26 +278,26 @@
 
         <pre>
             <code>
-    import pygame, sys, PyGameUI
+import pygame, sys, pygameui
 
-    pygame.init()
+pygame.init()
 
-    win = pygame.display.set_mode((500, 500))
+win = pygame.display.set_mode((500, 500))
 
-    example_element = PyGameUI.element((300, 300))
+example_element = pygameui.Element((300, 300))
 
-    clock = pygame.time.Clock()
-    while True:
-        win.fill((0, 0, 0))
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-        
-        example_element.draw(win)
+clock = pygame.time.Clock()
+while True:
+    win.fill((0, 0, 0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+    
+    example_element.draw(win)
 
-        pygame.display.flip()
-        clock.tick(60)
+    pygame.display.flip()
+    clock.tick(60)
             </code>
         </pre>
 
@@ -317,7 +317,7 @@
             <tr><td>content</td><td>What the element should contain. Can either be a pygame image, a string or left as nothing.</td><td>None</td></tr>
             <tr><td>centerMode</td><td>If True the elements center is placed on the provided position, if not the elements topleft is placed on the provided position.</td><td>True</td></tr>
             <tr><td>centerText</td><td>Same as centerMode but only for the potensial text.</td><td>True</td></tr>
-            <tr><td>font</td><td>Sets a font for the potensial text.</td><td>freesansbold.ttf</td></tr>
+            <tr><td>fontName</td><td>Sets the font for the potensial text.</td><td>freesansbold.ttf</td></tr>
             <tr><td>fontSize</td><td>Sets the font size for the potensial text.</td><td>50</td></tr>
             <tr><td>textColor</td><td>Sets the text color for the potensial text.</td><td>(231, 111, 81)</td></tr>
             <tr><td>rectWidth</td><td>Sets the width of the rectangle or image.</td><td>200</td></tr>
