@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, string
 import pygameui as pgu
 
 pygame.init()
@@ -27,14 +27,18 @@ undertitle = pgu.Text((450, 150), "This is an undertitle", (233, 196, 106), font
 text_elements.append(title)
 undertitle.jump((450, 150), (450, 155), 40)
 text_elements.append(undertitle)
+you_have_written = pgu.Text((450, 580), "You have written: ", (233, 196, 106), fontSize = 20)
+text_elements.append(you_have_written)
 # Button elements
 clickable_elements = []
 start_button = pgu.Element((450, 300), rectWidth = 300, content = "Start!", rectColor = (233, 196, 106), textColor = (231, 111, 81), fontSize= 50)
 start_button.flow((450, 305), (450, 315), 60)
 clickable_elements.append(start_button)
+other_button = pgu.Element((800, 400), content = "Other", fontSize= 50)
+clickable_elements.append(other_button)
 
-input_element = pgu.Input((500, 500))
-input_element.flow((500, 500), (300, 300), 50)
+# Input elements
+input_element = pgu.Input((win_width//2, 400))
 clickable_elements.append(input_element)
 
 clock = pygame.time.Clock()
@@ -45,11 +49,10 @@ while True:
             pygame.quit()
             sys.exit()
 
-        
-
     if start_button.was_clicked(clickable_elements):
         undertitle.hide_toggle()
-    
+
+    you_have_written.change("You have written: " + input_element.getValue())
     input_element.work(events, clickable_elements)
     draw(win)
     clock.tick(60)

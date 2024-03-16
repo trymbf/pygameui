@@ -447,10 +447,10 @@ while True:
 
         <h3 id = "obtaining_input_text">Obtaining input text</h3>
 
-        <p>Now that we have a working input element, we can obtain the text from it. This is done by calling the getText() method on the input element.</p>
+        <p>Now that we have a working input element, we can obtain the text from it. This is done by calling the getValue() method on the input element.</p>
         <pre>
             <code>
-input_text = example_input.getText()
+input_text = example_input.getValue()
 print(input_text)
             </code>
         </pre>
@@ -484,7 +484,7 @@ while True:
     example_input.work(events, clickable_elements)
 
     # Obtaining the input value and printing it
-    input_text = example_input.getText()
+    input_text = example_input.getValue()
     print("You have written: " + input_text)
 
     # Drawing the input

@@ -153,6 +153,7 @@ class Element():
         self.rectHeight = rectHeight
         # Show
         self.hide = False
+        self.sizeMultiplier= 1
         # Flowing
         self.flowing = False
         self.currentFlowPos = None
@@ -182,6 +183,7 @@ class Element():
             self.font = pygame.font.SysFont(self.fontName, self.fontSize)  # Load font
             # Text
             self.centerText = centerText
+            self.textColor = textColor
             self.text = self.font.render(content, True, textColor) # Create surface object
             self.textRect = self.text.get_rect() # Get rect
             # centering the text
@@ -405,6 +407,15 @@ class Input():
 
         self.userTextRect = self.userTextSurface.get_rect() # Get rect
         self.exampleTextRect = self.exampleTextSurface.get_rect() # Get rect
+
+        # Filter
+        self.filter_mode = "isAllowed" # isAllowed or isDisallowed, if isAllowed the filter will only allow the characters in the filter, if isDisallowed the filter will disallow the characters in the filter
+        self.filter = None
+
+        # Cursor
+        self.cursor_visible_timer = 60
+        self.cursor_index = len(self.userText)
+
         # centering the text
         self.userTextRect.center = self.rect.center
         self.exampleTextRect.center = self.rect.center
@@ -429,6 +440,14 @@ class Input():
     def hide_toggle(self):
         self.hide = not self.hide
 
+    def set_filter(self, filter: list, isAllowed: bool = True):
+        self.filter = filter
+        self.filter_mode = "isAllowed" if isAllowed else "isDisallowed"
+
+    def get_relative_cursor_position(self) -> int:
+        substring = self.userText[:self.cursor_index]
+        return self.font.size(substring)[0]
+
     def draw(self, win):
         if not self.hide:
             if self.userText != "":
@@ -438,11 +457,21 @@ class Input():
                     win.blit(self.exampleTextSurface, self.exampleTextRect)
                     
             if self.active:
+                # Draw rect
                 pygame.draw.rect(win, self.rectColorActive, self.rect, self.rectBorderWidth, border_radius = self.borderRadius)
+
+                # Draw cursor and make it blink
+                self.cursor_visible_timer -= 1
+                if self.cursor_visible_timer > 30:
+                    cursor_pos = self.get_relative_cursor_position() + self.userTextRect.left
+                    pygame.draw.line(win, self.normalTextColor, (cursor_pos, self.userTextRect.top), (cursor_pos, self.userTextRect.bottom), 2)
+                elif self.cursor_visible_timer == 0:
+                    self.cursor_visible_timer = 60
+
             else:
                 pygame.draw.rect(win, self.rectColorPassive, self.rect, self.rectBorderWidth, border_radius = self.borderRadius)
 
-    def getText(self):
+    def getValue(self):
         return self.userText
 
     def work(self, events: list, clickable_elements: list):
@@ -455,6 +484,10 @@ class Input():
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False: # == 1 is left click
                 self.active = not self.active
+                # Move cursor to the end of the text
+                self.cursor_index = len(self.userText)
+                self.cursor_visible_timer = 60
+
                 self.clicked = True
         else:
             if pygame.mouse.get_pressed()[0]: # == 1 is left click
@@ -472,13 +505,40 @@ class Input():
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if self.active:
+                    # Allow the user to paste text from clipboard
                     if event.key == pygame.K_v and event.mod & pygame.KMOD_CTRL:
-                        self.userText = pygame.scrap.get("text/plain;charset=utf-8").decode()
+                        self.userText = self.userText[0: self.cursor_index] + pygame.scrap.get("text/plain;charset=utf-8").decode() + self.userText[self.cursor_index:]
                         self.userText = self.userText.replace("\x00", "")
+                    # Allow the user to remove text using backspace
                     elif event.key == pygame.K_BACKSPACE:
-                        self.userText = self.userText[0: -1] # Removes last character
-                    elif (len(self.userText) <= self.characterLimit) and event.key != pygame.K_RETURN: # Keep text under character limit and don't enterperate enter as a key
-                        self.userText += event.unicode # Adds the userinput to the text
+                        if self.cursor_index == len(self.userText):
+                            self.userText = self.userText[0: -1]
+                            if self.cursor_index > 0:
+                                self.cursor_index -= 1
+                        elif self.cursor_index != 0:
+                            self.userText = self.userText[0: self.cursor_index - 1] + self.userText[self.cursor_index:]
+                            if self.cursor_index > 0:
+                                self.cursor_index -= 1
+                    elif event.key == pygame.K_DELETE:
+                        if self.cursor_index != len(self.userText):
+                            self.userText = self.userText[0: self.cursor_index] + self.userText[self.cursor_index + 1:]
+                    # Allow the user to move the cursor
+                    elif event.key == pygame.K_LEFT:
+                        if self.cursor_index > 0:
+                            self.cursor_index -= 1
+                    elif event.key == pygame.K_RIGHT:
+                        if self.cursor_index < len(self.userText):
+                            self.cursor_index += 1
+                    # Filter
+                    elif self.filter and ((self.filter_mode == "isAllowed" and (event.unicode not in self.filter)) or (self.filter_mode == "isDisallowed" and (event.unicode in self.filter))): 
+                        continue
+                    # Allow the user to write text
+                    elif (len(self.userText) <= self.characterLimit): # Keep text under character limit and don't enterperate enter as a key
+                        if event.unicode and event.key != pygame.K_RETURN:
+                            self.userText = self.userText[0: self.cursor_index] + event.unicode + self.userText[self.cursor_index:] # Adds the userinput to the text
+                            self.cursor_index += 1
+
+                    # Update the text
                     self.userTextSurface = self.font.render(self.userText, True, self.normalTextColor) # Create surface object for the userText
                     self.userTextRect = self.userTextSurface.get_rect() # Get rect
                     self.userTextRect.center = self.rect.center
