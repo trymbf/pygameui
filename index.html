@@ -90,6 +90,13 @@
             <option value="#creating_elements">Creating elements</option>
             <option value="#customizing_elements">Customizing elements</option>
         </select>
+        <select onchange="location = this.value;">
+            <option value="#input_elements">Input elements</option>
+            <option value="#creating_input">Creating input</option>
+            <option value="#giving_input_functionality">Giving input functionality</option>
+            <option value="#obtaining_input_text">Obtaining input text</option>
+            <option value="#customizing_input">Customizing input</option>
+        </select> 
 
         <a class = "download_link" href = exampleUser.py download>Example file</a>
         <a class = "download_link" href = "example_files\\PDCQ.zip" download>Project using PyGameUI</a>
@@ -182,33 +189,17 @@ while True:
         <p style = "text-decoration: underline;">Result:</p>
         <img class = "exampleIMG" src = "assets\\imgs\\simple_text.png">
 
-        <hr>
-
         <h3 id = "customizing_text">Customizing our text element</h3>
         <p>In addition to the required parameters, we can pass in optional ones. This allows even more customizing!</p>
         <p>The text element has so far three optional parameters: font, fontSize and centerMode.</p>
+
         <table>
-            <tr>
-                <th>Argument</th>
-                <th>Explanation</th>
-                <th>Default</th>
-            </tr>
-            <tr>
-              <td>fontName</td>
-              <td>Sets the font for the text</td>
-              <td>freesansbold.ttf</td>
-            </tr>
-            <tr>
-              <td>fontSize</td>
-              <td>Sets the size of the font</td>
-              <td>20</td>
-            </tr>
-            <tr>
-                <td>centerMode</td>
-                <td>If True the textrect's center is at the provided position, if not is the textrect's topleft used</td>
-                <td>True</td>
-            </tr>   
+            <tr><th>Argument</th><th>Explanation</th><th>Default</th></tr>
+            <tr><td>fontName</td><td>Sets the font for the text</td><td>freesansbold.ttf</td></tr>
+            <tr><td>fontSize</td><td>Sets the size of the font</td><td>20</td></tr>
+            <tr><td>centerMode</td><td>If True the textrect's center is at the provided position, if not is the textrect's topleft used</td><td>True</td></tr>   
         </table>
+
         <p>To edit an optional argument just add another parameter when creating the element.<br>
         Example:</p>
         <pre>
@@ -325,5 +316,213 @@ while True:
             <tr><td>rectColor</td><td>Sets a color for the rect.</td><td>(233, 196, 106)</td></tr>
             <tr><td>rectBorderRadius</td><td>How round the rects corners should be. The higher the number, the more round.</td><td>10</td></tr>
         </table>
+        
+        <hr>
+
+        <h2 style = "text-decoration: underline;", id = "input_elements">Basics: Input elements</h2>
+         
+        <h3 id = "creating_input">Creating an input element</h3>
+
+        <p>To add an input element just follow the same process as the other elements: <br>
+        The only required argument is the position.</p>
+        <pre>
+            <code>
+example_input = pygameui.Input((200, 200))
+            </code>
+        </pre>
+        <p>Input elements are drawn in the same way as any other element:</p>
+        <pre>
+            <code>
+example_input.draw(win)
+            </code>
+        </pre>
+        <p style="text-decoration: underline;">Final code:</p>
+        <pre>
+            <code>
+import pygame, sys
+import pygameui
+
+pygame.init()
+
+win = pygame.display.set_mode((500, 500))
+
+# Creating an input
+example_input = pygameui.Input((200, 200))
+
+clock = pygame.time.Clock()
+while True:
+    win.fill((0, 0, 0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+    # Drawing the input
+    example_input.draw(win)
+
+    # Updating the display
+    pygame.display.flip()
+    clock.tick(60)
+            </code>
+        </pre>
+        <p style="text-decoration: underline;">Result:</p>
+        <img class = "exampleIMG" src = "assets\\imgs\\creating_input.png">
+
+        <h3 id = "giving_input_functionality">Giving the input element functionality</h3>
+        <p>As you probatly have notices our input element looks nice and all that, but lacs any functionality...<br>
+        We first have to store the events from the pygame.event.get(). To do this swap this code: </p>
+        <pre>
+            <code>
+for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+        pygame.quit()
+        sys.exit()
+            </code>
+        </pre>
+        <p>With this code:</p>
+        <pre>
+            <code>
+events = pygame.event.get()
+for event in events:
+    if event.type == pygame.QUIT:
+        pygame.quit()
+        sys.exit()
+            </code>
+        </pre>
+        <p>Now we can add functionality to the input element. To do this we need to add a few lines of code. <br>
+        First we have to create a list of the clickable elements in our project. This list tells PyGameUI when <br>
+        it should change the cursor to a hand. (Indicating that the element is clickable)</p>
+        
+        <p>Right now our project only includes one clickable element so our list can be created like this:</p>
+        <pre>
+            <code>
+clickable_elements = [example_input]
+            </code>
+        </pre>
+        <p>Now we can add the functionality to the input element. This is done by just adding a line of code to the main loop:</p>
+        <pre>
+            <code>
+example_input.update(events, clickable_elements)
+            </code>
+        </pre>
+        <p style="text-decoration: underline;">Final code:</p>
+        <pre>
+            <code>
+import pygame, sys
+import pygameui
+
+pygame.init()
+
+win = pygame.display.set_mode((500, 500))
+
+# Creating an input
+example_input = pygameui.Input((200, 200))
+
+# Creating a list of all clickable elements
+clickable_elements = [example_input]
+
+clock = pygame.time.Clock()
+while True:
+    win.fill((0, 0, 0))
+
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # Give the input funcionality
+    example_input.work(events, clickable_elements)
+
+    # Drawing the input
+    example_input.draw(win)
+
+    # Updating the display
+    pygame.display.flip()
+    clock.tick(60)
+            </code>
+        </pre>
+        <p style="text-decoration: underline;">Result:</p>
+        <img class = "gif" src = "assets\\gifs\\input_example.gif">
+        <p>Now just click on the input to activate it, write to your heart's content, and click the input or outside of it to deactivate.</p>
+
+        <h3 id = "obtaining_input_text">Obtaining input text</h3>
+
+        <p>Now that we have a working input element, we can obtain the text from it. This is done by calling the getText() method on the input element.</p>
+        <pre>
+            <code>
+input_text = example_input.getText()
+print(input_text)
+            </code>
+        </pre>
+        <p style="text-decoration: underline;">Final code:</p>
+        <pre>
+            <code>
+import pygame, sys
+import pygameui
+
+pygame.init()
+
+win = pygame.display.set_mode((500, 500))
+
+# Creating an input
+example_input = pygameui.Input((200, 200))
+
+# Creating a list of all clickable elements
+clickable_elements = [example_input]
+
+clock = pygame.time.Clock()
+while True:
+    win.fill((0, 0, 0))
+
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # Give the input funcionality
+    example_input.work(events, clickable_elements)
+
+    # Obtaining the input value and printing it
+    input_text = example_input.getText()
+    print("You have written: " + input_text)
+
+    # Drawing the input
+    example_input.draw(win)
+
+    # Updating the display
+    pygame.display.flip()
+    clock.tick(60)  
+            </code>
+        </pre>
+
+        <h3 id = "customizing_input">Customizing input elements</h3>
+        
+        <p>Input elements are customized in the same way as the other elements.</p>
+        
+        <table>
+            <tr><th>Argument</th><th>Explanation</th><th>Default</th></tr>
+            <tr><td>fontName</td><td>The font name to be used for the text in the input element.</td><td>"freesansbold.ttf"</td></tr>
+            <tr><td>fontSize</td><td>The font size to be used for the text in the input element.</td><td>30</td></tr>
+            <tr><td>exampleContent</td><td>The example content to be displayed in the input element when empty and not active.</td><td>"Click me to input!"</td></tr>
+            <tr><td>prefilledContent</td><td>The prefilled content to be displayed in the input element.</td><td>""</td></tr>
+            <tr><td>characterLimit</td><td>The maximum number of characters allowed in the input element.</td><td>100</td></tr>
+            <tr><td>normalTextColor</td><td>The text color for the input element when it is not active.</td><td>(231, 111, 81)</td></tr>
+            <tr><td>exampleTextColor</td><td>The text color for the example content in the input element.</td><td>(100, 100, 100)</td></tr>
+            <tr><td>rectWidth</td><td>The width of the rectangular area of the input element.</td><td>200</td></tr>
+            <tr><td>rectHeight</td><td>The height of the rectangular area of the input element.</td><td>50</td></tr>
+            <tr><td>rectColorActive</td><td>The color of the input elements rectangular border when it is active.</td><td>(233, 196, 106)</td></tr>
+            <tr><td>rectColorPassive</td><td>The color of the input elements rectangular border when it is not active.</td><td>(200, 200, 200)</td></tr>
+            <tr><td>rectBorderRadius</td><td>The border radius of the rectangular area of the input element.</td><td>1</td></tr>
+            <tr><td>rectBorderWidth</td><td>The border width of the rectangular area of the input element.</td><td>5</td></tr>
+            <tr><td>centerMode</td><td>If True the elements center is placed on the provided position, if not the elements topleft is placed on the provided position.</td><td>True</td></tr>
+        </table>
+        <br>
+        <hr>
     </body>
+
+    <footer>
+        <p>Created by: <a href="https://tbf3d.com">Trym Bringsrud Fekjær</a></p>
+    </footer>
+    <hr>
 </html>

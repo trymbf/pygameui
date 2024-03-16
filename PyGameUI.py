@@ -3,7 +3,7 @@ import pygame
 pygame.init()
 
 
-VERSION = 1.12
+VERSION = 1.2
 
 class Text():
     def __init__(self, position: tuple, content:str, color:tuple, centerMode = True, fontName = "freesansbold.ttf", fontSize = 20):
@@ -442,6 +442,9 @@ class Input():
             else:
                 pygame.draw.rect(win, self.rectColorPassive, self.rect, self.rectBorderWidth, border_radius = self.borderRadius)
 
+    def getText(self):
+        return self.userText
+
     def work(self, events: list, clickable_elements: list):
         # Make activating work
         # Get mouse pos
@@ -451,7 +454,7 @@ class Input():
         if self.rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False: # == 1 is left click
-                self.active = True
+                self.active = not self.active
                 self.clicked = True
         else:
             if pygame.mouse.get_pressed()[0]: # == 1 is left click

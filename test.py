@@ -5,18 +5,32 @@ pygame.init()
 
 win = pygame.display.set_mode((500, 500))
 
-# Adding one parameter
-example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 200), fontName = "elephant")
-# Adding multiple parameters
-example_text_2 = pygameui.Text((200, 200), "My cool not centermoded text", (255, 255, 100), fontSize = 50, centerMode = False)
+# Creating an input
+example_input = pygameui.Input((200, 200))
+
+# Creating a list of all clickable elements
+clickable_elements = [example_input]
+
 clock = pygame.time.Clock()
 while True:
     win.fill((0, 0, 0))
-    for event in pygame.event.get():
+
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    example_text.draw(win)
-    example_text_2.draw(win)
+
+    # Give the input funcionality
+    example_input.work(events, clickable_elements)
+
+    # Obtaining the input value
+    input_text = example_input.getText()
+    print("You have written: " + input_text)
+
+    # Drawing the input
+    example_input.draw(win)
+
+    # Updating the display
     pygame.display.flip()
     clock.tick(60)
