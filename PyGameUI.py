@@ -447,6 +447,10 @@ class Input():
     def get_relative_cursor_position(self) -> int:
         substring = self.userText[:self.cursor_index]
         return self.font.size(substring)[0]
+    
+    def get_letter_position(self, letterIndex: str) -> int:
+        substring = self.userText[:letterIndex]
+        return self.font.size(substring)[0] + self.userTextRect.left
 
     def draw(self, win):
         if not self.hide:
@@ -483,11 +487,25 @@ class Input():
         if self.rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False: # == 1 is left click
-                self.active = not self.active
-                # Move cursor to the end of the text
-                self.cursor_index = len(self.userText)
+                if self.active:
+                    # Move cursor to the position of the mouse
+                    new_cursor_index = 0
+                    for letterIndex in range(len(self.userText)):
+                        letterPos = self.get_letter_position(letterIndex)
+                        if letterPos - (self.font.size((self.userText[letterIndex]))[0] // 2) < mouse_pos[0]:
+                            new_cursor_index = letterIndex
+                    
+                    # If the mouse is to the right of the text
+                    if (self.font.size(self.userText)[0] + self.userTextRect.left) < mouse_pos[0]:
+                        new_cursor_index = len(self.userText)
+                    
+                    self.cursor_index = new_cursor_index
+                else:
+                    self.active = True
+                    # Move cursor to the end of the text
+                    self.cursor_index = len(self.userText)
+                
                 self.cursor_visible_timer = 60
-
                 self.clicked = True
         else:
             if pygame.mouse.get_pressed()[0]: # == 1 is left click

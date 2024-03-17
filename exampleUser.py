@@ -34,11 +34,9 @@ clickable_elements = []
 start_button = pgu.Element((450, 300), rectWidth = 300, content = "Start!", rectColor = (233, 196, 106), textColor = (231, 111, 81), fontSize= 50)
 start_button.flow((450, 305), (450, 315), 60)
 clickable_elements.append(start_button)
-other_button = pgu.Element((800, 400), content = "Other", fontSize= 50)
-clickable_elements.append(other_button)
 
 # Input elements
-input_element = pgu.Input((win_width//2, 400))
+input_element = pgu.Input((win_width//2, 400), exampleContent="Username")
 clickable_elements.append(input_element)
 
 clock = pygame.time.Clock()
@@ -52,7 +50,7 @@ while True:
     if start_button.was_clicked(clickable_elements):
         undertitle.hide_toggle()
 
-    you_have_written.change("You have written: " + input_element.getValue())
+    you_have_written.change("Username: " + input_element.getValue())
     input_element.work(events, clickable_elements)
     draw(win)
     clock.tick(60)

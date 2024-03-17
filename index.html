@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>PyGameUI Documentation</title>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" />
+        <link href="prism.css" rel="stylesheet" />
         <link href="mainsite.css" rel="stylesheet">
         <link href="prism.css" rel = "stylesheet">
         <style>
@@ -117,7 +117,7 @@
         <img class = "gif" src="assets\\gifs\\add_pygameui.gif">
         <p>To use PyGameUI in a project, the projects needs to have at least a basic pygame script with PyGameUI imported as any other library:</p>
         <pre>
-            <code>
+            <code class="language-python">
 import pygame, sys
 import pygameui
 
@@ -150,19 +150,19 @@ while True:
         <p>Adding a text element only requires 1 line of code: <br>
         The three arguments are position (x, y), content and color (r, g, b).</p>
         <pre>
-            <code>
+            <code class="language-python">
 example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 255))
             </code>
         </pre>
         <p>Drawing the text only requires 1 line of code too: </p>
         <pre>
-            <code>
+            <code class="language-python">
 example_text.draw(win)
             </code>
         </pre>
         <p style = "text-decoration: underline;">Final code:</p>
         <pre>
-            <code>
+            <code class="language-python">
 import pygame, sys, pygameui
 
 pygame.init()
@@ -204,7 +204,7 @@ while True:
         <p>To edit an optional argument just add another parameter when creating the element.<br>
         Example:</p>
         <pre>
-            <code>
+            <code class="language-python">
 # Adding one parameter
 example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 200), fontName = "elephant")
 # Adding multiple parameters
@@ -213,7 +213,7 @@ example_text_2 = pygameui.Text((200, 200), "My cool not centermoded text", (255,
         </pre>
         <p style = "text-decoration: underline;">Final code: </p>
         <pre>
-            <code>
+            <code class="language-python">
 import pygame, sys, pygameui
 
 pygame.init()
@@ -253,7 +253,7 @@ while True:
         <p>A general element can be anything from just a decorative rectangle to an image or button. <br>They are created in the same way as text elements but only requires a position:</p>
 
         <pre>
-            <code>
+            <code class="language-python">
 example_element = pygameui.Element((300, 300))
             </code>
         </pre>
@@ -261,7 +261,7 @@ example_element = pygameui.Element((300, 300))
         <p>General elements are drawn in the same way as text elements:</p>
 
         <pre>
-            <code>
+            <code class="language-python">
 example_element.draw(win)
             </code>
         </pre>
@@ -269,7 +269,7 @@ example_element.draw(win)
         <p style="text-decoration: underline;">Final code:</p>
 
         <pre>
-            <code>
+            <code class="language-python">
 import pygame, sys, pygameui
 
 pygame.init()
@@ -327,19 +327,19 @@ while True:
         <p>To add an input element just follow the same process as the other elements: <br>
         The only required argument is the position.</p>
         <pre>
-            <code>
+            <code class="language-python">
 example_input = pygameui.Input((200, 200))
             </code>
         </pre>
         <p>Input elements are drawn in the same way as any other element:</p>
         <pre>
-            <code>
+            <code class="language-python">
 example_input.draw(win)
             </code>
         </pre>
         <p style="text-decoration: underline;">Final code:</p>
         <pre>
-            <code>
+            <code class="language-python">
 import pygame, sys
 import pygameui
 
@@ -372,7 +372,7 @@ while True:
         <p>As you probatly have notices our input element looks nice and all that, but lacs any functionality...<br>
         We first have to store the events from the pygame.event.get(). To do this swap this code: </p>
         <pre>
-            <code>
+            <code class="language-python">
 for event in pygame.event.get():
     if event.type == pygame.QUIT:
         pygame.quit()
@@ -381,7 +381,7 @@ for event in pygame.event.get():
         </pre>
         <p>With this code:</p>
         <pre>
-            <code>
+            <code class="language-python">
 events = pygame.event.get()
 for event in events:
     if event.type == pygame.QUIT:
@@ -395,13 +395,13 @@ for event in events:
         
         <p>Right now our project only includes one clickable element so our list can be created like this:</p>
         <pre>
-            <code>
+            <code class="language-python">
 clickable_elements = [example_input]
             </code>
         </pre>
         <p>Now we can add the functionality to the input element. This is done by just adding a line of code to the main loop:</p>
         <pre>
-            <code>
+            <code class="language-python">
 example_input.update(events, clickable_elements)
             </code>
         </pre>
@@ -450,14 +450,14 @@ while True:
 
         <p>Now that we have a working input element, we can obtain the text from it. This is done by calling the getValue() method on the input element.</p>
         <pre>
-            <code>
+            <code class="language-python">
 input_text = example_input.getValue()
 print(input_text)
             </code>
         </pre>
         <p style="text-decoration: underline;">Final code:</p>
         <pre>
-            <code>
+            <code class="language-python">
 import pygame, sys
 import pygameui
 
@@ -520,7 +520,7 @@ while True:
         </table>
         <br>
         <hr>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+        <script src="prism.js"></script>
     </body>
 
     <footer>
