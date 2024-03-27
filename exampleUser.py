@@ -50,6 +50,9 @@ while True:
     if start_button.was_clicked(clickable_elements):
         undertitle.hide_toggle()
 
+    if start_button.is_hovered():
+        start_button.change(newTextColor=(255, 255, 255), newRectColor=(231, 111, 81))
+
     you_have_written.change("Username: " + input_element.getValue())
     input_element.work(events, clickable_elements)
     draw(win)

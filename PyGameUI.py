@@ -3,7 +3,7 @@ import pygame
 pygame.init()
 
 
-VERSION = 1.2
+VERSION = 1.21
 
 class Text():
     def __init__(self, position: tuple, content:str, color:tuple, centerMode = True, fontName = "freesansbold.ttf", fontSize = 20):
@@ -43,16 +43,16 @@ class Text():
     def hide_toggle(self):
         self.hide = not self.hide
 
-    def change(self, newContent = None, newColor = None, newFont = None, newFontSize = None):
+    def change(self, newContent = None, newColor = None, newFontName = None, newFontSize = None):
         # If no new values are given, the old ones will be used
         if not newContent: newContent = self.content
         if not newColor: newColor = self.color
-        if not newFont: newFont = self.fontName
+        if not newFontName: newFontName = self.fontName
         if not newFontSize: newFontSize = self.fontSize
 
         # Create new surface object 
-        self.font = pygame.font.SysFont(newFont, newFontSize)  # Load font
-        self.text = self.font.render(newContent, True, self.color)
+        self.font = pygame.font.SysFont(newFontName, newFontSize)  # Load font
+        self.text = self.font.render(newContent, True, newColor)
         self.textRect = self.text.get_rect() # Get rect
         # centerMode
         self.textRect.topleft = (self.x - (self.textRect.width // 2), self.y - (self.textRect.height // 2)) if self.centerMode else (self.x, self.y)
@@ -215,6 +215,75 @@ class Element():
             self.rect = pygame.rect.Rect(self.x, self.y, self.rectWidth, self.rectHeight)
             self.borderRadius = rectBorderRadius
             self.rectColor = rectColor
+
+    # Not done pos wrong
+    def change(self, newContent = None, newTextColor = None, newFontName = None, newFontSize = None, newRectColor = None, newRectWidth = None, newRectHeight = None, newRectBorderRadius = None):
+        if self.type == "text":
+            # If no new values are given, the old ones will be used
+            if not newContent: newContent = self.content
+            if not newTextColor: newTextColor = self.textColor
+            if not newFontName: newFontName = self.fontName
+            if not newFontSize: newFontSize = self.fontSize
+            if not newRectColor: newRectColor = self.rectColor
+            if not newRectWidth: newRectWidth = self.rectWidth
+            if not newRectHeight: newRectHeight = self.rectHeight
+            if not newRectBorderRadius: newRectBorderRadius = self.borderRadius
+
+            # Rect
+            self.rect = pygame.rect.Rect(self.x, self.y, newRectWidth, newRectHeight)
+
+            self.rectColor = newRectColor
+            self.borderRadius = newRectBorderRadius
+
+            # Create new surface object 
+            self.font = pygame.font.SysFont(newFontName, newFontSize)  # Load font
+            self.text = self.font.render(newContent, True, newTextColor)
+            self.textRect = self.text.get_rect() # Get rect
+
+
+            # Store the new values
+            self.content = newContent
+            self.textColor = newTextColor
+            self.fontName = newFontName
+            self.fontSize = newFontSize
+            self.rectWidth = newRectWidth
+            self.rectHeight = newRectHeight
+            self.rectBorderRadius = newRectBorderRadius
+        elif self.type == "image":
+            if not newContent: newContent = self.content
+            if not newRectWidth: newRectWidth = self.rectWidth
+            if not newRectHeight: newRectHeight = self.rectHeight
+
+            try:
+                self.content = pygame.transform.scale(newContent, (newRectWidth, newRectHeight))
+                lastRect = self.rect
+                self.rect = self.content.get_rect()
+                self.rect.topleft = lastRect.topleft
+            except:
+                raise Exception(f"{self.content} is not a pygame image")
+
+            # Store the new values
+            self.content = newContent
+            self.rectWidth = newRectWidth
+            self.rectHeight = newRectHeight
+        elif self.type == "rectangle":
+            if not newRectColor: newRectColor = self.rectColor
+            if not newRectWidth: newRectWidth = self.rectWidth
+            if not newRectHeight: newRectHeight = self.rectHeight
+            if not newRectBorderRadius: newRectBorderRadius = self.borderRadius
+
+            self.rect = pygame.rect.Rect(self.rect.x, self.rect.y, newRectWidth, newRectHeight)
+            self.rectColor = newRectColor
+            self.borderRadius = newRectBorderRadius
+
+            # Store the new values
+            self.rectWidth = newRectWidth
+            self.rectHeight = newRectHeight
+            self.rectBorderRadius = newRectBorderRadius
+
+
+            
+
 
     def hide_toggle(self):
         self.hide = not self.hide
@@ -468,7 +537,7 @@ class Input():
                 self.cursor_visible_timer -= 1
                 if self.cursor_visible_timer > 30:
                     cursor_pos = self.get_relative_cursor_position() + self.userTextRect.left
-                    pygame.draw.line(win, self.normalTextColor, (cursor_pos, self.userTextRect.top), (cursor_pos, self.userTextRect.bottom), 2)
+                    pygame.draw.line(win, self.normalTextColor, (cursor_pos, self.userTextRect.top), (cursor_pos, self.userTextRect.bottom), self.fontSize // 15)
                 elif self.cursor_visible_timer == 0:
                     self.cursor_visible_timer = 60
 
@@ -494,7 +563,7 @@ class Input():
                         letterPos = self.get_letter_position(letterIndex)
                         if letterPos - (self.font.size((self.userText[letterIndex]))[0] // 2) < mouse_pos[0]:
                             new_cursor_index = letterIndex
-                    
+                        
                     # If the mouse is to the right of the text
                     if (self.font.size(self.userText)[0] + self.userTextRect.left) < mouse_pos[0]:
                         new_cursor_index = len(self.userText)
@@ -527,6 +596,8 @@ class Input():
                     if event.key == pygame.K_v and event.mod & pygame.KMOD_CTRL:
                         self.userText = self.userText[0: self.cursor_index] + pygame.scrap.get("text/plain;charset=utf-8").decode() + self.userText[self.cursor_index:]
                         self.userText = self.userText.replace("\x00", "")
+                        # Move cursor to the end of the pasted text
+                        self.cursor_index += len(pygame.scrap.get("text/plain;charset=utf-8").decode())
                     # Allow the user to remove text using backspace
                     elif event.key == pygame.K_BACKSPACE:
                         if self.cursor_index == len(self.userText):
@@ -540,6 +611,13 @@ class Input():
                     elif event.key == pygame.K_DELETE:
                         if self.cursor_index != len(self.userText):
                             self.userText = self.userText[0: self.cursor_index] + self.userText[self.cursor_index + 1:]
+                    elif event.key == pygame.K_HOME:
+                        self.cursor_index = 0
+                    elif event.key == pygame.K_END:
+                        self.cursor_index = len(self.userText)
+                    elif event.key == pygame.K_TAB:
+                        self.userText = self.userText[0: self.cursor_index] + "    " + self.userText[self.cursor_index:]
+                        self.cursor_index += 4
                     # Allow the user to move the cursor
                     elif event.key == pygame.K_LEFT:
                         if self.cursor_index > 0:
