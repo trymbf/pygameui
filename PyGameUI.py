@@ -3,10 +3,10 @@ import pygame
 pygame.init()
 
 
-VERSION = 1.21
+VERSION = 1.22
 
 class Text():
-    def __init__(self, position: tuple, content:str, color:tuple, centerMode = True, fontName = "freesansbold.ttf", fontSize = 20):
+    def __init__(self, position: tuple, content:str, color=(255, 255, 255), centerMode = True, fontName = "freesansbold.ttf", fontSize = 20):
         # Basic variables
         # Pos
         self.x, self.y = position
@@ -239,6 +239,8 @@ class Element():
             self.font = pygame.font.SysFont(newFontName, newFontSize)  # Load font
             self.text = self.font.render(newContent, True, newTextColor)
             self.textRect = self.text.get_rect() # Get rect
+            if self.centerText: self.textRect.center = self.rect.center
+            else: self.textRect.topleft = self.rect.topleft
 
 
             # Store the new values

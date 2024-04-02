@@ -148,10 +148,10 @@ while True:
         <h3 id = "creating_text">Creating a text element</h3>
 
         <p>Adding a text element only requires 1 line of code: <br>
-        The three arguments are position (x, y), content and color (r, g, b).</p>
+        The two arguments are position (x, y) and content</p>
         <pre>
             <code class="language-python">
-example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 255))
+example_text = pygameui.Text((200, 200), "My cool text")
             </code>
         </pre>
         <p>Drawing the text only requires 1 line of code too: </p>
@@ -170,7 +170,7 @@ pygame.init()
 win = pygame.display.set_mode((500, 500))
 
 # Create text element
-example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 255))
+example_text = pygameui.Text((200, 200), "My cool text")
 
 clock = pygame.time.Clock()
 while True:
@@ -196,6 +196,7 @@ while True:
 
         <table>
             <tr><th>Argument</th><th>Explanation</th><th>Default</th></tr>
+            <tr><td>color</td><td>Sets the color of the text</td><td>(255, 255, 255)</td></tr>
             <tr><td>fontName</td><td>Sets the font for the text</td><td>freesansbold.ttf</td></tr>
             <tr><td>fontSize</td><td>Sets the size of the font</td><td>20</td></tr>
             <tr><td>centerMode</td><td>If True the textrect's center is at the provided position, if not is the textrect's topleft used</td><td>True</td></tr>   

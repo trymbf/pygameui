@@ -1,15 +1,15 @@
-import pygame, sys
-import pygameui
+import pygame, sys, time
+import pygameui as pgui
 
 pygame.init()
 
 win = pygame.display.set_mode((500, 500))
 
 # Creating an input
-example_input = pygameui.Input((200, 200))
+element = pgui.Element((250, 250), content="Test")
 
-# Creating a list of all clickable elements
-clickable_elements = [example_input]
+elements = []
+elements.append(element)
 
 clock = pygame.time.Clock()
 while True:
@@ -20,17 +20,17 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-
-    # Give the input funcionality
-    example_input.work(events, clickable_elements)
-
-    # Obtaining the input value
-    input_text = example_input.getText()
-    print("You have written: " + input_text)
-
-    # Drawing the input
-    example_input.draw(win)
+    
+    element.change(newContent="Other", newTextColor=(255,0,0), newFontSize=50, newFontName="elephant")
+    for elemente in elements:
+        elemente.draw(win)
+    # Updating the display
+    pygame.display.flip()
+    time.sleep(1)
+    win.fill((0, 0, 0))
+    element.change(newContent="Write something:", newTextColor=(255, 0, 255), newFontSize=30, newFontName="impact")
+    element.draw(win)
 
     # Updating the display
     pygame.display.flip()
-    clock.tick(60)
+    time.sleep(1)
