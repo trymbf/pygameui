@@ -1,9 +1,9 @@
-import pygame
+import pygame, re
 
 pygame.init()
 
 
-VERSION = 1.23
+VERSION = 1.24
 
 class Text():
     def __init__(self, position: tuple, content:str, color=(255, 255, 255), centerMode = True, fontName = "freesansbold.ttf", fontSize = 20):
@@ -602,10 +602,23 @@ class Input():
                 if self.active:
                     # Allow the user to paste text from clipboard
                     if event.key == pygame.K_v and event.mod & pygame.KMOD_CTRL:
-                        self.userText = self.userText[0: self.cursor_index] + pygame.scrap.get("text/plain;charset=utf-8").decode() + self.userText[self.cursor_index:]
-                        self.userText = self.userText.replace("\x00", "")
+                        pasted_text = pygame.scrap.get("text/plain;charset=utf-8").decode()
+                        # Remove all non-printable characters
+                        pasted_text = re.sub(r'[^\x20-\x7E]+', '', pasted_text)
+
+                        # Filter the pasted text
+                        for letter in pasted_text:
+                            if self.filter_mode == "isAllowed" and letter not in self.filter:
+                                pasted_text = pasted_text.replace(letter, "")
+                            elif self.filter_mode == "isDisallowed" and letter in self.filter:
+                                pasted_text = pasted_text.replace(letter, "")
+                        # Check that the pasted text is not exceeding the character limit
+                        if len(self.userText) + len(pasted_text) > self.characterLimit:
+                            continue
+
+                        self.userText = self.userText[0: self.cursor_index] + pasted_text + self.userText[self.cursor_index:]
                         # Move cursor to the end of the pasted text
-                        self.cursor_index += len(pygame.scrap.get("text/plain;charset=utf-8").decode())
+                        self.cursor_index += len(pasted_text)
                     # Allow the user to remove text using backspace
                     elif event.key == pygame.K_BACKSPACE:
                         if self.cursor_index == len(self.userText):
