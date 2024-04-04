@@ -1,4 +1,4 @@
-import pygame, re
+import pygame
 
 pygame.init()
 
@@ -602,20 +602,10 @@ class Input():
                 if self.active:
                     # Allow the user to paste text from clipboard
                     if event.key == pygame.K_v and event.mod & pygame.KMOD_CTRL:
-                        pasted_text = pygame.scrap.get("text/plain;charset=utf-8").decode()
-                        # Remove all non-printable characters
-                        pasted_text = re.sub(r'[^\x20-\x7E]+', '', pasted_text)
-
-                        # Check that the pasted text is not filtered
-                        if self.filter and ((self.filter_mode == "isAllowed" and (pasted_text not in self.filter)) or (self.filter_mode == "isDisallowed" and (pasted_text in self.filter))):
-                            continue
-                        # Check that the pasted text is not exceeding the character limit
-                        if len(self.userText) + len(pasted_text) > self.characterLimit:
-                            continue
-
-                        self.userText = self.userText[0: self.cursor_index] + pasted_text + self.userText[self.cursor_index:]
+                        self.userText = self.userText[0: self.cursor_index] + pygame.scrap.get("text/plain;charset=utf-8").decode() + self.userText[self.cursor_index:]
+                        self.userText = self.userText.replace("\x00", "")
                         # Move cursor to the end of the pasted text
-                        self.cursor_index += len(pasted_text)
+                        self.cursor_index += len(pygame.scrap.get("text/plain;charset=utf-8").decode())
                     # Allow the user to remove text using backspace
                     elif event.key == pygame.K_BACKSPACE:
                         if self.cursor_index == len(self.userText):
