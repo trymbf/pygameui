@@ -3,7 +3,7 @@ import pygame
 pygame.init()
 
 
-VERSION = 1.22
+VERSION = 1.23
 
 class Text():
     def __init__(self, position: tuple, content:str, color=(255, 255, 255), centerMode = True, fontName = "freesansbold.ttf", fontSize = 20):
@@ -56,6 +56,12 @@ class Text():
         self.textRect = self.text.get_rect() # Get rect
         # centerMode
         self.textRect.topleft = (self.x - (self.textRect.width // 2), self.y - (self.textRect.height // 2)) if self.centerMode else (self.x, self.y)
+
+        # Store the new values
+        self.content = newContent
+        self.color = newColor
+        self.fontName = newFontName
+        self.fontSize = newFontSize
 
     # Draws text on screen if not hidden
     def draw(self, win):
