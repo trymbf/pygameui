@@ -3,7 +3,7 @@ import pygame, re
 pygame.init()
 
 
-VERSION = 1.24
+VERSION = 1.23
 
 class Text():
     def __init__(self, position: tuple, content:str, color=(255, 255, 255), centerMode = True, fontName = "freesansbold.ttf", fontSize = 20):
@@ -606,12 +606,9 @@ class Input():
                         # Remove all non-printable characters
                         pasted_text = re.sub(r'[^\x20-\x7E]+', '', pasted_text)
 
-                        # Filter the pasted text
-                        for letter in pasted_text:
-                            if self.filter_mode == "isAllowed" and letter not in self.filter:
-                                pasted_text = pasted_text.replace(letter, "")
-                            elif self.filter_mode == "isDisallowed" and letter in self.filter:
-                                pasted_text = pasted_text.replace(letter, "")
+                        # Check that the pasted text is not filtered
+                        if self.filter and ((self.filter_mode == "isAllowed" and (pasted_text not in self.filter)) or (self.filter_mode == "isDisallowed" and (pasted_text in self.filter))):
+                            continue
                         # Check that the pasted text is not exceeding the character limit
                         if len(self.userText) + len(pasted_text) > self.characterLimit:
                             continue
