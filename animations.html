@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PyGameUI: Animations</title>
+        <link href="prism.css" rel="stylesheet" />
+        <link href="mainsite.css" rel="stylesheet">
+        <link href="prism.css" rel = "stylesheet">
+        <style>
+            body {
+                font-family: 'Roboto', sans-serif;
+                background-color: #f4f4f4;
+                padding: 20px;
+                margin: 0;
+            }
+
+            h1, h2, h3, h4, h5, h6 {
+                color: #333;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            a {
+                display: block;
+                color: #007BFF;
+                text-decoration: none;
+                padding: 10px;
+                margin: 10px 0;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+            a:hover {
+                background-color: #007BFF;
+                color: #fff;
+            }
+            
+            a.download_link::before {
+                content: "\1F4E5 "; /* Unicode character for 'FLOPPY DISK' */
+                font-size: 1.2em;
+            }
+
+            a.download_link {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                border-color: rgb(45, 45, 45);
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+            select {
+                width: 200px;
+                height: 35px;
+                margin: 10px;
+                padding: 5px;
+                font-size: 16px;
+                border-radius: 5px;
+                border: none;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+                background-color: #f8f8f8; /* Add this line */
+            }
+            
+        </style>
+    </head>
+    <body>
+        <hr>
+        <h1>PyGameUI Documentation: Animations</h1>
+        <select onchange="location = this.value;">
+            <option value="#temp">Temp</option>
+        </select>
+        <select onchange="location = this.value;">
+            <option value="#temp">Temp</option>
+        </select>
+        <select onchange="location = this.value;">
+            <option value="#temp">Temp</option>
+        </select> 
+        <script src="prism.js"></script>
+        <hr>
+    </body>
+
+    <footer>
+        <p>Created by: <a href="https://tbf3d.com">Trym Bringsrud Fekjær</a></p>
+    </footer>
+    <hr>
+</html>

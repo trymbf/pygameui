@@ -110,11 +110,20 @@
         
         <hr>
         
-        <h2 style = "text-decoration: underline;">Basics: Getting started</h2>
+        <h2 style = "text-decoration: underline;">Basics: Getting started <-- (Start Here!)</h2>
         <p>Start by downloading the PyGameUI python file:</p>
         <a href="PyGameUI.py" download>Click me to download PyGameUI</a>
         <p>Than place the PyGameUI file in the same folder as your project files.</p>
         <img class = "gif" src="assets\\gifs\\add_pygameui.gif">
+        <p>Your project directory should now look like this:</p>
+        <pre>
+            <code>
+project_folder/
+└───pygameui.py
+└───main.py
+            </code>
+        </pre>
+
         <p>To use PyGameUI in a project, the projects needs to have at least a basic pygame script with PyGameUI imported as any other library:</p>
         <pre>
             <code class="language-python">
@@ -259,6 +268,20 @@ example_element = pygameui.Element((300, 300))
             </code>
         </pre>
 
+        <p>General elements can also contain text or images:</p>
+
+        <pre>
+            <code class="language-python">
+# Creating an element with text
+element_with_text = pygameui.Element((300, 300), "My cool element")
+
+# Creating an element with an image
+my_amaizing_image = pygame.image.load("my_amaizing_image.png")
+element_with_image = pygameui.Element((300, 300), content=my_amaizing_image)
+        
+            </code>
+        </pre>
+
         <p>General elements are drawn in the same way as text elements:</p>
 
         <pre>
@@ -316,7 +339,7 @@ while True:
             <tr><td>rectWidth</td><td>Sets the width of the rectangle or image.</td><td>200</td></tr>
             <tr><td>rectHeight</td><td>Sets the height for the rectangle or image.</td><td>75</td></tr>
             <tr><td>rectColor</td><td>Sets a color for the rect.</td><td>(233, 196, 106)</td></tr>
-            <tr><td>rectBorderRadius</td><td>How round the rects corners should be. The higher the number, the more round.</td><td>10</td></tr>
+            <tr><td>rectBorderRadius</td><td>How round the rects corners should be. The higher the number, the rounder the corner.</td><td>10</td></tr>
         </table>
         
         <hr>
@@ -370,7 +393,7 @@ while True:
         <img class = "exampleIMG" src = "assets\\imgs\\creating_input.png">
 
         <h3 id = "giving_input_functionality">Giving the input element functionality</h3>
-        <p>As you probatly have notices our input element looks nice and all that, but lacs any functionality...<br>
+        <p>As you probatly have notices our input element looks nice and all that, but lacks any functionality...<br>
         We first have to store the events from the pygame.event.get(). To do this swap this code: </p>
         <pre>
             <code class="language-python">
@@ -403,7 +426,7 @@ clickable_elements = [example_input]
         <p>Now we can add the functionality to the input element. This is done by just adding a line of code to the main loop:</p>
         <pre>
             <code class="language-python">
-example_input.update(events, clickable_elements)
+example_input.work(events, clickable_elements)
             </code>
         </pre>
         <p style="text-decoration: underline;">Final code:</p>
@@ -519,7 +542,12 @@ while True:
             <tr><td>rectBorderWidth</td><td>The border width of the rectangular area of the input element.</td><td>5</td></tr>
             <tr><td>centerMode</td><td>If True the elements center is placed on the provided position, if not the elements topleft is placed on the provided position.</td><td>True</td></tr>
         </table>
-        <br>
+        <hr>
+
+        <h3 id="what_to_do">What to do now?</h3>
+        <p>Now that you have learned the basics of PyGameUI, you can start giving your project even more functionality or bling!</p>
+        <a href="animations.html">Learn how to bring your UI to life by automaticly moving elements around</a>
+        <a href="buttons.html">Learn how to create buttons and give them functionality</a>  
         <hr>
         <script src="prism.js"></script>
     </body>

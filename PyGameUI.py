@@ -1,3 +1,9 @@
+# ----------------------------------------------------------------
+# Oh hey there! You found the source code for the PygameUI library!
+# If you are lost and don't know how to use the library, check out the documentation at https://tbf3d.github.io/pygameui/
+# Or if you know what you are doing, feel free to look around the code and see how it works! Or even contribute to the project!
+# ----------------------------------------------------------------
+
 import pygame, re
 
 pygame.init()
