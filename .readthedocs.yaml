@@ -4,6 +4,12 @@
 
 # Required
 version: 2
+
+# Build from the main branch
+branches:
+  - main
+
+
 # Set the OS, Python version and other tools you might need
 build:
   os: ubuntu-22.04
