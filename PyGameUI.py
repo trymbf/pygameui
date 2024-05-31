@@ -48,6 +48,12 @@ class Text():
     def hide_toggle(self):
         self.hide = not self.hide
 
+    def jump_toggle(self):
+        self.jumping = not self.jumping
+    
+    def flow_toggle(self):
+        self.flowing = not self.flowing
+
     def change(self, newContent = None, newColor = None, newFontName = None, newFontSize = None):
         # If no new values are given, the old ones will be used
         if not newContent: newContent = self.content
@@ -122,6 +128,7 @@ class Text():
         self.textRect.x = self.x
         self.textRect.y = self.y
 
+    # Returns if the text is hovered
     def is_hovered(self):
         # Get mouse pos
         mouse_pos = pygame.mouse.get_pos()
@@ -297,6 +304,12 @@ class Element():
     def hide_toggle(self):
         self.hide = not self.hide
 
+    def jump_toggle(self):
+        self.jumping = not self.jumping
+    
+    def flow_toggle(self):
+        self.flowing = not self.flowing
+
     def draw(self, win):
         if not self.hide:
             # If the element has text
@@ -445,13 +458,13 @@ class Element():
         self.flowing = True
     
     # Jump lets the user toggle the text between two points on a userSpecified timer
-    def jump(self, position1: tuple, position2: tuple, frames: int):
+    def jump(self, position1: tuple, position2: tuple, iterations: int):
         # Move to jumppoint
         self.move_to(position1[0], position1[1])
         # Set jumpPostions
         self.otherJumpPos, self.currentJumpPos = position2, position1
         # Frames
-        self.frames = frames
+        self.frames = iterations
         # Activate jumping
         self.jumping = True
 
@@ -517,6 +530,12 @@ class Input():
 
     def hide_toggle(self):
         self.hide = not self.hide
+
+    def jump_toggle(self):
+        self.jumping = not self.jumping
+    
+    def flow_toggle(self):
+        self.flowing = not self.flowing
 
     def set_filter(self, filter: list, isAllowed: bool = True):
         self.filter = filter

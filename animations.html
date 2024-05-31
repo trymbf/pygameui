@@ -11,7 +11,22 @@
         <h1>PyGameUI Documentation: Animations</h1>
         <a href="buttons.html" class="nextbacklink">&larr;Back: Buttons</a>
 
-        <p>Coming soon.</p>
+        <p>Any UI element (text, inputs and general elements) can be moved around using a sweet of diffrent functions that are listet on the bottom of this page.</p>
+
+        <table>
+            <tr>
+                <th>Function</th>
+                <th>Explanation</th>
+                <th>Arguments</th>
+            </tr>
+            <tr><td>move_to()</td><td>Moves the element to provided x,y cordinates (instantly, no animation)</td><td>x, y</td></tr>
+            <tr><td>move()</td><td>Moves the element by x, y steps.</td><td>x, y</td></tr>
+            <tr><td>flow()</td><td>Moves the element between two points. The more iterations the slower the animation.</td><td>position1(x,y), position2(x,y), iterations</td></tr>
+            <tr><td>jump()</td><td>Jumpes the element between two points. The more iterations the longer between the jumps.</td><td>position1(x,y), position2(x,y), iterations</td></tr>
+            <tr><td>flow_toggle()</td><td>Toggles flowing.</td><td>None</td></tr>
+            <tr><td>jump_toggle()</td><td>Toggles jumping.</td><td>None</td></tr>
+            <tr><td>update()</td><td>Every time update is called, 1 iteration for jump() and flow() is done.</td><td>None</td></tr>
+        </table>
 
         <script src="prism.js"></script>
         <hr>
