@@ -1,36 +1,31 @@
-import pygame, sys, time
-import pygameui as pgui
+import pygame, sys
+import pygameui
 
 pygame.init()
 
 win = pygame.display.set_mode((500, 500))
 
-# Creating an input
-element = pgui.Element((250, 250), content="Test")
+# List of clickable elements
+clickable_elements = []
 
-elements = []
-elements.append(element)
+# Create a button
+button = pygameui.Element((250, 250), content="Click me!")
+clickable_elements.append(button)
 
 clock = pygame.time.Clock()
 while True:
     win.fill((0, 0, 0))
-
-    events = pygame.event.get()
-    for event in events:
+    for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-    
-    element.change(newContent="Other", newTextColor=(255,0,0), newFontSize=50, newFontName="elephant")
-    for elemente in elements:
-        elemente.draw(win)
-    # Updating the display
-    pygame.display.flip()
-    time.sleep(1)
-    win.fill((0, 0, 0))
-    element.change(newContent="Write something:", newTextColor=(255, 0, 255), newFontSize=30, newFontName="impact")
-    element.draw(win)
 
-    # Updating the display
+    # Check if the button was clicked
+    if button.was_clicked(clickable_elements):
+        print("Button was clicked!")
+
+    # Draw the button
+    button.draw(win)
+
     pygame.display.flip()
-    time.sleep(1)
+    clock.tick(60)

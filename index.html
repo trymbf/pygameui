@@ -5,82 +5,10 @@
         <link href="prism.css" rel="stylesheet" />
         <link href="mainsite.css" rel="stylesheet">
         <link href="prism.css" rel = "stylesheet">
-        <style>
-            body {
-                font-family: 'Roboto', sans-serif;
-                background-color: #f4f4f4;
-                padding: 20px;
-                margin: 0;
-            }
-
-            h1, h2, h3, h4, h5, h6 {
-                color: #333;
-            }
-
-            h1 {
-                font-size: 2.5em;
-            }
-
-            a {
-                display: block;
-                color: #007BFF;
-                text-decoration: none;
-                padding: 10px;
-                margin: 10px 0;
-                border-radius: 5px;
-                transition: background-color 0.3s ease;
-            }
-
-            a:hover {
-                background-color: #007BFF;
-                color: #fff;
-            }
-            
-            a.download_link::before {
-                content: "\1F4E5 "; /* Unicode character for 'FLOPPY DISK' */
-                font-size: 1.2em;
-            }
-
-            a.download_link {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-
-            table {
-                font-family: arial, sans-serif;
-                border-collapse: collapse;
-                width: 100%;
-            }
-
-            td, th {
-                border: 1px solid #dddddd;
-                border-color: rgb(45, 45, 45);
-                text-align: left;
-                padding: 8px;
-            }
-
-            tr:nth-child(even) {
-                background-color: #dddddd;
-            }
-            select {
-                width: 200px;
-                height: 35px;
-                margin: 10px;
-                padding: 5px;
-                font-size: 16px;
-                border-radius: 5px;
-                border: none;
-                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-                background-color: #f8f8f8; /* Add this line */
-            }
-            
-        </style>
     </head>
     <body>
         <hr>
-        <h1>PyGameUI Documentation</h1>
+        <h1>PyGameUI Documentation: Basics</h1>
         <select onchange="location = this.value;">
             <option value="#text">Text elements</option>
             <option value="#creating_text">Creating text</option>
@@ -98,6 +26,7 @@
             <option value="#obtaining_input_text">Obtaining input text</option>
             <option value="#customizing_input">Customizing input</option>
         </select> 
+        <a href="buttons.html"  class="nextbacklink">Next: Buttons&rarr;</a>
 
         <a class = "download_link" href = exampleUser.py download>Example file</a>
         <a class = "download_link" href = "example_files\\PDCQ.zip" download>Project using PyGameUI</a>
@@ -158,11 +87,13 @@ while True:
 
         <p>Adding a text element only requires 1 line of code: <br>
         The two arguments are position (x, y) and content</p>
+
         <pre>
             <code class="language-python">
 example_text = pygameui.Text((200, 200), "My cool text")
             </code>
         </pre>
+        
         <p>Drawing the text only requires 1 line of code too: </p>
         <pre>
             <code class="language-python">
@@ -201,13 +132,13 @@ while True:
 
         <h3 id = "customizing_text">Customizing our text element</h3>
         <p>In addition to the required parameters, we can pass in optional ones. This allows even more customizing!</p>
-        <p>The text element has so far three optional parameters: font, fontSize and centerMode.</p>
+        <p>The text element has so far four optional parameters: font, fontSize, color and centerMode.</p>
 
         <table>
             <tr><th>Argument</th><th>Explanation</th><th>Default</th></tr>
             <tr><td>color</td><td>Sets the color of the text</td><td>(255, 255, 255)</td></tr>
-            <tr><td>fontName</td><td>Sets the font for the text</td><td>freesansbold.ttf</td></tr>
-            <tr><td>fontSize</td><td>Sets the size of the font</td><td>20</td></tr>
+            <tr><td>fontName</td><td>Sets the font for the text</td><td>freesansbold</td></tr>
+            <tr><td>fontSize</td><td>Sets the size of the font (To see available fonts use 'pygame.font.get_fonts()')</td><td>20</td></tr>
             <tr><td>centerMode</td><td>If True the textrect's center is at the provided position, if not is the textrect's topleft used</td><td>True</td></tr>   
         </table>
 
@@ -333,7 +264,7 @@ while True:
             <tr><td>content</td><td>What the element should contain. Can either be a pygame image, a string or left as nothing.</td><td>None</td></tr>
             <tr><td>centerMode</td><td>If True the elements center is placed on the provided position, if not the elements topleft is placed on the provided position.</td><td>True</td></tr>
             <tr><td>centerText</td><td>Same as centerMode but only for the potensial text.</td><td>True</td></tr>
-            <tr><td>fontName</td><td>Sets the font for the potensial text.</td><td>freesansbold.ttf</td></tr>
+            <tr><td>fontName</td><td>Sets the font for the potensial text. (To see available fonts use 'pygame.font.get_fonts()')</td><td>freesansbold.ttf</td></tr>
             <tr><td>fontSize</td><td>Sets the font size for the potensial text.</td><td>50</td></tr>
             <tr><td>textColor</td><td>Sets the text color for the potensial text.</td><td>(231, 111, 81)</td></tr>
             <tr><td>rectWidth</td><td>Sets the width of the rectangle or image.</td><td>200</td></tr>
@@ -527,7 +458,7 @@ while True:
         
         <table>
             <tr><th>Argument</th><th>Explanation</th><th>Default</th></tr>
-            <tr><td>fontName</td><td>The font name to be used for the text in the input element.</td><td>"freesansbold.ttf"</td></tr>
+            <tr><td>fontName</td><td>The font name to be used for the text in the input element. (To see available fonts use 'pygame.font.get_fonts()')</td><td>"freesansbold.ttf"</td></tr>
             <tr><td>fontSize</td><td>The font size to be used for the text in the input element.</td><td>30</td></tr>
             <tr><td>exampleContent</td><td>The example content to be displayed in the input element when empty and not active.</td><td>"Click me to input!"</td></tr>
             <tr><td>prefilledContent</td><td>The prefilled content to be displayed in the input element.</td><td>""</td></tr>
@@ -546,8 +477,8 @@ while True:
 
         <h3 id="what_to_do">What to do now?</h3>
         <p>Now that you have learned the basics of PyGameUI, you can start giving your project even more functionality or bling!</p>
-        <a href="animations.html">Learn how to bring your UI to life by automaticly moving elements around</a>
-        <a href="buttons.html">Learn how to create buttons and give them functionality</a>  
+        <a href="buttons.html" class="nextbacklink">(Recommended) Learn how to create buttons and give them functionality &rarr;</a>  
+        <a href="animations.html" class="nextbacklink">(Advanced) Learn how to bring your UI to life by automaticly moving elements around &rarr;</a>
         <hr>
         <script src="prism.js"></script>
     </body>
