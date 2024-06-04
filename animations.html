@@ -10,8 +10,113 @@
         <hr>
         <h1>PyGameUI Documentation: Animations</h1>
         <a href="buttons.html" class="nextbacklink">&larr;Back: Buttons</a>
+        <hr>
 
         <p>Any UI element (text, inputs and general elements) can be moved around using a sweet of diffrent functions that are listet on the bottom of this page.</p>
+        
+        <p>For now lets start with the fundamentals: </p>
+
+        <h3>Animations: Flow and Jump</h3>
+        <p>Animations are done by calling the functions on the UI element you want to animate. The functions are called on the UI element object.</p>
+        <p>In this case we use the flow function, </p>
+
+        <pre>
+            <code class="language-python">
+my_element = pygameui.Element((250, 250), content="Im movi'n")
+my_element.flow((250, 250), (250, 400), 100)
+            </code>
+        </pre>
+
+        <p>Now the element knows that it should flow between two points, but as you've maybe noticed, it isn't doing much moving right now...</p>
+        <p>That's because we need to call the update() function on the element to make it move, put the update() function in your main loop:</p>
+        
+        <pre>
+            <code class="language-python">
+my_element.update()
+            </code>
+        </pre>
+
+        <p>Now the element should be moving between the two points.</p>
+
+        <p style="text-decoration: underline;">Final code:</p>
+
+        <pre>
+            <code class="language-python">
+import pygame, sys
+import pygameui
+
+pygame.init()
+
+win = pygame.display.set_mode((500, 500))
+
+my_element = pygameui.Element((250, 250), content="Im movi'n")
+my_element.flow((250, 250), (250, 400), 100)
+
+clock = pygame.time.Clock()
+while True:
+    win.fill((0, 0, 0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # Update element
+    my_element.update()
+
+    # Draw element
+    my_element.draw(win)
+
+    pygame.display.flip()
+    clock.tick(60)
+            </code>
+        </pre>
+
+        <p style="text-decoration: underline;">Result:</p>
+        <img class = "gif" src = "assets\\gifs\\movingElement.gif">
+
+        <p>By switching the flow() function with the jump() function, you can make the button jump between the two positions instead:</p>
+        <p>And lets decreate the iterations from 100 to 30 so it jumps a little faster.</p>
+
+        <p style="text-decoration: underline;">Final code:</p>
+
+        <pre>
+            <code class="language-python">
+import pygame, sys
+import pygameui
+
+pygame.init()
+
+win = pygame.display.set_mode((500, 500))
+
+my_element = pygameui.Element((250, 250), content="Im movi'n")
+my_element.jump((250, 250), (250, 400), 30)
+
+clock = pygame.time.Clock()
+while True:
+    win.fill((0, 0, 0))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # Update element
+    my_element.update()
+
+    # Draw element
+    my_element.draw(win)
+
+    pygame.display.flip()
+    clock.tick(60)
+            </code>
+        </pre>
+
+        <p style="text-decoration: underline;">Result:</p>
+        <img class = "gif" src = "assets\\gifs\\jumpmoving.gif">
+        <p>(The fast jumping once in a while is just the gif resetting)</p>
+
+        <hr>
+
+        <h3>Functions</h3>
 
         <table>
             <tr>
@@ -20,11 +125,11 @@
                 <th>Arguments</th>
             </tr>
             <tr><td>move_to()</td><td>Moves the element to provided x,y cordinates (instantly, no animation)</td><td>x, y</td></tr>
-            <tr><td>move()</td><td>Moves the element by x, y steps.</td><td>x, y</td></tr>
-            <tr><td>flow()</td><td>Moves the element between two points. The more iterations the slower the animation.</td><td>position1(x,y), position2(x,y), iterations</td></tr>
-            <tr><td>jump()</td><td>Jumpes the element between two points. The more iterations the longer between the jumps.</td><td>position1(x,y), position2(x,y), iterations</td></tr>
-            <tr><td>flow_toggle()</td><td>Toggles flowing.</td><td>None</td></tr>
-            <tr><td>jump_toggle()</td><td>Toggles jumping.</td><td>None</td></tr>
+            <tr><td>move()</td><td>Moves the element by x, y steps (instantly, no animation)</td><td>x, y</td></tr>
+            <tr><td>flow()</td><td>Moves the element between two points. The more iterations the slower the animation. (Requires update())</td><td>position1(x,y), position2(x,y), iterations</td></tr>
+            <tr><td>jump()</td><td>Jumpes the element between two points. The more iterations the longer between the jumps. (Requires update())</td><td>position1(x,y), position2(x,y), iterations</td></tr>
+            <tr><td>flow_toggle()</td><td>Toggles flowing on or off.</td><td>None</td></tr>
+            <tr><td>jump_toggle()</td><td>Toggles jumping on or off.</td><td>None</td></tr>
             <tr><td>update()</td><td>Every time update is called, 1 iteration for jump() and flow() is done.</td><td>None</td></tr>
         </table>
 

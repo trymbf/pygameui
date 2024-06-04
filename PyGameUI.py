@@ -333,7 +333,7 @@ class Element():
         if self.rect.collidepoint(mouse_pos):
             return True 
 
-    def is_clicked(self, button_elements: list):
+    def is_clicked(self, clickable_elements: list):
         # Get mouse pos
         mouse_pos = pygame.mouse.get_pos()
 
@@ -343,13 +343,13 @@ class Element():
             if pygame.mouse.get_pressed()[0] == 1: # == 1 is left click
                 return True
         else:
-            for element in button_elements: # Checks if user is howering any other buttons
+            for element in clickable_elements: # Checks if user is howering any other buttons
                 if element.rect.collidepoint(mouse_pos):
                     break
             else: # If not howering any other buttons: set cursor to arrow
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
-    def was_clicked(self, button_elements: list):
+    def was_clicked(self, clickable_elements: list):
         action = False
 
         # Get mouse pos
@@ -362,7 +362,7 @@ class Element():
                 self.clicked = True
                 action = True
         else:
-            for element in button_elements:
+            for element in clickable_elements:
                 if element.rect.collidepoint(mouse_pos):
                     break
             else:
