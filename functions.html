@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PyGameUI: Functions</title>
+        <link href="prism.css" rel="stylesheet" />
+        <link href="mainsite.css" rel="stylesheet">
+        <link href="prism.css" rel = "stylesheet">
+    </head>
+    <body>
+        <hr>
+        <h1>PyGameUI Documentation: All functions table</h1>
+        <a href="animations.html" class="nextbacklink">&larr;Back: Animations</a>
+        <script src="prism.js"></script>
+        <hr>
+ 
+        <h2 id="text_functions">Text</h2>
+        <table>
+            <tr>
+                <th>Function</th>
+                <th>Explanation</th>
+                <th>Arguments</th>
+            </tr>
+            <tr><td>draw()</td><td>Draws the text to provided pygame.display.</td><td>win</td></tr>
+            <tr><td style="color: rgb(177, 9, 177); font-weight: bold;">hide_toggle()</td><td>Shows/hides the text.</td><td>None</td></tr>
+            <tr><td style="color: rgb(20, 9, 177); font-weight: bold;">get_pos()</td><td>If centermode returnes center position of text, if not returnes topleft.</td><td>None</td></tr>
+            <tr><td style="color: rgb(164, 167, 11); font-weight: bold;">change()</td><td>Changes and updates provided variables.</td><td>newContent = None, newColor = None, newFontName = None, newFontSize = None</td></tr>
+            <tr><td style="color: rgb(9, 171, 177); font-weight: bold;">is_hovered()</td><td>Returnes True if the mouse cursor is hovering the text.</td><td>None</td></tr>
+            <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">move_to()</td><td>Moves the text to provided x,y cordinates (instantly, no animation)</td><td>x, y</td></tr>
+            <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">move()</td><td>Moves the text by x, y steps (instantly, no animation)</td><td>x, y</td></tr>
+            <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">flow()</td><td>Moves the text between two points. The more iterations the slower the animation. (Requires update())</td><td>position1(x,y), position2(x,y), iterations</td></tr>
+            <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">jump()</td><td>Jumpes the text between two points. The more iterations the longer between the jumps. (Requires update())</td><td>position1(x,y), position2(x,y), iterations</td></tr>
+            <tr><td style="color: rgb(177, 9, 177); font-weight: bold;">flow_toggle()</td><td>Toggles flowing on or off.</td><td>None</td></tr>
+            <tr><td style="color: rgb(177, 9, 177); font-weight: bold;">jump_toggle()</td><td>Toggles jumping on or off.</td><td>None</td></tr>
+            <tr><td style="color: rgb(177, 118, 9); font-weight: bold;">update()</td><td>Every time update is called, 1 iteration for jump() and flow() is done.</td><td>None</td></tr>
+        </table>
+        <hr>
+        <h2 id="element_functions">General element</h2>
+        <table>
+            <tr>
+                <th>Function</th>
+                <th>Explanation</th>
+                <th>Arguments</th>
+            </tr>
+            <tr><td>draw()</td><td>Draws the element to provided pygame.display.</td><td>win</td></tr>
+            <tr><td style="color: rgb(177, 9, 177); font-weight: bold;">hide_toggle()</td><td>Shows/hides the element.</td><td>None</td></tr>
+            <tr><td style="color: rgb(20, 9, 177); font-weight: bold;">get_pos()</td><td>If centermode returnes center position of element, if not returnes topleft.</td><td>None</td></tr>
+            <tr><td style="color: rgb(164, 167, 11); font-weight: bold;">change()</td><td>Changes and updates provided variables.</td><td>newContent = None, newTextColor = None, newFontName = None, newFontSize = None, newRectColor = None, newRectWidth = None, newRectHeight = None, newRectBorderRadius = None</td></tr>
+            <tr><td style="color: rgb(9, 171, 177); font-weight: bold;">is_clicked()</td><td>Returnes True if element is currently being held down by mouse.</td><td>List of clickable elements</td></tr>
+            <tr><td style="color: rgb(9, 171, 177); font-weight: bold;">was_clicked()</td><td>Returnes True if element was clicked by mouse.</td><td>List of clickable elements</td></tr>
+            <tr><td style="color: rgb(9, 171, 177); font-weight: bold;">is_hovered()</td><td>Returnes True if the mouse cursor is hovering the button.</td><td>None</td></tr>
+            <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">move_to()</td><td>Moves the element to provided x,y cordinates (instantly, no animation)</td><td>x, y</td></tr>
+            <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">move()</td><td>Moves the element by x, y steps (instantly, no animation)</td><td>x, y</td></tr>
+            <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">flow()</td><td>Moves the element between two points. The more iterations the slower the animation. (Requires update())</td><td>position1(x,y), position2(x,y), iterations</td></tr>
+            <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">jump()</td><td>Jumpes the element between two points. The more iterations the longer between the jumps. (Requires update())</td><td>position1(x,y), position2(x,y), iterations</td></tr>
+            <tr><td style="color: rgb(177, 9, 177); font-weight: bold;">flow_toggle()</td><td>Toggles flowing on or off.</td><td>None</td></tr>
+            <tr><td style="color: rgb(177, 9, 177); font-weight: bold;">jump_toggle()</td><td>Toggles jumping on or off.</td><td>None</td></tr>
+            <tr><td style="color: rgb(177, 118, 9); font-weight: bold;">update()</td><td>Every time update is called, 1 iteration for jump() and flow() is done.</td><td>None</td></tr>
+        </table>  
+    <hr>
+    <h2 id="input_functions">Input</h2>
+    <table>
+        <tr>
+            <th>Function</th>
+            <th>Explanation</th>
+            <th>Arguments</th>
+        </tr>
+        <tr><td>draw()</td><td>Draws the input element to provided pygame.display.</td><td>win</td></tr>
+        <tr><td style="color: rgb(177, 9, 177); font-weight: bold;">hide_toggle()</td><td>Shows/hides the element.</td><td>None</td></tr>
+        <tr><td style="color: rgb(164, 167, 11); font-weight: bold;">set_filter()</td><td>Filters what can be written into the element, if isAllowed is true only the characters in the filter list will be allowed (f. eks ["1", "2", "a"]), if not the filterList characters will be excluded.</td><td>filter: list, isAllowed: bool = True</td></tr>
+        <tr><td style="color: rgb(177, 118, 9); font-weight: bold;">work()</td><td>Required for the input element to work, the event argument should be pygame.event.get().</td><td>events: list, clickable_elements: list</td></tr>
+        <tr><td style="color: rgb(20, 9, 177); font-weight: bold;">get_pos()</td><td>If centermode returnes center position of element, if not returnes topleft.</td><td>None</td></tr>
+        <tr><td style="color: rgb(164, 167, 11); font-weight: bold;">change()</td><td>Changes and updates provided variables.</td><td>newContent = None, newTextColor = None, newFontName = None, newFontSize = None, newRectColor = None, newRectWidth = None, newRectHeight = None, newRectBorderRadius = None</td></tr>
+        <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">move_to()</td><td>Moves the element to provided x,y cordinates (instantly, no animation)</td><td>x, y</td></tr>
+        <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">move()</td><td>Moves the element by x, y steps (instantly, no animation)</td><td>x, y</td></tr>
+        <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">flow()</td><td>Moves the element between two points. The more iterations the slower the animation. (Requires update())</td><td>position1(x,y), position2(x,y), iterations</td></tr>
+        <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">jump()</td><td>Jumpes the element between two points. The more iterations the longer between the jumps. (Requires update())</td><td>position1(x,y), position2(x,y), iterations</td></tr>
+        <tr><td style="color: rgb(177, 9, 177); font-weight: bold;">flow_toggle()</td><td>Toggles flowing on or off.</td><td>None</td></tr>
+        <tr><td style="color: rgb(177, 9, 177); font-weight: bold;">jump_toggle()</td><td>Toggles jumping on or off.</td><td>None</td></tr>
+        <tr><td style="color: rgb(177, 118, 9); font-weight: bold;">update()</td><td>Every time update is called, 1 iteration for jump() and flow() is done.</td><td>None</td></tr>
+    </table>  
+    </body>
+
+    <footer>
+        <p>Created by: <a href="https://tbf3d.com">Trym Bringsrud Fekjær</a></p>
+    </footer>
+    <hr>
+</html>

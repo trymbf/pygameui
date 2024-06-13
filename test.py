@@ -22,9 +22,7 @@ while True:
 
     # Button click
     if button.is_clicked(clickable_elements):
-        my_element.move_to(250, 400)
-    else:
-        my_element.move_to(250, 250)
+        my_element.move_to(my_element.get_pos()[0] + 1, my_element.get_pos()[1])
 
     # Draw element
     my_element.draw(win)

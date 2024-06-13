@@ -54,6 +54,13 @@ class Text():
     def flow_toggle(self):
         self.flowing = not self.flowing
 
+    # Makes it simple to get the position of the element (center or topleft)
+    def get_pos(self):
+        if self.centerMode:
+            return self.rect.center
+        else:
+            return self.rect.topleft
+
     def change(self, newContent = None, newColor = None, newFontName = None, newFontSize = None):
         # If no new values are given, the old ones will be used
         if not newContent: newContent = self.content
@@ -233,6 +240,13 @@ class Element():
             self.rect = pygame.rect.Rect(self.x, self.y, self.rectWidth, self.rectHeight)
             self.borderRadius = rectBorderRadius
             self.rectColor = rectColor
+
+    # Makes it simple to get the position of the element (center or topleft)
+    def get_pos(self):
+        if self.centerMode:
+            return self.rect.center
+        else:
+            return self.rect.topleft
 
     # Not done pos wrong
     def change(self, newContent = None, newTextColor = None, newFontName = None, newFontSize = None, newRectColor = None, newRectWidth = None, newRectHeight = None, newRectBorderRadius = None):
@@ -531,6 +545,13 @@ class Input():
     def hide_toggle(self):
         self.hide = not self.hide
 
+    # Makes it simple to get the position of the element (center or topleft)
+    def get_pos(self):
+        if self.centerMode:
+            return self.rect.center
+        else:
+            return self.rect.topleft
+
     def jump_toggle(self):
         self.jumping = not self.jumping
     
@@ -572,7 +593,7 @@ class Input():
             else:
                 pygame.draw.rect(win, self.rectColorPassive, self.rect, self.rectBorderWidth, border_radius = self.borderRadius)
 
-    def getValue(self):
+    def get_value(self):
         return self.userText
 
     def work(self, events: list, clickable_elements: list):
