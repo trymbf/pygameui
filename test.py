@@ -5,28 +5,27 @@ pygame.init()
 
 win = pygame.display.set_mode((500, 500))
 
-my_element = pygameui.Element((250, 250), content="Im movi'n")
+# Create input element
+my_input = pygameui.Input((250, 250))
 
-# Button
-clickable_elements =[]
-button = pygameui.Element((250, 100), content="Hold me to move")
-clickable_elements.append(button)
+# Create clickable elements list
+clickable_elements = [my_input]
 
 clock = pygame.time.Clock()
 while True:
     win.fill((0, 0, 0))
-    for event in pygame.event.get():
+
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-    # Button click
-    if button.is_clicked(clickable_elements):
-        my_element.move_to(my_element.get_pos()[0] + 1, my_element.get_pos()[1])
+    # Make input element works
+    my_input.work(events, clickable_elements)
 
-    # Draw element
-    my_element.draw(win)
-    button.draw(win)
+    # Draw input element
+    my_input.draw(win)
 
     pygame.display.flip()
     clock.tick(60)
