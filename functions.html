@@ -69,6 +69,7 @@
         <tr><td style="color: rgb(164, 167, 11); font-weight: bold;">set_filter()</td><td>Filters what can be written into the element, if isAllowed is true only the characters in the filter list will be allowed (f. eks ["1", "2", "a"]), if not the filterList characters will be excluded.</td><td>filter: list, isAllowed: bool = True</td></tr>
         <tr><td style="color: rgb(177, 118, 9); font-weight: bold;">work()</td><td>Required for the input element to work, the event argument should be pygame.event.get().</td><td>events: list, clickable_elements: list</td></tr>
         <tr><td style="color: rgb(20, 9, 177); font-weight: bold;">get_pos()</td><td>If centermode returnes center position of element, if not returnes topleft.</td><td>None</td></tr>
+        <tr><td style="color: rgb(20, 9, 177); font-weight: bold;">get_value()</td><td>Returnes the text written in the input.</td><td>None</td></tr>
         <tr><td style="color: rgb(164, 167, 11); font-weight: bold;">change()</td><td>Changes and updates provided variables.</td><td>newContent = None, newTextColor = None, newFontName = None, newFontSize = None, newRectColor = None, newRectWidth = None, newRectHeight = None, newRectBorderRadius = None</td></tr>
         <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">move_to()</td><td>Moves the element to provided x,y cordinates (instantly, no animation)</td><td>x, y</td></tr>
         <tr><td style="color: rgb(93, 177, 9); font-weight: bold;">move()</td><td>Moves the element by x, y steps (instantly, no animation)</td><td>x, y</td></tr>
@@ -80,6 +81,7 @@
     </table>  
     </body>
 
+    <hr>
     <footer>
         <p>Created by: <a href="https://tbf3d.com">Trym Bringsrud Fekjær</a></p>
     </footer>
