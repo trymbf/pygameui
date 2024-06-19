@@ -9,7 +9,7 @@ from time import time
 
 pygame.init()
 
-VERSION = 1.24
+VERSION = 1.25
 
 class Text():
     def __init__(self, position: tuple, content:str, color=(255, 255, 255), centerMode = True, fontName = "freesansbold.ttf", fontSize = 20):
