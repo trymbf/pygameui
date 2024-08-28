@@ -5,10 +5,11 @@
 # ----------------------------------------------------------------
 
 import pygame, re
+from time import time
 
 pygame.init()
 
-VERSION = 1.24
+VERSION = 1.25
 
 class Text():
     def __init__(self, position: tuple, content:str, color=(255, 255, 255), centerMode = True, fontName = "freesansbold.ttf", fontSize = 20):
@@ -542,6 +543,13 @@ class Input():
         self.clicked = False
         self.active = False
 
+        # Key down
+        self.key_down_dict = {} # 
+        self.key_down_time = 0
+        self.long_press_active = False
+        self.key_down_last_frame = False
+        self.min_hold_time = .5 # The minimun time between key reaction
+
     def hide_toggle(self):
         self.hide = not self.hide
 
@@ -596,6 +604,22 @@ class Input():
     def get_value(self):
         return self.userText
 
+    def backspace(self):
+        if self.cursor_index == len(self.userText):
+            self.userText = self.userText[0: -1]
+            if self.cursor_index > 0:
+                self.cursor_index -= 1
+        elif self.cursor_index != 0:
+            self.userText = self.userText[0: self.cursor_index - 1] + self.userText[self.cursor_index:]
+            if self.cursor_index > 0:
+                self.cursor_index -= 1
+
+    def update_text(self):
+        # Update the text
+        self.userTextSurface = self.font.render(self.userText, True, self.normalTextColor) # Create surface object for the userText
+        self.userTextRect = self.userTextSurface.get_rect() # Get rect
+        self.userTextRect.center = self.rect.center
+
     def work(self, events: list, clickable_elements: list):
         # Make activating work
         # Get mouse pos
@@ -637,6 +661,26 @@ class Input():
         if pygame.mouse.get_pressed()[0] == 0: #  No mousebuttons down
             self.clicked = False
 
+        # Make backspace work
+        inputs  = pygame.key.get_pressed()
+
+        if self.active:
+            if inputs[pygame.K_BACKSPACE]:
+                if (not self.long_press_active) and (self.key_down_last_frame) and (time() - self.key_down_time > .4):
+                    self.long_press_active = True
+                    self.min_hold_time = .07
+
+                if (time() - self.key_down_time > self.min_hold_time) or not self.key_down_last_frame:
+                    self.backspace()
+                    self.update_text()
+                    self.key_down_time = time()
+                    self.key_down_last_frame = True
+            
+            else:
+                self.key_down_last_frame = False
+                self.long_press_active = False
+                self.min_hold_time = .5
+
         # Make writing work
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -660,16 +704,8 @@ class Input():
                         self.userText = self.userText[0: self.cursor_index] + pasted_text + self.userText[self.cursor_index:]
                         # Move cursor to the end of the pasted text
                         self.cursor_index += len(pasted_text)
-                    # Allow the user to remove text using backspace
                     elif event.key == pygame.K_BACKSPACE:
-                        if self.cursor_index == len(self.userText):
-                            self.userText = self.userText[0: -1]
-                            if self.cursor_index > 0:
-                                self.cursor_index -= 1
-                        elif self.cursor_index != 0:
-                            self.userText = self.userText[0: self.cursor_index - 1] + self.userText[self.cursor_index:]
-                            if self.cursor_index > 0:
-                                self.cursor_index -= 1
+                        pass
                     elif event.key == pygame.K_DELETE:
                         if self.cursor_index != len(self.userText):
                             self.userText = self.userText[0: self.cursor_index] + self.userText[self.cursor_index + 1:]
