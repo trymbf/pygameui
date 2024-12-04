@@ -22,16 +22,16 @@ def draw(win):
 
 #  Text elements
 text_elements = []
-title = pgu.Text((450, 90), "This is a title",  (244, 162, 97), fontSize = 100, fontName = "elephant")
-undertitle = pgu.Text((450, 150), "This is an undertitle", (233, 196, 106), fontSize = 20, fontName = "elephant")
+title = pgu.Text((450, 90), "This is a title",  (244, 162, 97), font_size = 100, font_name = "elephant")
+undertitle = pgu.Text((450, 150), "This is an undertitle", (233, 196, 106), font_size = 20, font_name = "elephant")
 text_elements.append(title)
 undertitle.jump((450, 150), (450, 155), 40)
 text_elements.append(undertitle)
-you_have_written = pgu.Text((450, 580), "You have written: ", (233, 196, 106), fontSize = 20)
+you_have_written = pgu.Text((450, 580), "You have written: ", (233, 196, 106), font_size = 20)
 text_elements.append(you_have_written)
 # Button elements
 clickable_elements = []
-start_button = pgu.Element((450, 300), rectWidth = 300, content = "Start!", rectColor = (233, 196, 106), textColor = (231, 111, 81), fontSize= 50)
+start_button = pgu.Element((450, 300), rect_width = 300, content = "Start!", rect_color = (233, 196, 106), text_color = (231, 111, 81), font_size= 50)
 start_button.flow((450, 305), (450, 315), 60)
 clickable_elements.append(start_button)
 
@@ -51,7 +51,7 @@ while True:
         undertitle.hide_toggle()
 
     if start_button.is_hovered():
-        start_button.change(newTextColor=(255, 255, 255), newRectColor=(231, 111, 81))
+        start_button.change(new_text_color=(255, 255, 255), new_rect_color=(231, 111, 81))
 
     you_have_written.change("Username: " + input_element.getValue())
     input_element.work(events, clickable_elements)
