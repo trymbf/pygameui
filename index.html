@@ -142,9 +142,9 @@ while True:
         <table>
             <tr><th>Argument</th><th>Explanation</th><th>Default</th></tr>
             <tr><td>color</td><td>Sets the color of the text</td><td>(255, 255, 255)</td></tr>
-            <tr><td>fontName</td><td>Sets the font for the text</td><td>freesansbold</td></tr>
-            <tr><td>fontSize</td><td>Sets the size of the font (To see available fonts use 'pygame.font.get_fonts()')</td><td>20</td></tr>
-            <tr><td>centerMode</td><td>If True the textrect's center is at the provided position, if not is the textrect's topleft used</td><td>True</td></tr>   
+            <tr><td>font_name</td><td>Sets the font for the text</td><td>freesansbold</td></tr>
+            <tr><td>font_size</td><td>Sets the size of the font (To see available fonts use 'pygame.font.get_fonts()')</td><td>20</td></tr>
+            <tr><td>center_mode</td><td>If True the textrect's center is at the provided position, if not is the textrect's topleft used</td><td>True</td></tr>
         </table>
 
         <p>To edit an optional argument just add another parameter when creating the element.<br>
@@ -167,9 +167,9 @@ pygame.init()
 win = pygame.display.set_mode((500, 500))
 
 # Adding one parameter
-example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 200), fontName = "elephant")
+example_text = pygameui.Text((200, 200), "My cool text", (255, 255, 200), font_name = "elephant")
 # Adding multiple parameters
-example_text_2 = pygameui.Text((200, 200), "My cool not centermoded text", (255, 255, 100), fontSize = 50, centerMode = False)
+example_text_2 = pygameui.Text((200, 200), "My cool not centermoded text", (255, 255, 100), font_size = 50, center_mode = False)
 
 clock = pygame.time.Clock()
 while True:
@@ -267,15 +267,15 @@ while True:
                 <th>Default</th>
             </tr>
             <tr><td>content</td><td>What the element should contain. Can either be a pygame image, a string or left as nothing.</td><td>None</td></tr>
-            <tr><td>centerMode</td><td>If True the elements center is placed on the provided position, if not the elements topleft is placed on the provided position.</td><td>True</td></tr>
-            <tr><td>centerText</td><td>Same as centerMode but only for the potensial text.</td><td>True</td></tr>
-            <tr><td>fontName</td><td>Sets the font for the potensial text. (To see available fonts use 'pygame.font.get_fonts()')</td><td>freesansbold.ttf</td></tr>
-            <tr><td>fontSize</td><td>Sets the font size for the potensial text.</td><td>50</td></tr>
-            <tr><td>textColor</td><td>Sets the text color for the potensial text.</td><td>(231, 111, 81)</td></tr>
-            <tr><td>rectWidth</td><td>Sets the width of the rectangle or image.</td><td>200</td></tr>
-            <tr><td>rectHeight</td><td>Sets the height for the rectangle or image.</td><td>75</td></tr>
-            <tr><td>rectColor</td><td>Sets a color for the rect.</td><td>(233, 196, 106)</td></tr>
-            <tr><td>rectBorderRadius</td><td>How round the rects corners should be. The higher the number, the rounder the corner.</td><td>10</td></tr>
+            <tr><td>center_mode</td><td>If True the elements center is placed on the provided position, if not the elements topleft is placed on the provided position.</td><td>True</td></tr>
+            <tr><td>center_text</td><td>Same as centerMode but only for the potensial text.</td><td>True</td></tr>
+            <tr><td>font_name</td><td>Sets the font for the potensial text. (To see available fonts use 'pygame.font.get_fonts()')</td><td>freesansbold.ttf</td></tr>
+            <tr><td>font_size</td><td>Sets the font size for the potensial text.</td><td>50</td></tr>
+            <tr><td>text_color</td><td>Sets the text color for the potensial text.</td><td>(231, 111, 81)</td></tr>
+            <tr><td>rect_width</td><td>Sets the width of the rectangle or image.</td><td>200</td></tr>
+            <tr><td>rect_height</td><td>Sets the height for the rectangle or image.</td><td>75</td></tr>
+            <tr><td>rect_color</td><td>Sets a color for the rect.</td><td>(233, 196, 106)</td></tr>
+            <tr><td>rect_border_radius</td><td>How round the rects corners should be. The higher the number, the rounder the corner.</td><td>10</td></tr>
         </table>
         
         <hr>
@@ -463,20 +463,20 @@ while True:
         
         <table>
             <tr><th>Argument</th><th>Explanation</th><th>Default</th></tr>
-            <tr><td>fontName</td><td>The font name to be used for the text in the input element. (To see available fonts use 'pygame.font.get_fonts()')</td><td>"freesansbold.ttf"</td></tr>
-            <tr><td>fontSize</td><td>The font size to be used for the text in the input element.</td><td>30</td></tr>
-            <tr><td>exampleContent</td><td>The example content to be displayed in the input element when empty and not active.</td><td>"Click me to input!"</td></tr>
-            <tr><td>prefilledContent</td><td>The prefilled content to be displayed in the input element.</td><td>""</td></tr>
-            <tr><td>characterLimit</td><td>The maximum number of characters allowed in the input element.</td><td>100</td></tr>
-            <tr><td>normalTextColor</td><td>The text color for the input element when it is not active.</td><td>(231, 111, 81)</td></tr>
-            <tr><td>exampleTextColor</td><td>The text color for the example content in the input element.</td><td>(100, 100, 100)</td></tr>
-            <tr><td>rectWidth</td><td>The width of the rectangular area of the input element.</td><td>200</td></tr>
-            <tr><td>rectHeight</td><td>The height of the rectangular area of the input element.</td><td>50</td></tr>
-            <tr><td>rectColorActive</td><td>The color of the input elements rectangular border when it is active.</td><td>(233, 196, 106)</td></tr>
-            <tr><td>rectColorPassive</td><td>The color of the input elements rectangular border when it is not active.</td><td>(200, 200, 200)</td></tr>
-            <tr><td>rectBorderRadius</td><td>The border radius of the rectangular area of the input element.</td><td>1</td></tr>
-            <tr><td>rectBorderWidth</td><td>The border width of the rectangular area of the input element.</td><td>5</td></tr>
-            <tr><td>centerMode</td><td>If True the elements center is placed on the provided position, if not the elements topleft is placed on the provided position.</td><td>True</td></tr>
+            <tr><td>font_name</td><td>The font name to be used for the text in the input element. (To see available fonts use 'pygame.font.get_fonts()')</td><td>"freesansbold.ttf"</td></tr>
+            <tr><td>font_size</td><td>The font size to be used for the text in the input element.</td><td>30</td></tr>
+            <tr><td>example_content</td><td>The example content to be displayed in the input element when empty and not active.</td><td>"Click me to input!"</td></tr>
+            <tr><td>prefilled_content</td><td>The prefilled content to be displayed in the input element.</td><td>""</td></tr>
+            <tr><td>character_limit</td><td>The maximum number of characters allowed in the input element.</td><td>100</td></tr>
+            <tr><td>normal_text_color</td><td>The text color for the input element when it is not active.</td><td>(231, 111, 81)</td></tr>
+            <tr><td>example_text_color</td><td>The text color for the example content in the input element.</td><td>(100, 100, 100)</td></tr>
+            <tr><td>rect_width</td><td>The width of the rectangular area of the input element.</td><td>200</td></tr>
+            <tr><td>rect_height</td><td>The height of the rectangular area of the input element.</td><td>50</td></tr>
+            <tr><td>rect_color_active</td><td>The color of the input elements rectangular border when it is active.</td><td>(233, 196, 106)</td></tr>
+            <tr><td>rect_color_passive</td><td>The color of the input elements rectangular border when it is not active.</td><td>(200, 200, 200)</td></tr>
+            <tr><td>rect_border_radius</td><td>The border radius of the rectangular area of the input element.</td><td>1</td></tr>
+            <tr><td>rect_border_width</td><td>The border width of the rectangular area of the input element.</td><td>5</td></tr>
+            <tr><td>center_mode</td><td>If True the elements center is placed on the provided position, if not the elements topleft is placed on the provided position.</td><td>True</td></tr>
         </table>
         <hr>
 

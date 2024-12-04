@@ -36,7 +36,7 @@ start_button.flow((450, 305), (450, 315), 60)
 clickable_elements.append(start_button)
 
 # Input elements
-input_element = pgu.Input((win_width//2, 400), exampleContent="Username")
+input_element = pgu.Input((win_width//2, 400), example_content="Username")
 clickable_elements.append(input_element)
 
 clock = pygame.time.Clock()
