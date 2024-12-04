@@ -98,7 +98,7 @@ class Element:
         return self.rect.topleft
 
     """
-    Togglers
+    Toggles
     """
 
     def toggle_display(self) -> None:
@@ -186,8 +186,8 @@ class Element:
         ent_pos_share = 1-start_pos_share
 
         # Create a list of points that the element will move to in order
-        self.move_points = [start_position for i in range(int(num_frames*start_pos_share))]
-        self.move_points += [end_position for i in range(int(num_frames*ent_pos_share))]
+        self.move_points = [start_position for _ in range(int(num_frames*start_pos_share))]
+        self.move_points += [end_position for _ in range(int(num_frames*ent_pos_share))]
 
         # If loop is True, the element will jump back to the start position after reaching the end position
         if loop:
@@ -366,5 +366,3 @@ class Image(Element):
             return
 
         surface.blit(self.image, self.rect)
-
-
