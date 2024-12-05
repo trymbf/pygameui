@@ -5,7 +5,7 @@ pygame.init()
 
 win = pygame.display.set_mode((500, 500))
 
-test = pygameui.Element((100, 100), 100, 100, (255, 0, 0))
+test = pygameui.Input((0, 0), hint="Type here")
 
 clock = pygame.time.Clock()
 while True:

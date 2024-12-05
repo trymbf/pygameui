@@ -239,6 +239,20 @@ class Element:
 
         return False
 
+    def is_clicked(self):
+        """
+        Returns if the element is clicked.
+        """
+        # Get mouse pos
+        mouse_pos = pygame.mouse.get_pos()
+
+        # Check mouse over and clicked conditions
+        if self.rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0] == 1:  # == 1 is left click
+                return True
+
+        return False
+
     """
     Basic functions
     """
@@ -267,9 +281,13 @@ class Text(Element):
     """
     def __init__(self,
                  position: tuple[int, int],
-                 content: str, color: tuple[int, int, int] = (255, 255, 255),
+                 content: str,
+                 color: tuple[int, int, int] = (255, 255, 255),
+                 font_size: int = 20,
                  font_family: str = "Arial",
-                 centered: bool = False, font_size: int = 20):
+                 width: int = 0,
+                 height: int = 0,
+                 centered: bool = False):
         """
         Create a text element
         :param position: Where the text will be positioned
@@ -278,6 +296,8 @@ class Text(Element):
         :param centered: If the text will be centered in the position
         :param font_size: The size of the font
         :param font_family: What font family the text will use
+        :param width: Width of the text element, 0 indicates that the width will be the width of the text.
+        :param height: Height of the text element, 0 indicates that the height will be the width of the text.
         """
         # Text attributes
         self.content = content
@@ -285,7 +305,11 @@ class Text(Element):
         self.font_family = font_family
 
         # Get the dimensions of the text
-        text_dimensions = self.get_text_rect_dimensions()
+        if width != 0 and height != 0:
+            text_dimensions = (width, height)
+        else:
+            text_dimensions = self.get_text_rect_dimensions()
+
         super().__init__(position, text_dimensions[0], text_dimensions[1], color, centered)
 
         # Render text
@@ -366,3 +390,40 @@ class Image(Element):
             return
 
         surface.blit(self.image, self.rect)
+
+class Input(Text):
+    def __init__(self,
+                 position: tuple [int, int],
+                 width: int = 200,
+                 height: int = 50,
+                 passive_text_color: tuple[int, int, int] = (150, 150, 150),
+                 active_text_color: tuple[int, int, int] = (255, 255, 255),
+                 passive_border_color: tuple[int, int, int] = (100, 100, 100),
+                 active_border_color: tuple[int, int, int] = (200, 200, 200),
+                 border_radius: int = 0,
+                 border_width: int = 2,
+                 font_size: int = 20,
+                 font_family: str = "Arial",
+                 hint: str = "",
+                 centered: bool = False):
+
+        super().__init__(position, content=hint, color=passive_text_color, font_size=font_size, font_family=font_family, width=width, height=height, centered=centered)
+
+        # Visual attributes
+        self.passive_text_color = passive_text_color
+        self.active_text_color = active_text_color
+        self.passive_border_color = passive_border_color
+        self.active_border_color = active_border_color
+        self.border_radius = border_radius
+        self.border_width = border_width
+
+        # States
+        self.active = False
+
+    def draw(self, surface: pygame.surface):
+        super().draw(surface)
+
+        if self.active:
+            pygame.draw.rect(surface, self.active_border_color, self.rect, self.border_width, border_radius=self.border_radius)
+        else:
+            pygame.draw.rect(surface, self.passive_border_color, self.rect, self.border_width, border_radius=self.border_radius)
