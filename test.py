@@ -5,11 +5,7 @@ pygame.init()
 
 win = pygame.display.set_mode((500, 500))
 
-# Create input element
-my_input = pygameui.Input((250, 250))
-
-# Create clickable elements list
-clickable_elements = [my_input]
+test = pygameui.Input((0, 0), hint="Type here")
 
 clock = pygame.time.Clock()
 while True:
@@ -21,11 +17,8 @@ while True:
             pygame.quit()
             sys.exit()
 
-    # Make input element works
-    my_input.work(events, clickable_elements)
-
-    # Draw input element
-    my_input.draw(win)
+    test.draw(win)
+    test.update()
 
     pygame.display.flip()
     clock.tick(60)
