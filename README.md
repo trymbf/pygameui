@@ -33,19 +33,16 @@ A class for creating input fields. It extends the `Text` class and adds input-sp
 ### Button
 A class for creating buttons. It extends the `Element` class and adds button-specific attributes and methods.
 
-## Creating Custom Elements
-You can create custom UI elements by extending the base `Element` class. Here is an example of a custom element:
+## Learn more in the docs!
+- [Getting Started](docs/getting-started.md)
+- [Components Guide](docs/components/index.md)
+- [Basic Tutorial](docs/tutorials/basic.md)
+- [Animation Guide](docs/features/animation.md)
 
-```python
-class CustomElement(pygameui.Element):
-    def __init__(self, position, width, height, color):
-        super().__init__(position, width, height, color)
 
-    def draw(self, surface):
-        super().draw(surface)
-        # Add custom drawing code here
+## Quick Links
+- [Examples](docs/examples/index.md)
+- [Gallery](docs/examples/gallery.md)
 
-    def update(self):
-        super().update()
-        # Add custom update code here
-```
+## Getting Help
+- [GitHub Issues](https://github.com/trymbf/pygameui/issues)
