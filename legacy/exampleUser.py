@@ -1,5 +1,5 @@
-import pygame, sys, string
-import pygameuiOLD as pgu
+import pygame, sys
+from legacy import pygameuiOLD as pgu
 
 pygame.init()
 
