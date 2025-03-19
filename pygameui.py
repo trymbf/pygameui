@@ -51,6 +51,9 @@ class Element:
         # Framerate
         self.framerate = 60
 
+        # Clicked
+        self.clicked = False
+
 
     """
     Setters
@@ -249,9 +252,21 @@ class Element:
         # Check mouse over and clicked conditions
         if self.rect.collidepoint(mouse_pos):
             if pygame.mouse.get_pressed()[0] == 1:  # == 1 is left click
+                self.clicked = True
                 return True
 
         return False
+
+    def was_clicked(self):
+        """
+        Returnes true if the element was clicked and then released
+        """
+        if self.is_clicked():
+            return
+
+        if self.clicked:
+            self.clicked = False
+            return True
 
     """
     Basic functions
@@ -303,6 +318,7 @@ class Text(Element):
         self.content = content
         self.font_size = font_size
         self.font_family = font_family
+        self.font = pygame.font.SysFont(self.font_family, self.font_size)
 
         # Get the dimensions of the text
         if width != 0 and height != 0:
@@ -310,7 +326,7 @@ class Text(Element):
         else:
             text_dimensions = self.get_text_rect_dimensions()
 
-        super().__init__(position, text_dimensions[0], text_dimensions[1], color, centered)
+        super().__init__(position, width=text_dimensions[0], height=text_dimensions[1], color=color, centered=centered)
 
         # Render text
         self.text_surface = self.render_text()
@@ -336,6 +352,24 @@ class Text(Element):
         text_surface = font.render(self.content, True, self.color)
         return text_surface
 
+    def change_text(self, new_text: str) -> None:
+        """
+        Change the text of the element
+        :param new_text: str with the new text
+        :return: None
+        """
+        self.content = new_text
+        self.text_surface = self.render_text()
+
+    def change_text_color(self, new_color: tuple[int, int, int]) -> None:
+        """
+        Change the color of the text
+        :param new_color: tuple[int, int, int] with the new color
+        :return: None
+        """
+        self.color = new_color
+        self.text_surface = self.render_text()
+
     def draw(self, surface: pygame.Surface) -> None:
         """
         Draw the text in the surface
@@ -346,7 +380,13 @@ class Text(Element):
         if not self.display:
             return
 
-        surface.blit(self.text_surface, self.rect)
+        rect = self.text_surface.get_rect()
+        if self.centered:
+            rect.center = self.rect.center
+        else:
+            rect.topleft = self.rect.topleft
+
+        surface.blit(self.text_surface, rect)
 
 class Image(Element):
     """
@@ -392,6 +432,9 @@ class Image(Element):
         surface.blit(self.image, self.rect)
 
 class Input(Text):
+    """
+    Input element that can be displayed
+    """
     def __init__(self,
                  position: tuple [int, int],
                  width: int = 200,
@@ -406,8 +449,30 @@ class Input(Text):
                  font_family: str = "Arial",
                  hint: str = "",
                  centered: bool = False):
+        """
+        Create an input element
+        :param position: Where the input will be positioned
+        :param width: Width of the input
+        :param height: Height of the input
+        :param passive_text_color: Color of the text when the input is not active
+        :param active_text_color: Color of the text when the input is active
+        :param passive_border_color: Color of the border when the input is not active
+        :param active_border_color: Color of the border when the input is active
+        :param border_radius: Radius of the border
+        :param border_width: Width of the border
+        :param font_size: Size of the font
+        :param font_family: Font family of the text
+        :param hint: Hint of the input
+        """
 
-        super().__init__(position, content=hint, color=passive_text_color, font_size=font_size, font_family=font_family, width=width, height=height, centered=centered)
+        super().__init__(position,
+                         content=hint,
+                         color=passive_text_color,
+                         font_size=font_size,
+                         font_family=font_family,
+                         width=width,
+                         height=height,
+                         centered=centered)
 
         # Visual attributes
         self.passive_text_color = passive_text_color
@@ -417,13 +482,246 @@ class Input(Text):
         self.border_radius = border_radius
         self.border_width = border_width
 
+        # Text attributes
+        self.hint = hint
+        self.text = ""
+
         # States
         self.active = False
 
+        # Filer
+        self.filter = None
+        self.filter_mode_exclude = True
+
+        # Keys
+        self.exclude_keys = [pygame.KMOD_SHIFT, pygame.KMOD_CAPS, pygame.K_CAPSLOCK, pygame.K_LSHIFT, pygame.K_RSHIFT]
+        self.exit_keys = [pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_TAB, pygame.K_ESCAPE]
+
+        # Cursor
+        self.cursor = False
+        self.cursor_index = 0
+
+    """
+    Getters
+    """
+
+    def get_text(self):
+        """
+        Get the text of the input
+        """
+        return self.text
+
+    """
+    Filter
+    """
+
+    def set_filter(self, new_filter: str, exclude_mode: bool = True) -> None:
+        """
+        Set the filter of the input
+        :param new_filter: str with the new filter
+        :param exclude_mode: If the true, the filter will exclude the characters in the filter, if false, the filter will only allow characters in the filter
+        """
+        self.filter = new_filter
+        self.filter_mode_exclude = exclude_mode
+
+    def allow_key(self, key: str):
+        """
+        Check if the key is allowed by the filter
+        :param key: str with the key to be checked
+        """
+        if not self.filter:
+            return True
+
+        if self.filter_mode_exclude:
+            if key not in self.filter:
+                return True
+        else:
+            if key in self.filter:
+                return True
+
+        return False
+
+    """
+    Typing
+    """
+    def handle_keys(self, events: list) -> None:
+        """
+        Handle the typing of the input
+        :param events: list with the events
+        """
+        for event in events:
+            if event.type != pygame.KEYDOWN:
+                continue
+            elif event.key in self.exit_keys:
+                self.active = False
+            elif event.key in self.exclude_keys:
+                continue
+            elif event.key == pygame.K_RIGHT:
+                if self.cursor_index >= len(self.text):
+                    continue
+                self.cursor_index += 1
+            elif event.key == pygame.K_LEFT:
+                if self.cursor_index <= 0:
+                    continue
+                self.cursor_index -= 1
+            elif event.key == pygame.K_BACKSPACE:
+                if self.cursor_index == 0:
+                    continue
+
+                self.text = self.text[:self.cursor_index-1] + self.text[self.cursor_index:]
+                self.cursor_index -= 1
+            elif event.key == pygame.K_DELETE:
+                if self.cursor_index == len(self.text):
+                    continue
+
+                self.text = self.text[:self.cursor_index] + self.text[self.cursor_index+1:]
+            else:
+                if not self.allow_key(event.unicode):
+                    continue
+
+                self.text = self.text[:self.cursor_index] + event.unicode + self.text[self.cursor_index:]
+                self.cursor_index += 1
+
+        self.change_text(self.text)
+
+    def draw_cursor(self, surface: pygame.Surface):
+        """
+        Draw the cursor
+        :param surface: pygame.Surface where the cursor will be drawn
+        """
+        if not self.cursor:
+            return
+
+        font = pygame.font.SysFont(self.font_family, self.font_size)
+        cursor_surface = font.render("|", True, self.active_text_color)
+
+        text_to_cursor = Text(self.get_position(), self.text[:self.cursor_index], self.active_text_color,
+                              self.font_size, self.font_family, self.centered)
+
+        cursor_position = (self.rect.x + text_to_cursor.rect.width, self.rect.y)
+
+        if self.centered:
+            print((self.rect.width - self.get_text_rect_dimensions()[0])//2)
+            cursor_position = (self.rect.x + (self.rect.width - self.get_text_rect_dimensions()[0]), self.rect.centery - text_to_cursor.rect.height//2)
+
+        surface.blit(cursor_surface, cursor_position)
+
+    """
+    Basic functions
+    """
+
     def draw(self, surface: pygame.surface):
+        """
+        Draw the input and the cursor
+        :param surface: pygame.Surface where the input will be drawn
+        """
         super().draw(surface)
 
         if self.active:
+            self.draw_cursor(surface)
             pygame.draw.rect(surface, self.active_border_color, self.rect, self.border_width, border_radius=self.border_radius)
         else:
             pygame.draw.rect(surface, self.passive_border_color, self.rect, self.border_width, border_radius=self.border_radius)
+
+    def update(self, events: list) -> None:
+        """
+        Update the input
+        :param events: list with the events
+        """
+        super().update()
+
+        # Check if the input was clicked
+        if self.was_clicked():
+            self.active = True
+        # Check if the input was clicked outside, if so, deactivate it
+        elif self.active:
+            self.handle_keys(events)
+            if pygame.mouse.get_pressed()[0] == 1 and not self.is_clicked():
+                self.active = False
+                if self.text != "":
+                    self.change_text(self.text)
+                else:
+                    self.change_text(self.hint)
+
+class Button(Element):
+    """
+    Button element that can be displayed
+    """
+    def __init__(self,
+                 position: tuple[int, int],
+                 width: int = 200,
+                 height: int = 50,
+                 border_radius: int = 10,
+                 content: str = "Click me.",
+                 color: tuple[int, int, int] = (255, 255, 255),
+                 hover_color: tuple[int, int, int] = (200, 200, 200),
+                 click_color: tuple[int, int, int] = (150, 150, 150),
+                 text_color: tuple[int, int, int] = (100, 100, 100),
+                 text_hover_color: tuple[int, int, int] = (0, 0, 0),
+                 text_click_color: tuple[int, int, int] = (0, 0, 0),
+                 font_size: int = 20,
+                 font_family: str = "Arial",
+                 centered: bool = False):
+        """
+        Create a button element
+        :param position: Where the button will be positioned
+        :param width: Width of the button
+        :param height: Height of the button
+        :param content: Text of the button
+        :param color: Color of the button
+        :param hover_color: Color of the button when hovered
+        :param click_color: Color of the button when clicked
+        :param font_size: Size of the font
+        :param font_family: Font family of the text
+        :param centered: If the button will be centered in the position
+        """
+
+        super().__init__(position, width, height, color, border_radius, centered)
+
+        self.text_object = Text(position, content, text_color, font_size, font_family, width, height, centered)
+
+        # Button attributes
+        self.text = content
+        self.color = color
+        self.hover_color = hover_color
+        self.click_color = click_color
+        self.border_radius = border_radius
+
+        # Text attributes
+        self.text_color = text_color
+        self.text_hover_color = text_hover_color
+        self.text_click_color = text_click_color
+
+        # States
+        self.hovered = False
+        self.clicked = False
+
+    def draw(self, surface: pygame.Surface) -> None:
+        """
+        Draw the button
+        :param surface: pygame.Surface where the button will be drawn
+        """
+        if not self.display:
+            return
+
+        if self.clicked:
+            pygame.draw.rect(surface, self.click_color, self.rect, border_radius=self.border_radius)
+            self.text_object.change_text_color(self.text_click_color)
+        elif self.hovered:
+            pygame.draw.rect(surface, self.hover_color, self.rect, border_radius=self.border_radius)
+            self.text_object.change_text_color(self.text_hover_color)
+        else:
+            pygame.draw.rect(surface, self.color, self.rect, border_radius=self.border_radius)
+            self.text_object.change_text_color(self.text_color)
+
+        self.text_object.draw(surface)
+
+    def update(self) -> None:
+        """
+        Update the button,
+        Collects the events and updates the button
+        """
+        self.text_object.update()
+
+        # Check if the button is hovered
+        self.hovered = self.is_hovered()
