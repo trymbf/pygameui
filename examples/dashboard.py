@@ -82,7 +82,7 @@ while run:
 
     if logout_btn.was_clicked():
         status.change_text("Logging out...")
-        status.change_text_color(ERROR_COLOR)
+        status.set_text_color(ERROR_COLOR)
 
     if clear_notif_btn.was_clicked():
         notif1.change_text("No new notifications")

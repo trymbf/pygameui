@@ -92,8 +92,8 @@ def perform_attack():
     global health, mana, gold, experience
     
     # Update combat log
-    log_entry3.change_text(log_entry2.content)
-    log_entry2.change_text(log_entry1.content)
+    log_entry3.change_text(log_entry2._content)
+    log_entry2.change_text(log_entry1._content)
     log_entry1.change_text("You attack! Damage dealt!")
     
     # Simulate battle effects
@@ -111,14 +111,14 @@ def cast_spell():
     global health, mana, gold, experience
     
     if mana < 15:
-        log_entry3.change_text(log_entry2.content)
-        log_entry2.change_text(log_entry1.content)
+        log_entry3.change_text(log_entry2._content)
+        log_entry2.change_text(log_entry1._content)
         log_entry1.change_text("Not enough mana!")
         return
     
     # Update combat log
-    log_entry3.change_text(log_entry2.content)
-    log_entry2.change_text(log_entry1.content)
+    log_entry3.change_text(log_entry2._content)
+    log_entry2.change_text(log_entry1._content)
     log_entry1.change_text("You cast a spell! Critical hit!")
     
     # Simulate battle effects
@@ -136,14 +136,14 @@ def use_item():
     global health, mana, gold
     
     if gold < 50:
-        log_entry3.change_text(log_entry2.content)
-        log_entry2.change_text(log_entry1.content)
+        log_entry3.change_text(log_entry2._content)
+        log_entry2.change_text(log_entry1._content)
         log_entry1.change_text("Not enough gold!")
         return
     
     # Update combat log
-    log_entry3.change_text(log_entry2.content)
-    log_entry2.change_text(log_entry1.content)
+    log_entry3.change_text(log_entry2._content)
+    log_entry2.change_text(log_entry1._content)
     log_entry1.change_text("You used a health potion!")
     
     # Simulate item use
@@ -156,8 +156,8 @@ def use_item():
 
 def attempt_run():
     # Update combat log
-    log_entry3.change_text(log_entry2.content)
-    log_entry2.change_text(log_entry1.content)
+    log_entry3.change_text(log_entry2._content)
+    log_entry2.change_text(log_entry1._content)
     
     if random.random() > 0.5:
         log_entry1.change_text("You escaped successfully!")
@@ -177,14 +177,14 @@ def update_stats():
     gold_text.change_text(f"Gold: {gold}")
     
     # Update bar elements - adjust width and position
-    health_bar.rect.width = (health/max_health) * 200
-    health_bar.rect.centerx = 200 - (200-(health/max_health*200))/2
+    health_bar._rect.width = (health/max_health) * 200
+    health_bar._rect.centerx = 200 - (200-(health/max_health*200))/2
     
-    mana_bar.rect.width = (mana/max_mana) * 200
-    mana_bar.rect.centerx = 480 - (200-(mana/max_mana*200))/2
+    mana_bar._rect.width = (mana/max_mana) * 200
+    mana_bar._rect.centerx = 480 - (200-(mana/max_mana*200))/2
     
-    xp_bar.rect.width = (experience/max_experience) * 600
-    xp_bar.rect.centerx = 400 - (600-(experience/max_experience*600))/2
+    xp_bar._rect.width = (experience/max_experience) * 600
+    xp_bar._rect.centerx = 400 - (600-(experience/max_experience*600))/2
 
 # Main game loop
 running = True

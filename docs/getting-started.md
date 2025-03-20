@@ -20,10 +20,10 @@ import pygameui
 
 # Initialize
 pygame.init()
-screen = pygame.display.set_mode((width, height))
+screen = pygame.display.set_mode((800, 600)) # Set your own width and height
 
 # Create UI elements
-ui_element = pygameui.Element(position=(x, y))
+ui_element = pygameui.Element(position=(250, 250), width=200, height=50)
 
 # Main loop
 running = True
@@ -35,7 +35,7 @@ while running:
             running = False
 
     # Reset screen
-    screen.fill(background_color)
+    screen.fill((0,0,0))
   
     # Update element, moves, checks actions etc
     ui_element.update()
@@ -50,7 +50,9 @@ while running:
 To add more UI elements, simply create more instances of the `Element` class or its subclasses (like `Button`, `Text`, etc.) and follow the same pattern.
 
 ## Example create text
+
 First create a text object:
+
 ```python
 my_text = pygameui.Text(
     text="Hello World", 
@@ -61,6 +63,7 @@ my_text = pygameui.Text(
 ```
 
 And then in the main loop, you would call:
+
 ```python
 my_text.update()
 my_text.draw(screen)

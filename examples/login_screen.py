@@ -72,10 +72,10 @@ def attempt_login():
     
     if username == "admin" and password == "password":
         status_msg.change_text("Login successful!")
-        status_msg.change_text_color(SUCCESS_COLOR)
+        status_msg.set_text_color(SUCCESS_COLOR)
     else:
         status_msg.change_text("Invalid username or password")
-        status_msg.change_text_color(ERROR_COLOR)
+        status_msg.set_text_color(ERROR_COLOR)
 
 # Main game loop
 running = True

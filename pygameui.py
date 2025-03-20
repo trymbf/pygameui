@@ -7,10 +7,11 @@
 """
 
 import pygame
+import re
 
 pygame.init()
 
-VERSION = 2.00
+VERSION = "2.1.0"
 
 class Element:
     """
@@ -32,28 +33,27 @@ class Element:
         :param centered: If the element will be centered in the position
         """
         # Basic attributes
-        self.rect = pygame.Rect(position, (width, height))
-        self.border_radius = border_radius
-        self.color = color
-        self.display = True
+        self._rect = pygame.Rect(position, (width, height))
+        self._border_radius = border_radius
+        self._color = color
+        self._display = True
         # Centered attribute, if True, the element will be centered in the position
-        self.centered = centered
-        if self.centered:
-            self.rect.center = position
+        self._centered = centered
+        if self._centered:
+            self._rect.center = position
 
         # Movement attributes
-        self.is_moving = False
-        self.loop = False
-        self.move_point_index = 0
+        self._is_moving = False
+        self._loop = False
+        self._move_point_index = 0
         # Move points is a list of tuples with the points that the element will move to in order
-        self.move_points = []
+        self._move_points = []
 
         # Framerate
-        self.framerate = 60
+        self._framerate = 60
 
         # Clicked
-        self.clicked = False
-
+        self._clicked = False
 
     """
     Setters
@@ -65,10 +65,10 @@ class Element:
         :param position: tuple[int, int] with the new position
         :return: None
         """
-        if self.centered:
-            self.rect.center = position
+        if self._centered:
+            self._rect.center = position
         else:
-            self.rect.topleft = position
+            self._rect.topleft = position
 
     def set_framerate(self, framerate: int) -> None:
         """
@@ -76,7 +76,7 @@ class Element:
         :param framerate: int with the new framerate
         :return: None
         """
-        self.framerate = framerate
+        self._framerate = framerate
 
     def set_display(self, display: bool) -> None:
         """
@@ -84,7 +84,23 @@ class Element:
         :param display: bool with the new display value
         :return: None
         """
-        self.display = display
+        self._display = display
+
+    def set_color(self, color: tuple[int, int, int]) -> None:
+        """
+        Set the color of the element
+        :param color: tuple[int, int, int] with the new color
+        :return: None
+        """
+        self._color = color
+
+    def set_border_radius(self, border_radius: int) -> None:
+        """
+        Set the border radius of the element
+        :param border_radius: int with the new border radius
+        :return: None
+        """
+        self._border_radius = border_radius
 
     """
     Getters
@@ -95,10 +111,10 @@ class Element:
         Get the position of the element
         :return: tuple[int, int] with the position of the element
         """
-        if self.centered:
-            return self.rect.center
+        if self._centered:
+            return self._rect.center
 
-        return self.rect.topleft
+        return self._rect.topleft
 
     """
     Toggles
@@ -109,7 +125,7 @@ class Element:
         Toggle the display of the element
         :return: None
         """
-        self.display = not self.display
+        self._display = not self._display
 
     """
     Movement functions
@@ -120,19 +136,19 @@ class Element:
         Start the movement of the element
         :return: None
         """
-        self.is_moving = True
+        self._is_moving = True
 
     def stop_move(self) -> None:
         """
         Stop the movement of the element
         :return: None
         """
-        self.is_moving = False
+        self._is_moving = False
 
     # TODO - Fix the framerate of the movement so it actually takes the time to move from start to end position
     def flow(self,
-             start_position: [int, int],
-             end_position: [int, int],
+             start_position: tuple[int, int],
+             end_position: tuple[int, int],
              time: int,
              loop: bool = False) -> None:
 
@@ -145,29 +161,29 @@ class Element:
         :return: None
         """
         # Calculate the number of frames
-        num_frames = time // (1000 // self.framerate)
+        num_frames = time // (1000 // self._framerate)
         # Calculate the distance between the start and end positions
         distance = [end_position[0] - start_position[0], end_position[1] - start_position[1]]
         # Calculate the speed of the element per frame
         speed = [distance[0] / num_frames, distance[1] / num_frames]
         # Create a list of points that the element will move to in order
-        self.move_points = [[start_position[0] + speed[0] * i, start_position[1] + speed[1] * i] for i in
+        self._move_points = [[start_position[0] + speed[0] * i, start_position[1] + speed[1] * i] for i in
                             range(num_frames)]
-        self.move_points.append(end_position)
+        self._move_points.append(end_position)
 
         # If loop is True, the element will move back to the start position after reaching the end position
         if loop:
-            self.loop = True
-            self.move_point_index = 0
+            self._loop = True
+            self._move_point_index = 0
             # Reverse the list of points so the element moves back to the start position
-            self.move_points += reversed(self.move_points)
+            self._move_points += reversed(self._move_points)
 
         self.start_move()
 
     # TODO - Fix the framerate of the jumping so it actually takes the time to jump from start to end position
     def jump(self,
-             start_position: [int, int],
-             end_position: [int, int],
+             start_position: tuple[int, int],
+             end_position: tuple[int, int],
              time: int,
              loop: bool = False,
              ratio: float = 1) -> None:
@@ -182,43 +198,43 @@ class Element:
         :return:
         """
         # Calculate the number of frames
-        num_frames = time // (1000 // self.framerate)
+        num_frames = time // (1000 // self._framerate)
 
         # Calculate ratio
         start_pos_share = 0.5*ratio
         ent_pos_share = 1-start_pos_share
 
         # Create a list of points that the element will move to in order
-        self.move_points = [start_position for _ in range(int(num_frames*start_pos_share))]
-        self.move_points += [end_position for _ in range(int(num_frames*ent_pos_share))]
+        self._move_points = [start_position for _ in range(int(num_frames*start_pos_share))]
+        self._move_points += [end_position for _ in range(int(num_frames*ent_pos_share))]
 
         # If loop is True, the element will jump back to the start position after reaching the end position
         if loop:
-            self.loop = True
-            self.move_point_index = 0
-            self.move_points += reversed(self.move_points)
+            self._loop = True
+            self._move_point_index = 0
+            self._move_points += reversed(self._move_points)
 
         self.start_move()
 
-    def update_movement(self) -> None:
+    def _update_movement(self) -> None:
         """
         Update the movement of the element
         :return: None
         """
-        if not self.is_moving:
+        if not self._is_moving:
             return
 
-        if self.loop:
-            point_to_move_to = self.move_points[self.move_point_index]
-            self.move_point_index += 1
+        if self._loop:
+            point_to_move_to = self._move_points[self._move_point_index]
+            self._move_point_index += 1
 
-            if self.move_point_index >= len(self.move_points):
-                self.move_point_index = 0
+            if self._move_point_index >= len(self._move_points):
+                self._move_point_index = 0
 
         else:
-            point_to_move_to = self.move_points.pop(0)
-            if not self.move_points:
-                self.is_moving = False
+            point_to_move_to = self._move_points.pop(0)
+            if not self._move_points:
+                self._is_moving = False
 
         self.set_position(point_to_move_to)
 
@@ -237,35 +253,37 @@ class Element:
         mouse_pos = pygame.mouse.get_pos()
 
         # Check mouse over and clicked conditions
-        if self.rect.collidepoint(mouse_pos):
+        if self._rect.collidepoint(mouse_pos):
             return True
 
         return False
 
-    def is_clicked(self):
+    def is_clicked(self, button: int = 1):
         """
         Returns if the element is clicked.
+        :param button: The button that will be used to click the element, default is left click
+        :return: True if the element is clicked, False otherwise
         """
         # Get mouse pos
         mouse_pos = pygame.mouse.get_pos()
 
         # Check mouse over and clicked conditions
-        if self.rect.collidepoint(mouse_pos):
-            if pygame.mouse.get_pressed()[0] == 1:  # == 1 is left click
-                self.clicked = True
+        if self._rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0] == button:
+                self._clicked = True
                 return True
 
         return False
 
     def was_clicked(self):
         """
-        Returnes true if the element was clicked and then released
+        Returnes true if the element was left clicked and then released
         """
         if self.is_clicked():
             return
 
-        if self.clicked:
-            self.clicked = False
+        if self._clicked:
+            self._clicked = False
             return True
 
     """
@@ -278,17 +296,17 @@ class Element:
         :param surface: pygame.Surface where the element will be drawn
         :return: None
         """
-        if not self.display:
+        if not self._display:
             return
 
-        pygame.draw.rect(surface, self.color, self.rect, border_radius = self.border_radius)
+        pygame.draw.rect(surface, self._color, self._rect, border_radius = self._border_radius)
 
-    def update(self) -> None:
+    def update(self, _=None) -> None:
         """
         Update the element
         :return: None
         """
-        self.update_movement()
+        self._update_movement()
 
 class Text(Element):
     """
@@ -302,26 +320,29 @@ class Text(Element):
                  font_family: str = "Arial",
                  width: int = 0,
                  height: int = 0,
+                 anti_aliasing: bool = True,
                  centered: bool = False):
         """
         Create a text element
         :param position: Where the text will be positioned
         :param content: The text displayed
         :param color: The text color
-        :param centered: If the text will be centered in the position
         :param font_size: The size of the font
         :param font_family: What font family the text will use
         :param width: Width of the text element, 0 indicates that the width will be the width of the text.
         :param height: Height of the text element, 0 indicates that the height will be the width of the text.
+        :param anti_aliasing: If the text will be anti aliased
+        :param centered: If the text will be centered in the position
         """
         # Text attributes
-        self.content = content
-        self.font_size = font_size
-        self.font_family = font_family
-        self.font = pygame.font.SysFont(self.font_family, self.font_size)
+        self._content = content
+        self._font_size = font_size
+        self._font_family = font_family
+        self._font = pygame.font.SysFont(self._font_family, self._font_size)
+        self._anti_aliasing = anti_aliasing
 
         # Get the dimensions of the text
-        if width != 0 and height != 0:
+        if width and height:
             text_dimensions = (width, height)
         else:
             text_dimensions = self.get_text_rect_dimensions()
@@ -329,47 +350,81 @@ class Text(Element):
         super().__init__(position, width=text_dimensions[0], height=text_dimensions[1], color=color, centered=centered)
 
         # Render text
-        self.text_surface = self.render_text()
+        self._text_surface = self._render_text()
+
+    """
+    Getters
+    """
 
     def get_text_rect_dimensions(self) -> tuple[int, int]:
         """
         Get the dimensions of the text, width and height
         :return: tuple[int, int] with the width and height of the text
         """
-        font = pygame.font.SysFont(self.font_family, self.font_size)
-        text_surface = font.render(self.content, True, (255, 255, 255))
+        font = pygame.font.SysFont(self._font_family, self._font_size)
+        text_surface = font.render(self._content, True, (255, 255, 255))
 
         rect = text_surface.get_rect()
         return rect.width, rect.height
 
-    def render_text(self) -> pygame.Surface:
-        """
-        Render the text
-        :return: pygame.Surface with the rendered text
-'       """
+    """
+    Setters
+    """
 
-        font = pygame.font.SysFont(self.font_family, self.font_size)
-        text_surface = font.render(self.content, True, self.color)
-        return text_surface
-
-    def change_text(self, new_text: str) -> None:
+    def set_content(self, new_content: str) -> None:
         """
         Change the text of the element
         :param new_text: str with the new text
         :return: None
         """
-        self.content = new_text
-        self.text_surface = self.render_text()
+        self._content = new_content
+        self._text_surface = self._render_text()
 
-    def change_text_color(self, new_color: tuple[int, int, int]) -> None:
+    def set_color(self, new_color: tuple[int, int, int]) -> None:
         """
         Change the color of the text
         :param new_color: tuple[int, int, int] with the new color
         :return: None
         """
-        self.color = new_color
-        self.text_surface = self.render_text()
 
+        self._color = new_color
+        self._text_surface = self._render_text() # Update the text surface with the new color
+
+    def set_font_size(self, new_size: int) -> None:
+        """
+        Change the size of the font
+        :param new_size: int with the new size
+        :return: None
+        """
+        self._font_size = new_size
+        self._text_surface = self._render_text()
+    
+    def set_font_family(self, new_family: str) -> None:
+        """
+        Change the font family of the text
+        :param new_family: str with the new font family
+        :return: None
+        """
+        self._font_family = new_family
+        self._text_surface = self._render_text()
+
+    """
+    Internal functions
+    """
+
+    def _render_text(self) -> pygame.Surface:
+        """
+        Render the text
+        :return: pygame.Surface with the rendered text
+'       """
+
+        font = pygame.font.SysFont(self._font_family, self._font_size)
+        text_surface = font.render(self._content, self._anti_aliasing, self._color)
+        return text_surface
+    
+    """
+    Basic functions
+    """
     def draw(self, surface: pygame.Surface) -> None:
         """
         Draw the text in the surface
@@ -377,16 +432,16 @@ class Text(Element):
         :return: None
         """
 
-        if not self.display:
+        if not self._display:
             return
 
-        rect = self.text_surface.get_rect()
-        if self.centered:
-            rect.center = self.rect.center
+        rect = self._text_surface.get_rect()
+        if self._centered:
+            rect.center = self._rect.center
         else:
-            rect.topleft = self.rect.topleft
+            rect.topleft = self._rect.topleft
 
-        surface.blit(self.text_surface, rect)
+        surface.blit(self._text_surface, rect)
 
 class Image(Element):
     """
@@ -409,15 +464,78 @@ class Image(Element):
         :param scale: Factor to scale the image by compared to the original size, applies when width and height are not set
         """
         # Image attributes
-        self.image = pygame.image.load(image_path)
-        self.scale = scale
+        self._image = pygame.image.load(image_path)
+        self._image_path = image_path
+        self._scale = scale
+        self._width = width
+        self._height = height
 
         if width and height:
-            self.image = pygame.transform.scale(self.image, (width, height)).convert_alpha()
+            self._image = pygame.transform.scale(self._image, (width, height)).convert_alpha()
         else:
-            self.image = pygame.transform.scale(self.image, (self.image.get_width() * self.scale, self.image.get_height() * self.scale)).convert_alpha()
+            self._image = pygame.transform.scale(self._image, (self._image.get_width() * self._scale, self._image.get_height() * self._scale)).convert_alpha()
+            self._width = self._image.get_width()
+            self._height = self._image.get_height()
 
-        super().__init__(position, self.image.get_width(), self.image.get_height(), centered=centered)
+        super().__init__(position, self._image.get_width(), self._image.get_height(), centered=centered)
+
+
+
+    """
+    Setters
+    """
+
+    def set_image(self, new_image_path: str) -> None:
+        """
+        Change the image of the element
+        :param new_image_path: str with the new image path
+        :return: None
+        """
+        
+        self._image = pygame.image.load(new_image_path)
+        self._image = pygame.transform.scale(self._image, (self._width, self._height)).convert_alpha()
+
+    def scale(self, new_scale: int) -> None:
+        """
+        Change the scale of the image
+        :param new_scale: int with the new scale
+        :return: None
+        """
+        self._scale = new_scale
+        self._image = pygame.transform.scale(self._load_original_image(), (self._image.get_width() * self._scale, self._image.get_height() * self._scale)).convert_alpha()
+
+    """
+    Getters
+    """
+    
+    def get_image(self) -> pygame.Surface:
+        """
+        Get the image of the element
+        :return: pygame.Surface with the image
+        """
+        return self._image
+    
+    def get_scale(self) -> int:
+        """
+        Get the scale of the image
+        :return: int with the scale of the image
+        """
+        return self._scale
+
+    """
+    Internal functions
+    """
+
+    def _load_original_image(self) -> None:
+        """
+        Load the original image
+        :return: pygame.Surface with the original image
+        """
+        return pygame.image.load(self._image_path).convert_alpha()
+
+    """
+    Basic functions
+    """
 
     def draw(self, surface: pygame.Surface) -> None:
         """
@@ -426,10 +544,10 @@ class Image(Element):
         :return: None
         """
 
-        if not self.display:
+        if not self._display:
             return
 
-        surface.blit(self.image, self.rect)
+        surface.blit(self._image, self._rect)
 
 class Input(Text):
     """
@@ -473,33 +591,40 @@ class Input(Text):
                          width=width,
                          height=height,
                          centered=centered)
+        
+        # Initialize the pygame scrap module
+        # This module is used to copy and paste text from the clipboard
+        pygame.scrap.init()
+        pygame.scrap.set_mode(pygame.SCRAP_CLIPBOARD)
 
         # Visual attributes
-        self.passive_text_color = passive_text_color
-        self.active_text_color = active_text_color
-        self.passive_border_color = passive_border_color
-        self.active_border_color = active_border_color
-        self.border_radius = border_radius
-        self.border_width = border_width
+        self._passive_text_color = passive_text_color
+        self._active_text_color = active_text_color
+        self._passive_border_color = passive_border_color
+        self._active_border_color = active_border_color
+        self._border_radius = border_radius
+        self._border_width = border_width
 
         # Text attributes
-        self.hint = hint
-        self.text = ""
+        self._hint = hint
+        self._text = "" # User input text
 
         # States
         self.active = False
 
         # Filer
-        self.filter = None
-        self.filter_mode_exclude = True
+        self._max_length = 0
+        self._filter = None
+        self._filter_mode_exclude = True
 
-        # Keys
-        self.exclude_keys = [pygame.KMOD_SHIFT, pygame.KMOD_CAPS, pygame.K_CAPSLOCK, pygame.K_LSHIFT, pygame.K_RSHIFT]
-        self.exit_keys = [pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_TAB, pygame.K_ESCAPE]
+        # Keys that will be ignored from the input
+        self._exclude_keys = [pygame.KMOD_SHIFT, pygame.KMOD_CAPS, pygame.K_CAPSLOCK, pygame.K_LSHIFT, pygame.K_RSHIFT]
+        # Keys that will exit the input
+        self._exit_keys = [pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_TAB, pygame.K_ESCAPE]
 
         # Cursor
-        self.cursor = False
-        self.cursor_index = 0
+        self._cursor = False
+        self._cursor_index = 0
 
     """
     Getters
@@ -509,11 +634,18 @@ class Input(Text):
         """
         Get the text of the input
         """
-        return self.text
+        return self._text
 
     """
-    Filter
+    Setters
     """
+
+    def set_max_length(self, max_length: int) -> None:
+        """
+        Set the maximum length of the input
+        :param max_length: int with the maximum length
+        """
+        self._max_length = max_length
 
     def set_filter(self, new_filter: str, exclude_mode: bool = True) -> None:
         """
@@ -521,88 +653,118 @@ class Input(Text):
         :param new_filter: str with the new filter
         :param exclude_mode: If the true, the filter will exclude the characters in the filter, if false, the filter will only allow characters in the filter
         """
-        self.filter = new_filter
-        self.filter_mode_exclude = exclude_mode
+        self._filter = new_filter
+        self._filter_mode_exclude = exclude_mode
 
-    def allow_key(self, key: str):
+    """
+    Internal functions
+    """
+    def _allow_key(self, key: str):
         """
         Check if the key is allowed by the filter
         :param key: str with the key to be checked
         """
-        if not self.filter:
+        if self._max_length and len(self._text) >= self._max_length:
+            return False
+
+        if not self._filter:
             return True
 
-        if self.filter_mode_exclude:
-            if key not in self.filter:
+        if self._filter_mode_exclude:
+            if key not in self._filter:
                 return True
         else:
-            if key in self.filter:
+            if key in self._filter:
                 return True
 
         return False
 
-    """
-    Typing
-    """
-    def handle_keys(self, events: list) -> None:
+    def _handle_keys(self, events: list) -> None:
         """
         Handle the typing of the input
         :param events: list with the events
         """
         for event in events:
-            if event.type != pygame.KEYDOWN:
+            if event.type != pygame.KEYDOWN: # We only want to handle key down events
                 continue
-            elif event.key in self.exit_keys:
+            # Handle copy/paste
+            if event.key == pygame.K_v and event.mod & pygame.KMOD_CTRL:
+                pasted_text = pygame.scrap.get("text/plain;charset=utf-8").decode()
+                # Remove all non-printable characters
+                pasted_text = re.sub(r'[^\x20-\x7E]+', '', pasted_text)
+
+                for char in pasted_text:
+                    if not self._allow_key(char):
+                        pasted_text = pasted_text.replace(char, "")
+                
+                if self._max_length and len(pasted_text) + len(self._text) > self._max_length:
+                    pasted_text = pasted_text[:self._max_length - len(self._text)]
+
+                self._text = self._text[:self._cursor_index] + pasted_text + self._text[self._cursor_index:]
+                self._cursor_index += len(pasted_text)
+                continue
+            elif event.key == pygame.K_c and event.mod & pygame.KMOD_CTRL:
+                pygame.scrap.put(pygame.SCRAP_TEXT, self._text.encode('utf-8'))
+                continue
+            elif event.key == pygame.K_x and event.mod & pygame.KMOD_CTRL:
+                pygame.scrap.put(pygame.SCRAP_TEXT, self._text.encode('utf-8'))
+                self._text = ""
+                self._cursor_index = 0
+                continue
+            elif event.key in self._exit_keys: # Check if the key should exit the input
                 self.active = False
-            elif event.key in self.exclude_keys:
+            elif event.key in self._exclude_keys: # Check the key should be ignored
                 continue
+            # Cursor
             elif event.key == pygame.K_RIGHT:
-                if self.cursor_index >= len(self.text):
+                if self._cursor_index >= len(self._text):
                     continue
-                self.cursor_index += 1
+                self._cursor_index += 1
             elif event.key == pygame.K_LEFT:
-                if self.cursor_index <= 0:
+                if self._cursor_index <= 0:
                     continue
-                self.cursor_index -= 1
+                self._cursor_index -= 1
+            # Backspace and delete
             elif event.key == pygame.K_BACKSPACE:
-                if self.cursor_index == 0:
+                if self._cursor_index == 0:
                     continue
 
-                self.text = self.text[:self.cursor_index-1] + self.text[self.cursor_index:]
-                self.cursor_index -= 1
+                self._text = self._text[:self._cursor_index-1] + self._text[self._cursor_index:]
+                self._cursor_index -= 1
             elif event.key == pygame.K_DELETE:
-                if self.cursor_index == len(self.text):
+                if self._cursor_index == len(self._text):
                     continue
 
-                self.text = self.text[:self.cursor_index] + self.text[self.cursor_index+1:]
+                self._text = self._text[:self._cursor_index] + self._text[self._cursor_index+1:]
+            # Normal keys
             else:
-                if not self.allow_key(event.unicode):
+                if not self._allow_key(event.unicode):
                     continue
 
-                self.text = self.text[:self.cursor_index] + event.unicode + self.text[self.cursor_index:]
-                self.cursor_index += 1
+                self._text = self._text[:self._cursor_index] + event.unicode + self._text[self._cursor_index:]
+                self._cursor_index += 1
 
-        self.change_text(self.text)
+        self.set_content(self._text)
 
-    def draw_cursor(self, surface: pygame.Surface):
+    def _draw_cursor(self, surface: pygame.Surface):
         """
         Draw the cursor
         :param surface: pygame.Surface where the cursor will be drawn
         """
-        if not self.cursor:
+        if not self._cursor:
             return
 
-        font = pygame.font.SysFont(self.font_family, self.font_size)
-        cursor_surface = font.render("|", True, self.active_text_color)
+        font = pygame.font.SysFont(self._font_family, self._font_size)
+        cursor_surface = font.render("|", True, self._active_text_color)
 
-        text_to_cursor = Text(self.get_position(), self.text[:self.cursor_index], self.active_text_color,
-                              self.font_size, self.font_family, self.centered)
+        text_to_cursor = Text(self.get_position(), self._text[:self._cursor_index], self._active_text_color,
+                              self._font_size, self._font_family, self._centered)
 
-        cursor_position = (self.rect.x + text_to_cursor.rect.width, self.rect.y)
+        cursor_position = (self._rect.x + text_to_cursor._rect.width, self._rect.y)
 
-        if self.centered:
-            print((self.rect.width - self.get_text_rect_dimensions()[0])//2)
-            cursor_position = (self.rect.x + (self.rect.width - self.get_text_rect_dimensions()[0]), self.rect.centery - text_to_cursor.rect.height//2)
+        if self._centered:
+            print((self._rect.width - self.get_text_rect_dimensions()[0])//2)
+            cursor_position = (self._rect.x + (self._rect.width - self.get_text_rect_dimensions()[0]), self._rect.centery - text_to_cursor._rect.height//2)
 
         surface.blit(cursor_surface, cursor_position)
 
@@ -618,10 +780,10 @@ class Input(Text):
         super().draw(surface)
 
         if self.active:
-            self.draw_cursor(surface)
-            pygame.draw.rect(surface, self.active_border_color, self.rect, self.border_width, border_radius=self.border_radius)
+            self._draw_cursor(surface)
+            pygame.draw.rect(surface, self._active_border_color, self._rect, self._border_width, border_radius=self._border_radius)
         else:
-            pygame.draw.rect(surface, self.passive_border_color, self.rect, self.border_width, border_radius=self.border_radius)
+            pygame.draw.rect(surface, self._passive_border_color, self._rect, self._border_width, border_radius=self._border_radius)
 
     def update(self, events: list) -> None:
         """
@@ -635,13 +797,13 @@ class Input(Text):
             self.active = True
         # Check if the input was clicked outside, if so, deactivate it
         elif self.active:
-            self.handle_keys(events)
+            self._handle_keys(events)
             if pygame.mouse.get_pressed()[0] == 1 and not self.is_clicked():
                 self.active = False
-                if self.text != "":
-                    self.change_text(self.text)
+                if self._text != "":
+                    self.set_content(self._text)
                 else:
-                    self.change_text(self.hint)
+                    self.set_content(self._hint)
 
 class Button(Element):
     """
@@ -678,50 +840,53 @@ class Button(Element):
 
         super().__init__(position, width, height, color, border_radius, centered)
 
-        self.text_object = Text(position, content, text_color, font_size, font_family, width, height, centered)
+        self._text_object = Text(position, content, text_color, font_size, font_family, width, height, centered)
 
         # Button attributes
-        self.text = content
-        self.color = color
-        self.hover_color = hover_color
-        self.click_color = click_color
-        self.border_radius = border_radius
+        self._text = content
+        self._color = color
+        self._hover_color = hover_color
+        self._click_color = click_color
+        self._border_radius = border_radius
 
         # Text attributes
-        self.text_color = text_color
-        self.text_hover_color = text_hover_color
-        self.text_click_color = text_click_color
+        self._text_color = text_color
+        self._text_hover_color = text_hover_color
+        self._text_click_color = text_click_color
 
         # States
-        self.hovered = False
-        self.clicked = False
+        self._hovered = False
+        self._clicked = False
 
+    """
+    Basic functions
+    """
     def draw(self, surface: pygame.Surface) -> None:
         """
         Draw the button
         :param surface: pygame.Surface where the button will be drawn
         """
-        if not self.display:
+        if not self._display:
             return
 
-        if self.clicked:
-            pygame.draw.rect(surface, self.click_color, self.rect, border_radius=self.border_radius)
-            self.text_object.change_text_color(self.text_click_color)
-        elif self.hovered:
-            pygame.draw.rect(surface, self.hover_color, self.rect, border_radius=self.border_radius)
-            self.text_object.change_text_color(self.text_hover_color)
+        if self._clicked:
+            pygame.draw.rect(surface, self._click_color, self._rect, border_radius=self._border_radius)
+            self._text_object.set_color(self._text_click_color)
+        elif self._hovered:
+            pygame.draw.rect(surface, self._hover_color, self._rect, border_radius=self._border_radius)
+            self._text_object.set_color(self._text_hover_color)
         else:
-            pygame.draw.rect(surface, self.color, self.rect, border_radius=self.border_radius)
-            self.text_object.change_text_color(self.text_color)
+            pygame.draw.rect(surface, self._color, self._rect, border_radius=self._border_radius)
+            self._text_object.set_color(self._text_color)
 
-        self.text_object.draw(surface)
+        self._text_object.draw(surface)
 
-    def update(self) -> None:
+    def update(self,  _=None) -> None:
         """
         Update the button,
         Collects the events and updates the button
         """
-        self.text_object.update()
+        self._text_object.update()
 
         # Check if the button is hovered
-        self.hovered = self.is_hovered()
+        self._hovered = self.is_hovered()
