@@ -51,8 +51,3 @@ centered: bool = False
 - `font_size`: Size of the text font
 - `font_family`: Font family for the text
 - `centered`: If True, the button is centered on the provided position
-
-### Button States
-- Normal: Default appearance
-- Hover: When mouse is over the button
-- Click: When button is being pressed
