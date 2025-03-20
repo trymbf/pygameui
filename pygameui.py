@@ -814,7 +814,7 @@ class Button(Element):
                  width: int = 200,
                  height: int = 50,
                  border_radius: int = 10,
-                 content: str = "Click me.",
+                 label: str = "Click me.",
                  color: tuple[int, int, int] = (255, 255, 255),
                  hover_color: tuple[int, int, int] = (200, 200, 200),
                  click_color: tuple[int, int, int] = (150, 150, 150),
@@ -829,7 +829,7 @@ class Button(Element):
         :param position: Where the button will be positioned
         :param width: Width of the button
         :param height: Height of the button
-        :param content: Text of the button
+        :param label: Text of the button
         :param color: Color of the button
         :param hover_color: Color of the button when hovered
         :param click_color: Color of the button when clicked
@@ -840,10 +840,19 @@ class Button(Element):
 
         super().__init__(position, width, height, color, border_radius, centered)
 
-        self._text_object = Text(position, content, text_color, font_size, font_family, width, height, centered)
+        self._text_object = Text(
+            position=self._rect.center,
+            content=label,
+            color=text_color,
+            font_size=font_size,
+            font_family=font_family,
+            width=width,
+            height=height,
+            centered=True # Center the text in the button
+        )
 
         # Button attributes
-        self._text = content
+        self._label = label
         self._color = color
         self._hover_color = hover_color
         self._click_color = click_color
@@ -857,6 +866,60 @@ class Button(Element):
         # States
         self._hovered = False
         self._clicked = False
+
+    """
+    Setters
+    """
+    def set_label(self, new_label: str) -> None:
+        """
+        Set the text of the button
+        :param new_text: str with the new text
+        """
+        self._label = new_label
+        self._text_object.set_content(new_label)
+
+    def set_color(self, color: tuple[int, int, int]) -> None:
+        """
+        Set the background color of the button
+        :param color: tuple[int, int, int] with the new color
+        """
+        self._color = color
+
+    def set_hover_color(self, color: tuple[int, int, int]) -> None:
+        """
+        Set the hover color of the button
+        :param color: tuple[int, int, int]
+        """
+        self._hover_color = color
+    
+    def set_click_color(self, color: tuple[int, int, int]) -> None:
+        """
+        Set the click color of the button
+        :param color: tuple[int, int, int]
+        """
+        self._click_color = color
+    
+    def set_text_color(self, color: tuple[int, int, int]) -> None:
+        """
+        Set the text color of the button
+        :param color: tuple[int, int, int]
+        """
+        self._text_color = color
+        self._text_object.set_color(color)
+    
+    def set_text_hover_color(self, color: tuple[int, int, int]) -> None:
+        """
+        Set the hover color of the text
+        :param color: tuple[int, int, int]
+        """
+        self._text_hover_color = color
+
+    def set_text_click_color(self, color: tuple[int, int, int]) -> None:
+        """
+        Set the click color of the text
+        :param color: tuple[int, int, int]
+        """
+        self._text_click_color = color
 
     """
     Basic functions

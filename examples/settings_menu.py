@@ -75,15 +75,15 @@ def handle_button_click(button):
     
     if button == fullscreen_btn:
         fullscreen_enabled = not fullscreen_enabled
-        fullscreen_btn._text = "Enabled" if fullscreen_enabled else "Disabled"
+        fullscreen_btn._label = "Enabled" if fullscreen_enabled else "Disabled"
     
     elif button == vsync_btn:
         vsync_enabled = not vsync_enabled
-        vsync_btn._text = "Enabled" if vsync_enabled else "Disabled"
+        vsync_btn._label = "Enabled" if vsync_enabled else "Disabled"
     
     elif button == resolution_btn:
         resolution_index = (resolution_index + 1) % len(resolution_options)
-        resolution_btn._text = resolution_options[resolution_index]
+        resolution_btn._label = resolution_options[resolution_index]
     
     elif button == save_btn:
         status_msg.change_text("Settings saved successfully!")

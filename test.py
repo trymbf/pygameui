@@ -56,7 +56,7 @@ def create_ui_elements():
         position=(400, 150),
         width=200,
         height=50,
-        content="Click Me!",
+        label="Click Me!",
         color=(100, 100, 255),
         hover_color=(150, 150, 255),
         click_color=(50, 50, 200),
