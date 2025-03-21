@@ -43,7 +43,7 @@ class Element:
             self._rect.center = position
 
         # Movement attributes
-        self._is_moving = False
+        self._is_being_animated = False
         self._loop = False
         self._move_point_index = 0
         # Move points is a list of tuples with the points that the element will move to in order
@@ -94,13 +94,21 @@ class Element:
         """
         self._color = color
 
-    def set_border_radius(self, border_radius: int) -> None:
+    def set_border_radius(self, radius: int) -> None:
         """
         Set the border radius of the element
         :param border_radius: int with the new border radius
         :return: None
         """
-        self._border_radius = border_radius
+        self._border_radius = radius
+
+    def set_animate(self, state: bool) -> None:
+        """
+        Set if the element will move, be animated or not
+        :param move: bool with the new move value
+        :return: None
+        """
+        self._is_being_animated = state
 
     """
     Getters
@@ -116,6 +124,20 @@ class Element:
 
         return self._rect.topleft
 
+    def get_display(self) -> bool:
+        """
+        Get if the element will be displayed
+        :return: bool with the display value
+        """
+        return self._display
+
+    def get_animation_state(self) -> bool:
+        """
+        Get if the element is being animated
+        :return: bool with the animation state
+        """
+        return self._is_being_animated
+
     """
     Toggles
     """
@@ -128,23 +150,8 @@ class Element:
         self._display = not self._display
 
     """
-    Movement functions
+    Movement methods
     """
-
-    def start_move(self) -> None:
-        """
-        Start the movement of the element
-        :return: None
-        """
-        self._is_moving = True
-
-    def stop_move(self) -> None:
-        """
-        Stop the movement of the element
-        :return: None
-        """
-        self._is_moving = False
-
     # TODO - Fix the framerate of the movement so it actually takes the time to move from start to end position
     def flow(self,
              start_position: tuple[int, int],
@@ -178,7 +185,7 @@ class Element:
             # Reverse the list of points so the element moves back to the start position
             self._move_points += reversed(self._move_points)
 
-        self.start_move()
+        self.set_animate(True)
 
     # TODO - Fix the framerate of the jumping so it actually takes the time to jump from start to end position
     def jump(self,
@@ -214,14 +221,18 @@ class Element:
             self._move_point_index = 0
             self._move_points += reversed(self._move_points)
 
-        self.start_move()
+        self.set_animate(True)
+
+    """
+    Internal methods
+    """
 
     def _update_movement(self) -> None:
         """
         Update the movement of the element
         :return: None
         """
-        if not self._is_moving:
+        if not self._is_being_animated:
             return
 
         if self._loop:
@@ -234,12 +245,12 @@ class Element:
         else:
             point_to_move_to = self._move_points.pop(0)
             if not self._move_points:
-                self._is_moving = False
+                self._is_being_animated = False
 
         self.set_position(point_to_move_to)
 
     """
-    Mouse and clicking functions
+    Mouse and clicking methods
     """
 
     def is_hovered(self):
@@ -287,7 +298,7 @@ class Element:
             return True
 
     """
-    Basic functions
+    Basic methods
     """
 
     def draw(self, surface: pygame.Surface) -> None:
@@ -345,7 +356,7 @@ class Text(Element):
         if width and height:
             text_dimensions = (width, height)
         else:
-            text_dimensions = self.get_text_rect_dimensions()
+            text_dimensions = self._get_text_rect_dimensions()
 
         super().__init__(position, width=text_dimensions[0], height=text_dimensions[1], color=color, centered=centered)
 
@@ -353,10 +364,66 @@ class Text(Element):
         self._text_surface = self._render_text()
 
     """
+    Setters
+    """
+
+    def set_content(self, content: str) -> None:
+        """
+        Change the text of the element
+        :param content: str with the new text
+        :return: None
+        """
+        self._content = content
+        self._text_surface = self._render_text()
+
+    def set_color(self, color: tuple[int, int, int]) -> None:
+        """
+        Change the color of the text
+        :param color: tuple[int, int, int] with the new color
+        :return: None
+        """
+
+        self._color = color
+        self._text_surface = self._render_text() # Update the text surface with the new color
+
+    def set_font_size(self, font_size: int) -> None:
+        """
+        Change the size of the font
+        :param font_size: int with the new size
+        :return: None
+        """
+        self._font_size = font_size
+        self._text_surface = self._render_text()
+    
+    def set_font_family(self, font_family: str) -> None:
+        """
+        Change the font family of the text
+        :param font_family: str with the new font family
+        :return: None
+        """
+        self._font_family = font_family
+        self._text_surface = self._render_text()
+
+        """
     Getters
     """
 
-    def get_text_rect_dimensions(self) -> tuple[int, int]:
+    """
+    Getters
+    """
+
+    def get_content(self) -> str:
+        """
+        Get the content of the text
+        :return: str with the content of the text
+        """
+        return self._content
+
+    """
+    Internal methods
+    """
+
+    def _get_text_rect_dimensions(self) -> tuple[int, int]:
         """
         Get the dimensions of the text, width and height
         :return: tuple[int, int] with the width and height of the text
@@ -366,51 +433,6 @@ class Text(Element):
 
         rect = text_surface.get_rect()
         return rect.width, rect.height
-
-    """
-    Setters
-    """
-
-    def set_content(self, new_content: str) -> None:
-        """
-        Change the text of the element
-        :param new_text: str with the new text
-        :return: None
-        """
-        self._content = new_content
-        self._text_surface = self._render_text()
-
-    def set_color(self, new_color: tuple[int, int, int]) -> None:
-        """
-        Change the color of the text
-        :param new_color: tuple[int, int, int] with the new color
-        :return: None
-        """
-
-        self._color = new_color
-        self._text_surface = self._render_text() # Update the text surface with the new color
-
-    def set_font_size(self, new_size: int) -> None:
-        """
-        Change the size of the font
-        :param new_size: int with the new size
-        :return: None
-        """
-        self._font_size = new_size
-        self._text_surface = self._render_text()
-    
-    def set_font_family(self, new_family: str) -> None:
-        """
-        Change the font family of the text
-        :param new_family: str with the new font family
-        :return: None
-        """
-        self._font_family = new_family
-        self._text_surface = self._render_text()
-
-    """
-    Internal functions
-    """
 
     def _render_text(self) -> pygame.Surface:
         """
@@ -423,7 +445,7 @@ class Text(Element):
         return text_surface
     
     """
-    Basic functions
+    Basic methods
     """
     def draw(self, surface: pygame.Surface) -> None:
         """
@@ -485,23 +507,23 @@ class Image(Element):
     Setters
     """
 
-    def set_image(self, new_image_path: str) -> None:
+    def set_image(self, image_path: str) -> None:
         """
         Change the image of the element
-        :param new_image_path: str with the new image path
+        :param image_path: str with the new image path
         :return: None
         """
         
-        self._image = pygame.image.load(new_image_path)
+        self._image = pygame.image.load(image_path)
         self._image = pygame.transform.scale(self._image, (self._width, self._height)).convert_alpha()
 
-    def scale(self, new_scale: int) -> None:
+    def scale(self, scale: int) -> None:
         """
         Change the scale of the image
-        :param new_scale: int with the new scale
+        :param scale: int with the new scale
         :return: None
         """
-        self._scale = new_scale
+        self._scale = scale
         self._image = pygame.transform.scale(self._load_original_image(), (self._image.get_width() * self._scale, self._image.get_height() * self._scale)).convert_alpha()
 
     """
@@ -523,7 +545,7 @@ class Image(Element):
         return self._scale
 
     """
-    Internal functions
+    Internal methods
     """
 
     def _load_original_image(self) -> None:
@@ -534,7 +556,7 @@ class Image(Element):
         return pygame.image.load(self._image_path).convert_alpha()
 
     """
-    Basic functions
+    Basic methods
     """
 
     def draw(self, surface: pygame.Surface) -> None:
@@ -627,16 +649,6 @@ class Input(Text):
         self._cursor_index = 0
 
     """
-    Getters
-    """
-
-    def get_text(self):
-        """
-        Get the text of the input
-        """
-        return self._text
-
-    """
     Setters
     """
 
@@ -647,17 +659,41 @@ class Input(Text):
         """
         self._max_length = max_length
 
-    def set_filter(self, new_filter: str, exclude_mode: bool = True) -> None:
+    def set_filter(self, filter: str, only_allow_filter: bool = False) -> None:
         """
         Set the filter of the input
-        :param new_filter: str with the new filter
-        :param exclude_mode: If the true, the filter will exclude the characters in the filter, if false, the filter will only allow characters in the filter
+        :param filter: str with the new filter
+        :param only_allow_filter: If true, the filter will exclude the characters in the filter, if false, the filter will only allow characters in the filter
         """
-        self._filter = new_filter
-        self._filter_mode_exclude = exclude_mode
+        self._filter = filter
+        self._filter_mode_exclude = only_allow_filter
+
+    def set_hint(self, hint: str) -> None:
+        """
+        Set the hint of the input
+        :param hint: str with the new hint
+        """
+        self._hint = hint
+    
+    def set_value(self, value: str) -> None:
+        """
+        Set the text of the input
+        :param value: str with the new text
+        """
+        self._text = value
 
     """
-    Internal functions
+    Getters
+    """
+
+    def get_value(self):
+        """
+        Get the text of the input
+        """
+        return self._text
+
+    """
+    Internal methods
     """
     def _allow_key(self, key: str):
         """
@@ -763,13 +799,13 @@ class Input(Text):
         cursor_position = (self._rect.x + text_to_cursor._rect.width, self._rect.y)
 
         if self._centered:
-            print((self._rect.width - self.get_text_rect_dimensions()[0])//2)
-            cursor_position = (self._rect.x + (self._rect.width - self.get_text_rect_dimensions()[0]), self._rect.centery - text_to_cursor._rect.height//2)
+            print((self._rect.width - self._get_text_rect_dimensions()[0])//2)
+            cursor_position = (self._rect.x + (self._rect.width - self._get_text_rect_dimensions()[0]), self._rect.centery - text_to_cursor._rect.height//2)
 
         surface.blit(cursor_surface, cursor_position)
 
     """
-    Basic functions
+    Basic methods
     """
 
     def draw(self, surface: pygame.surface):
@@ -870,13 +906,13 @@ class Button(Element):
     """
     Setters
     """
-    def set_label(self, new_label: str) -> None:
+    def set_label(self, label: str) -> None:
         """
         Set the text of the button
-        :param new_text: str with the new text
+        :param label: str with the new text
         """
-        self._label = new_label
-        self._text_object.set_content(new_label)
+        self._label = label
+        self._text_object.set_content(label)
 
     def set_color(self, color: tuple[int, int, int]) -> None:
         """
@@ -922,7 +958,7 @@ class Button(Element):
         self._text_click_color = color
 
     """
-    Basic functions
+    Basic methods
     """
     def draw(self, surface: pygame.Surface) -> None:
         """

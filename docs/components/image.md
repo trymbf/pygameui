@@ -46,21 +46,26 @@ Three ways to control image size:
 2. Scale factor (`scale` parameter)
 3. Exact dimensions (`width` and `height` parameters)
 
-## Performance Tips
+## Methods
 
+All methods inherited from the [Element](element.md) class.
+
+(Some methods may not be applicable to the Image class, but are included for consistency.)
+
+### Setters
 ```python
-# Efficient loading for multiple instances
-shared_image = pygame.image.load("sprite.png")
-for pos in positions:
-    image = pygameui.Image(
-        position=pos,
-        image=shared_image
-    )
+set_image(image_path: str) -> None
+scale(scale: int) -> None
+```
+- `set_image`: Set a new image for the element
+- `scale`: Set a new scale for the image
+
+### Getters
+```python
+get_image() -> pygame.Surface
+get_scale() -> int
 ```
 
-## Best Practices
+- `get_image`: Get the current image of the element
+- `get_scale`: Get the current scale of the image
 
-- Use appropriate image sizes
-- Convert images to PNG for transparency
-- Cache frequently used images
-- Consider memory usage with large images

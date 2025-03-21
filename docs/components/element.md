@@ -34,37 +34,72 @@ centered: bool = False
 
 ## Methods
 
-### Position Control
+### Basic methods
 ```python
-# Set new position
-element.set_position((200, 200))
+draw(surface: pygame.Surface) -> None
+update() -> None
+```
+- `draw`: Draws the element on the provided surface.
+- `update`: Updates the element's state. This method should be called every frame to ensure animations and events are processed.
 
-# Get current position
-pos = element.get_position()
-
-# Center the element
-element.centered = True
+### Setters
+```python
+set_position(position: tuple[int,int]) -> None
+set_framerate(framerate: int) -> None
+set_display(display: bool) -> None
+set_color(color: tuple[int, int, int]) -> None
+set_border_radius(radius: int) -> None
+set_animate(state: bool) -> None
 ```
 
-### Display Control
+- `set_position`: Set the position of the element
+- `set_framerate`: Set the framerate for the elements animations
+- `set_display`: If set True, the element is drawn when element.draw is called
+- `set_color`: Set the color of the element
+- `set_border_radius`: Set the border radius of the element
+- `set_animate`: If set True, the elements set animations are will be preformed when the element is updated
+
+### Getters
 ```python
-# Hide element
-element.set_display(False)
-
-# Show element
-element.set_display(True)
-
-# Toggle visibility
-element.toggle_display()
+get_position() -> tuple[int, int]
+get_display() -> bool
+get_animation_state() -> bool
 ```
 
-### Mouse Interaction
-```python
-# Check if mouse is over element
-if element.is_hovered():
-    print("Mouse over!")
+- `get_position`: Get the current position of the element, if the element is centered, the returned position is the center of the element
+- `get_display`: Get the display state of the element
+- `get_animation_state`: Get the animation state of the element, if the element is being animated, the returned value is True, otherwise False
 
-# Check if element is clicked
-if element.is_clicked():
-    print("Clicked!")
+
+### Animations
+
+```python
+flow(
+    start_position: tuple[int, int],
+    end_position: tuple[int, int],
+    time: int,
+    loop: bool = False
+    ) -> None
+
+jump(
+    start_position: tuple[int, int],
+    end_position: tuple[int, int],
+    time: int,
+    loop: bool = False,
+    ratio: float = 1
+    ) -> None
 ```
+- `flow`: Moves the element from start_position to end_position over a specified time. If loop is True, the animation will repeat.
+
+- `jump`: Teleports the element from start_position to end_position over a specified time. If loop is True, the animation will repeat.
+
+### Mouse and Click Events
+```python
+is_hovered() -> bool
+is_clicked(button: int = 1) -> bool
+was_clicked() -> bool
+```
+
+- `is_hovered`: Check if the mouse is hovering over the element. Returns True if hovered, False otherwise.
+- `is_clicked`: Check if the element is hovered and the provided mouse button is down. Returns True if clicked, False otherwise. The default button is 1 (left mouse button).
+- `was_clicked`: Check if the element was clicked in the last frame. Returns True if clicked, False otherwise.

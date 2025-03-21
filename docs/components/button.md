@@ -51,3 +51,30 @@ centered: bool = False
 - `font_size`: Size of the text font
 - `font_family`: Font family for the text
 - `centered`: If True, the button is centered on the provided position
+
+## Methods
+All methods inherited from the [Element](element.md) class.
+
+(Some methods may not be applicable to the Image class, but are included for consistency.)
+
+### Setters
+```python
+set_label(label: str) -> None
+set_color(color: tuple[int, int, int]) -> None
+set_hover_color(color: tuple[int, int, int]) -> None
+set_click_color(color: tuple[int, int, int]) -> None
+set_text_color(color: tuple[int, int, int]) -> None
+set_text_hover_color(color: tuple[int, int, int]) -> None
+set_text_click_color(color: tuple[int, int, int]) -> None
+```
+
+- `set_label`: Set the text displayed on the button
+- `set_color`: Set the default button background color
+- `set_hover_color`: Set the background color when the button is hovered over
+- `set_click_color`: Set the background color when the button is clicked
+- `set_text_color`: Set the color of the buttonlabel when not hovered
+- `set_text_hover_color`: Set the color of the buttonlabel when hovered over
+- `set_text_click_color`: Set the color of the buttonlabel when clicked
+
+### Mouse and Click Events
+See the [Mouse and Click Events](element.md#mouse-and-click-events) section in the Element documentation.

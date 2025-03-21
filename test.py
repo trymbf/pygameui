@@ -276,9 +276,6 @@ def run_text_tests(elements, elapsed_time):
     elif cycle == 4:
         test_text.set_font_family("Impact")
         elements["status"].set_content("Text: set_font_family()")
-    elif cycle == 5:
-        dimensions = test_text.get_text_rect_dimensions()
-        elements["status"].set_content(f"Text: get_text_rect_dimensions() = {dimensions}")
 
 def run_input_tests(elements, elapsed_time):
     """Test Input class features"""
@@ -394,7 +391,7 @@ def main():
             # Display input value
             if "input" in ui_elements and "status" in ui_elements:
                 if ui_elements["input"].active:
-                    ui_elements["status"].set_content(f"Input: {ui_elements['input'].get_text()}")
+                    ui_elements["status"].set_content(f"Input: {ui_elements['input'].get_value()}")
                     ui_elements["status"].set_color((0, 200, 255))
         
         # Draw all UI elements

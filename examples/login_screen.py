@@ -67,8 +67,8 @@ elements = [
 
 # Handle login attempt
 def attempt_login():
-    username = username_input.get_text()
-    password = password_input.get_text()
+    username = username_input.get_value()
+    password = password_input.get_value()
     
     if username == "admin" and password == "password":
         status_msg.change_text("Login successful!")

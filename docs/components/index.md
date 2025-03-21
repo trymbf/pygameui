@@ -1,7 +1,5 @@
 # Components Guide
 
-**Next:** [Animation Guide](../animation.md) | **Previous:** [Basic Tutorial](../tutorials/basic.md)
-
 ## Available Components
 
 1. [Element](element.md) - Base component
@@ -27,28 +25,3 @@
 5. [Image](image.md) - Image display
    - Multiple formats
    - Scaling options
-   - Performance optimization
-
-## Usage Examples
-
-Each component page includes:
-- Basic implementation
-- Available properties
-- Common use cases
-- Performance tips
-
-## Quick Reference
-
-```python
-# Basic element creation pattern
-element = pygameui.ComponentName(
-    position=(x, y),
-    # ... other properties
-)
-
-# Update and draw pattern
-element.update()  # or element.update(events)
-element.draw(screen)
-```
-
-**Next:** Learn about [Animation](../animation.md)
