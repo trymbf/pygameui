@@ -22,27 +22,21 @@ Then place the PyGameUI file in the same folder as your project files.
 ![gif of putting the file in the same folder](https://trymbf.github.io/pygameui/assets//gifs//add_pygameui.gif)
 
 ## Available Elements
-### Element
-The base class for all UI elements. It provides basic functionality such as setting position, drawing, and updating.
-### Text
-A class for displaying text. It extends the `Element` class and adds text-specific attributes and methods.
-### Image
-A class for displaying images. It extends the `Element` class and adds image-specific attributes and methods.
-### Input
-A class for creating input fields. It extends the `Text` class and adds input-specific attributes and methods.
-### Button
-A class for creating buttons. It extends the `Element` class and adds button-specific attributes and methods.
+
+- **Element**
+  The base class for all UI elements. It provides basic functionality such as setting position, drawing, and updating. [Learn more!](docs/components/element.md)
+- **Text**
+  A class for displaying text. It extends the `Element` class and adds text-specific attributes and methods. [Learn more!](docs/components/text.md)
+- **Image**
+  A class for displaying images. It extends the `Element` class and adds image-specific attributes and methods. [Learn more!](docs/components/image.md)
+- **Input**
+  A class for creating input fields. It extends the `Text` class and adds input-specific attributes and methods. [Learn more!](docs/components/input.md)
+- **Button**
+  A class for creating buttons. It extends the `Element` class and adds button-specific attributes and methods. [Learn more!](docs/components/button.md)
 
 ## Learn more in the docs!
 - [Getting Started](docs/getting-started.md)
 - [Components Guide](docs/components/index.md)
-- [Basic Tutorial](docs/tutorials/basic.md)
-- [Animation Guide](docs/features/animation.md)
-
-
-## Quick Links
-- [Examples](docs/examples/index.md)
-- [Gallery](docs/examples/gallery.md)
 
 ## Getting Help
 - [GitHub Issues](https://github.com/trymbf/pygameui/issues)
