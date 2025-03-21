@@ -1,6 +1,7 @@
 site_name: PygameUI
 site_description: Documentation for PygameUI library
 site_author: Trym Bringsrud Fekjær
+site_url: https://trymbf.github.io/PygameUI
 repo_url: https://github.com/trymbf/PygameUI
 
 theme:
