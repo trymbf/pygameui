@@ -78,3 +78,79 @@ set_text_click_color(color: tuple[int, int, int]) -> None
 
 ### Mouse and Click Events
 See the [Mouse and Click Events](element.md#mouse-and-click-events) section in the Element documentation.
+
+## Example
+Simple example of buttons with different styles and functionality.
+
+```python
+import pygame
+import pygameui
+
+# Initialize
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+clock = pygame.time.Clock()
+
+# Create buttons
+primary_button = pygameui.Button(
+    position=(400, 200),
+    label="Primary Button",
+    width=250,
+    height=60,
+    color=(75, 145, 250),         # Blue
+    hover_color=(95, 165, 255),   # Lighter blue
+    click_color=(55, 125, 235),   # Darker blue
+    text_color=(255, 255, 255),   # White text
+    font_size=24,
+    border_radius=15,
+    centered=True
+)
+
+secondary_button = pygameui.Button(
+    position=(400, 300),
+    label="Secondary Button",
+    width=250,
+    height=60,
+    color=(240, 240, 240),        # Light gray
+    hover_color=(220, 220, 220),  # Medium gray
+    click_color=(200, 200, 200),  # Darker gray
+    text_color=(50, 50, 50),      # Dark text
+    font_size=24,
+    border_radius=15,
+    centered=True
+)
+
+# Track click status
+message = "Click a button!"
+
+# Main loop
+running = True
+while running:
+    # Handle events
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Reset screen
+    screen.fill((30, 30, 30))  # Dark background
+
+    # Update buttons
+    primary_button.update()
+    secondary_button.update()
+
+    # Check for button clicks
+    if primary_button.was_clicked():
+        print("Primary button clicked!")
+
+    if secondary_button.was_clicked():
+        print("Secondary button clicked!")
+
+    # Draw elements
+    primary_button.draw(screen)
+    secondary_button.draw(screen)
+
+    # Update display
+    pygame.display.flip()
+    clock.tick(60)
+```

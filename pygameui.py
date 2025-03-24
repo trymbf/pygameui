@@ -989,3 +989,156 @@ class Button(Element):
 
         # Check if the button is hovered
         self._hovered = self.is_hovered()
+
+class ProgressBar(Element):
+    """
+    Progress element that can be displayed
+    """
+    def __init__(self,
+                 position: tuple[int, int],
+                 width: int = 200,
+                 height: int = 50,
+                 progrss: int = 0,
+                 max_progress: int = 100,
+                 min_progress: int = 0,
+                 color: tuple[int, int, int] = (150, 255, 150),
+                 background_color: tuple[int, int, int] = (100, 100, 100),
+                 border_radius: int = 0,
+                 border_color: tuple[int, int, int] = (200, 200, 200),
+                 border_width: int = 2,
+                 centered: bool = False):
+        """
+        Create a progress element
+        :param position: Where the progress will be positioned
+        :param width: Width of the progress
+        :param height: Height of the progress
+        :param progress: Current progress amount
+        :param max_progress: Maximum progress amount
+        :param min_progress: Minimum progress amount
+        :param color: Color of the progress
+        :param border_radius: Radius of the border
+        :param border_width: Width of the border
+        :param centered: If the progress will be centered in the position
+        """
+        super().__init__(position, width, height, color, border_radius, centered)
+
+        # Progress attributes
+        self._progress = progrss
+        self._max_progress = max_progress
+        self._min_progress = min_progress
+
+        # Progress bar attributes
+        self._progress_bar = pygame.Rect(self._rect.x, self._rect.y, 0, self._rect.height)
+        self._progress_bar_color = color
+        self._progress_bar_width = width
+        self._progress_bar_height = height
+        self._progress_bar_centered = centered
+
+        # Border attributes
+        self._border_color = border_color
+        self._border_radius = border_radius
+        self._border_width = border_width
+
+        # Background attributes
+        self._background_color = background_color
+
+    """
+    Setters 
+    """
+
+    def set_progress(self, progress: int) -> None:
+        """
+        Set the progress amount
+        :param progress: int with the new progress amount
+        """
+        self._progress = progress
+
+        if self._progress > self._max_progress:
+            self._progress = self._max_progress
+        elif self._progress < self._min_progress:
+            self._progress = self._min_progress
+        
+        self._update_progress_bar()
+    
+    def set_max_progress(self, max_progress: int) -> None:
+        """
+        Set the maximum progress amount
+        :param max_progress: int with the new maximum progress amount
+        """
+        self._max_progress = max_progress
+        
+        self._update_progress_bar()
+
+    def set_min_progress(self, min_progress: int) -> None:
+        """
+        Set the minimum progress amount
+        :param min_progress: int with the new minimum progress amount
+        """
+        self._min_progress = min_progress
+        # Update the progress bar width
+        if self._progress < self._min_progress:
+            self._progress = self._min_progress
+        
+        self._update_progress_bar()
+
+    def change_progress(self, amount: int) -> None:
+        """
+        Change the progress amount
+        :param amount: int with the amount to change the progress by
+        :return: None
+        """
+        self._progress += amount
+
+        self.set_progress(self._progress)
+
+    """
+    Getters
+    """
+    def get_progress(self) -> int:
+        """
+        Get the progress amount
+        :return: int with the progress amount
+        """
+        return self._progress
+
+    """
+    Internal methods
+    """
+    
+    def _update_progress_bar(self) -> None:
+        """
+        Update the progress bar width
+        :return: None
+        """
+        self._progress_bar.width = int(self._rect.width * (self._progress / self._max_progress))
+
+
+    """
+    Basic methods
+    """
+
+    def draw(self, surface: pygame.Surface) -> None:
+        """"
+        Draw the progress bar
+        :param surface: pygame.Surface where the progress bar will be drawn
+        :return: None
+        """
+        if not self._display:
+            return
+
+        # Draw the background
+        pygame.draw.rect(surface, self._background_color, self._rect, border_radius=self._border_radius)
+        # Draw the progress bar
+        pygame.draw.rect(surface, self._progress_bar_color, self._progress_bar, border_radius=self._border_radius)
+        # Draw the border
+        pygame.draw.rect(surface, self._border_color, self._rect, self._border_width, border_radius=self._border_radius)
+    
+    def update(self, _=None) -> None:
+        """
+        Update the progress bar
+        :return: None
+        """
+        super().update()
+        self._update_progress_bar()
+        
+        
