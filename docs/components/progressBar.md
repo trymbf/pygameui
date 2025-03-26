@@ -43,9 +43,9 @@ centered: bool = False
 - `max_progress`: Maximum value for the progress bar
 - `min_progress`: Minimum value for the progress bar
 - `color`: Color of the progress bar fill
-- `background_color`: Color of the unfilled portion
+- `background_color`: Color of the unfilled portion, set to None for no background
 - `border_radius`: Radius for rounded corners
-- `border_color`: Color of the border around the progress bar
+- `border_color`: Color of the border around the progress bar, set to None for no border
 - `border_width`: Width of the border
 - `centered`: If True, the progress bar is centered on the provided position
 

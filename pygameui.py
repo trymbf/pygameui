@@ -1017,6 +1017,8 @@ class ProgressBar(Element):
         :param min_progress: Minimum progress amount
         :param color: Color of the progress
         :param border_radius: Radius of the border
+        :param background_color: Color of the background, set to None to disable the background
+        :param border_color: Color of the border, set to None to disable the border
         :param border_width: Width of the border
         :param centered: If the progress will be centered in the position
         """
@@ -1127,11 +1129,13 @@ class ProgressBar(Element):
             return
 
         # Draw the background
-        pygame.draw.rect(surface, self._background_color, self._rect, border_radius=self._border_radius)
+        if self._background_color:
+            pygame.draw.rect(surface, self._background_color, self._rect, border_radius=self._border_radius)
         # Draw the progress bar
         pygame.draw.rect(surface, self._progress_bar_color, self._progress_bar, border_radius=self._border_radius)
         # Draw the border
-        pygame.draw.rect(surface, self._border_color, self._rect, self._border_width, border_radius=self._border_radius)
+        if self._border_color:
+            pygame.draw.rect(surface, self._border_color, self._rect, self._border_width, border_radius=self._border_radius)
     
     def update(self, _=None) -> None:
         """
@@ -1141,4 +1145,4 @@ class ProgressBar(Element):
         super().update()
         self._update_progress_bar()
         
-        
+#class DropDownMenu(Element):
