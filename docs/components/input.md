@@ -7,10 +7,6 @@ Text input fields for user data entry.
 ```python
 input_field = pygameui.Input(
     position=(100, 100),
-    width=200,
-    height=50,
-    hint="Enter text...",
-    font_size=20
 )
 ```
 

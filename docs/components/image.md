@@ -8,10 +8,6 @@ The Image class allows you to display images in your UI.
 image = pygameui.Image(
     position=(100, 100),
     image_path="path/to/image.png",
-    width=200,  # Optional
-    height=150, # Optional
-    scale=1,    # Optional
-    centered=True
 )
 ```
 

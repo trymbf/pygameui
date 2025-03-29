@@ -7,14 +7,6 @@ Buttons provide clickable interface elements with hover effects.
 ```python
 button = pygameui.Button(
     position=(100, 100),
-    content="Click Me",
-    width=200,
-    height=50,
-    color=(255, 255, 255),
-    hover_color=(200, 200, 200),
-    click_color=(150, 150, 150),
-    text_color=(0, 0, 0),
-    centered=True
 )
 ```
 
@@ -53,11 +45,13 @@ centered: bool = False
 - `centered`: If True, the button is centered on the provided position
 
 ## Methods
+
 All methods inherited from the [Element](element.md) class.
 
 (Some methods may not be applicable to the Image class, but are included for consistency.)
 
 ### Setters
+
 ```python
 set_label(label: str) -> None
 set_color(color: tuple[int, int, int]) -> None
@@ -77,9 +71,11 @@ set_text_click_color(color: tuple[int, int, int]) -> None
 - `set_text_click_color`: Set the color of the buttonlabel when clicked
 
 ### Mouse and Click Events
+
 See the [Mouse and Click Events](element.md#mouse-and-click-events) section in the Element documentation.
 
 ## Example
+
 Simple example of buttons with different styles and functionality.
 
 ```python

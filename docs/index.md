@@ -30,6 +30,10 @@ Then place the PyGameUI file in the same folder as your project files.
   A class for creating input fields. It extends the `Text` class and adds input-specific attributes and methods. [Learn more!](components/input.md)
 - **Button**
   A class for creating buttons. It extends the `Element` class and adds button-specific attributes and methods. [Learn more!](components/button.md)
+- **DropDownMenu**
+  A class for creating dropdown menus. It extends the `Element` class and adds dropdown-specific attributes and methods. [Learn more!](components/DropDownMenu.md)
+- **ProgressBar**
+  A class for creating progress bars. It extends the `Element` class and adds progress bar-specific attributes and methods. [Learn more!](components/progressbar.md)
 
 ## Getting Help
 

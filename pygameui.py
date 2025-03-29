@@ -799,7 +799,6 @@ class Input(Text):
         cursor_position = (self._rect.x + text_to_cursor._rect.width, self._rect.y)
 
         if self._centered:
-            print((self._rect.width - self._get_text_rect_dimensions()[0])//2)
             cursor_position = (self._rect.x + (self._rect.width - self._get_text_rect_dimensions()[0]), self._rect.centery - text_to_cursor._rect.height//2)
 
         surface.blit(cursor_surface, cursor_position)
@@ -1145,4 +1144,231 @@ class ProgressBar(Element):
         super().update()
         self._update_progress_bar()
         
-#class DropDownMenu(Element):
+class DropdownMenu(Element):
+    def __init__(self, 
+                 position: tuple[int, int],
+                 options: list[str], 
+                 width: int = 200, 
+                 height: int = 50,
+                 max_elements_per_column: int = 5,
+                 wrap_reverse: bool = False,
+                 color = (255, 255, 255),
+                 hover_color = (200, 200, 200),
+                 click_color = (150, 150, 150),
+                 text_color = (0, 0, 0),
+                 text_hover_color = (0, 0, 0),
+                 text_click_color = (0, 0, 0),
+                 selected_option_color = (200, 200, 200),
+                 selected_option_hover_color = (150, 150, 150),
+                 selected_option_click_color = (100, 100, 100),
+                 selected_option_text_color = (0, 0, 0),
+                 selected_option_text_hover_color = (0, 0, 0),
+                 selected_option_text_click_color = (0, 0, 0),
+                 border_radius = 0, 
+                 centered = False):
+        
+        super().__init__(position, width, height, color, border_radius, centered)
+
+        # Visuals
+        self._color = color
+        self._hover_color = hover_color
+        self._click_color = click_color
+        self._text_color = text_color
+        self._text_color_hover = text_hover_color
+        self._text_color_click = text_click_color
+
+        self._selected_option_color = selected_option_color
+        self._selected_option_text_color = selected_option_text_color
+        self._selected_option_hover_color = selected_option_hover_color
+        self._selected_option_click_color = selected_option_click_color
+        self._selected_option_text_hover_color = selected_option_text_hover_color
+        self._selected_option_text_click_color = selected_option_text_click_color
+
+        self._border_radius = border_radius
+
+        # Drop down menu attributes
+        self._options = options
+        self._selected_option_index = 0
+        self._wrap_direction = -1 if wrap_reverse else 1
+        self._max_elements_per_column = max_elements_per_column
+        self._options_buttons = self._generate_options_buttons()
+        self._selected_button = self._generate_selected_button()
+        self._is_open = False
+
+    """
+    Setters
+    """
+
+    def set_options(self, options: list[str]) -> None:
+        """
+        Set the options of the drop down menu
+        :param options: list[str] with the new options
+        :return: None
+        """
+        self._options = options
+        self._options_buttons = self._generate_options_buttons()
+        self._selected_button = self._generate_selected_button()
+        self._selected_option_index = 0
+
+    def set_selected_option(self, option: str) -> None:
+        """
+        Set the selected option of the drop down menu
+        :param selected_option: str with the new selected option
+        :return: None
+        """
+        if option not in self._options:
+            raise ValueError("Selected option is not in the options list")
+        
+        self._selected_option_index = self._options.index(option)
+        self._selected_button = self._generate_selected_button()
+    
+    def set_selected_index(self, index: int) -> None:
+        """
+        Set the selected option of the drop down menu
+        :param selected_option_index: int with the new selected option index
+        :return: None
+        """
+        if index < 0 or index >= len(self._options):
+            raise ValueError("Selected option index is out of range")
+        
+        self._selected_option_index = index
+        self._selected_button = self._generate_selected_button()
+
+    """
+    Getters
+    """
+    def get_selected_option(self) -> str:
+        """
+        Get the selected option
+        :return: str with the selected option
+        """
+        return self._options[self._selected_option_index]
+
+    def get_selected_index(self) -> int:
+        """
+        Get the selected option index
+        :return: int with the selected option index
+        """
+        return self._selected_option_index
+    
+    def get_options(self) -> list[str]:
+        """
+        Get the options of the drop down menu
+        :return: list[str] with the options
+        """
+        return self._options
+
+    """
+    Internal methods
+    """
+
+    def _generate_selected_button(self) -> Button:
+        """
+        Return a button with the selected option
+        :return: Button with the selected option
+        """
+        selected_button = Button((self._rect.x, self._rect.y), 
+                                 self._rect.width, self._rect.height, 
+                                 label=self._options[self._selected_option_index], 
+                                 color=self._selected_option_color, 
+                                 hover_color=self._selected_option_hover_color, 
+                                 click_color=self._selected_option_click_color, 
+                                 text_color=self._selected_option_text_color,
+                                 text_click_color=self._selected_option_text_click_color,
+                                 text_hover_color=self._selected_option_text_hover_color,
+                                 border_radius=self._border_radius)
+
+        return selected_button
+    
+    def _generate_options_buttons(self) -> list[Button]:
+        """
+        Generate the buttons for the options
+        :return: list of buttons with the options
+        """
+        options_buttons = []
+
+        for index, lable in enumerate(self._options):
+            offset_x = self._rect.width * (index // self._max_elements_per_column) * self._wrap_direction
+            offset_y = self._rect.height * ((index - index // self._max_elements_per_column * self._max_elements_per_column) + 1)
+            x_cordinate = self._rect.x + offset_x
+            y_cordinate = self._rect.y + offset_y
+                
+            button = Button((x_cordinate, y_cordinate), 
+                            self._rect.width, self._rect.height, 
+                            label=lable,
+                            color=self._color,
+                            hover_color=self._hover_color,
+                            click_color=self._click_color,
+                            text_color=self._text_color,
+                            text_click_color=self._text_color_click,
+                            text_hover_color=self._text_color_hover,
+                            border_radius=self._border_radius)
+
+            options_buttons.append(button)
+
+        return options_buttons
+    
+    """
+    Basic methods
+    """
+    
+    def draw(self, surface: pygame.Surface) -> None:
+        """
+        Draw the drop down menu
+        :param surface: pygame.Surface where the drop down menu will be drawn
+        :return: None
+        """
+
+        self._selected_button.draw(surface)
+
+        if self._is_open:
+            for button in self._options_buttons:
+                button.draw(surface)
+
+    def update(self, _=None) -> None:
+        """
+        Update the drop down menu
+        :return: None
+        """
+        super().update()
+
+        # If the menu is being animated, update the buttons so they are in the right position
+        if self._is_being_animated:
+            self._options_buttons = self._generate_options_buttons()
+            self._selected_button = self._generate_selected_button()
+
+        # Update the buttons
+        self._selected_button.update()
+        for button in self._options_buttons:
+            button.update()
+
+        if self._is_open:
+            # Check if any of the buttons were clicked, if so, set the selected option to the clicked button
+            for button in self._options_buttons:
+                if button.was_clicked():
+                    self._selected_option_index = self._options_buttons.index(button)
+                    self._selected_button = self._generate_selected_button()
+                    # Close the menu after selecting an option
+                    self._is_open = False
+                    return
+            
+            if self._selected_button.was_clicked():
+                self._is_open = False
+                return
+
+            # Check if the menu was clicked outside, if so, close it
+            if pygame.mouse.get_pressed()[0] == 1 and not self.is_clicked():
+                # Check that we haven't clicked any other button from the menu
+                for button in self._options_buttons:
+                    if button.is_hovered():
+                        return
+                    
+                self._is_open = False
+                return
+
+        # Check if the menu was clicked, if so, open it
+        if self._selected_button.was_clicked():
+            self._is_open = True
+
+
+

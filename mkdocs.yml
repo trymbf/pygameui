@@ -38,3 +38,5 @@ nav:
       - Button: components/button.md
       - Image: components/image.md
       - Input: components/input.md
+      - Progress Bar: components/progress-bar.md
+      - Dropdown Menu: components/dropdown-menu.md

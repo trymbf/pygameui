@@ -8,10 +8,6 @@ The Text class provides text rendering capabilities with customizable fonts and 
 text = pygameui.Text(
     position=(100, 100),
     content="Hello World",
-    color=(255, 255, 255),
-    font_size=20,
-    font_family="Arial",
-    centered=True
 )
 ```
 
