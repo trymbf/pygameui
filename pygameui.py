@@ -681,6 +681,9 @@ class Input(Text):
         :param value: str with the new text
         """
         self._text = value
+        self.set_content(self._text)
+
+        
 
     """
     Getters
