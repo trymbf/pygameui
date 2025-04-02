@@ -11,7 +11,7 @@ import re
 
 pygame.init()
 
-VERSION = "2.2.2"
+VERSION = "2.2.3"
 
 class Element:
     """
@@ -1437,9 +1437,9 @@ class Table(Element):
         :return: None
         """
         self._content = content
-        self._items = self._generate_table()
         self._columns = len(content[0])
         self._rows = len(content)
+        self._items = self._generate_table()
 
     """
     Internal methods
