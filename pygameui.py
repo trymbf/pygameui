@@ -1172,11 +1172,16 @@ class DropdownMenu(Element):
                  options: list[str], 
                  width: int = 200, 
                  height: int = 50,
+                 element_width: int = 200,
+                 element_height: int = 50,
+                 element_spacing: int = 2,
                  max_elements_per_column: int = 5,
                  wrap_reverse: bool = False,
                  color = (255, 255, 255),
                  hover_color = (200, 200, 200),
                  click_color = (150, 150, 150),
+                 font_size = 20,
+                 font_family = "Arial",
                  text_color = (0, 0, 0),
                  text_hover_color = (0, 0, 0),
                  text_click_color = (0, 0, 0),
@@ -1199,6 +1204,9 @@ class DropdownMenu(Element):
         self._text_color_hover = text_hover_color
         self._text_color_click = text_click_color
 
+        self._font_size = font_size
+        self._font_family = font_family
+
         self._selected_option_color = selected_option_color
         self._selected_option_text_color = selected_option_text_color
         self._selected_option_hover_color = selected_option_hover_color
@@ -1207,6 +1215,10 @@ class DropdownMenu(Element):
         self._selected_option_text_click_color = selected_option_text_click_color
 
         self._border_radius = border_radius
+
+        self._element_width = element_width
+        self._element_height = element_height
+        self._element_spacing = element_spacing
 
         # Drop down menu attributes
         self._options = options
@@ -1310,13 +1322,17 @@ class DropdownMenu(Element):
         options_buttons = []
 
         for index, lable in enumerate(self._options):
-            offset_x = self._rect.width * (index // self._max_elements_per_column) * self._wrap_direction
-            offset_y = self._rect.height * ((index - index // self._max_elements_per_column * self._max_elements_per_column) + 1)
+            multiplier_x = index // self._max_elements_per_column
+            offset_x = self._element_spacing + self._element_width * multiplier_x * self._wrap_direction + self._element_spacing * (multiplier_x-1)
+
+            multiplier_y = index - index // self._max_elements_per_column * self._max_elements_per_column
+            offset_y = self._rect.height + self._element_height * multiplier_y + self._element_spacing * (multiplier_y+1)
+            
             x_cordinate = self._rect.x + offset_x
             y_cordinate = self._rect.y + offset_y
                 
             button = Button((x_cordinate, y_cordinate), 
-                            self._rect.width, self._rect.height, 
+                            self._element_width, self._element_height, 
                             label=lable,
                             color=self._color,
                             hover_color=self._hover_color,
@@ -1324,6 +1340,8 @@ class DropdownMenu(Element):
                             text_color=self._text_color,
                             text_click_color=self._text_color_click,
                             text_hover_color=self._text_color_hover,
+                            font_family=self._font_family,
+                            font_size=self._font_size,
                             border_radius=self._border_radius)
 
             options_buttons.append(button)
@@ -1482,4 +1500,3 @@ class Table(Element):
         for item in self._items:
             item.draw(surface)
             item.update()
-    
