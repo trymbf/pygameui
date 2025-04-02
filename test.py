@@ -12,9 +12,6 @@ dropdown = pygameui.Table(
     width=300,
     height=100,
     content=[["Option 1", "Option 2", "Option 3"], ["Option 4", "Option 5", "Option 6"]],
-    color=(255,0,0),
-    border_color=(0, 255, 0),
-    border_width=1,
 )
 
 # Main loop

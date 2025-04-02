@@ -11,7 +11,7 @@ import re
 
 pygame.init()
 
-VERSION = "2.2.0"
+VERSION = "2.2.1"
 
 class Element:
     """
@@ -1401,7 +1401,8 @@ class Table(Element):
                  content: list[list[str]], 
                  width = 200, 
                  height = 50, 
-                 color = (255, 255, 255), 
+                 color = (255, 255, 255),
+                 hover_color = (200, 200, 200),
                  text_color = (0, 0, 0),
                  border_color = (200, 200, 200),
                  border_width = 2,
@@ -1416,6 +1417,7 @@ class Table(Element):
         self._cell_width = width // self._columns
         self._cell_height = height // self._rows
         self._cell_color = color
+        self._cell_color_hover = hover_color
 
         self._text_color = text_color
 
@@ -1459,7 +1461,7 @@ class Table(Element):
                 y = self._rect.y + row * self._cell_height
 
                 # Draw the text in the cell
-                cell = Button((x, y), label=self._content[row][column], width=self._cell_width, height=self._cell_height, color=self._cell_color, border_radius=self._border_radius, border_color=self._border_color, border_width=self._border_width, text_color=self._text_color)
+                cell = Button((x, y), label=self._content[row][column], width=self._cell_width, height=self._cell_height, color=self._cell_color, border_radius=self._border_radius, border_color=self._border_color, border_width=self._border_width, text_color=self._text_color, hover_color=self._cell_color_hover)
                 items_to_draw.append(cell)
 
         return items_to_draw
@@ -1479,4 +1481,5 @@ class Table(Element):
 
         for item in self._items:
             item.draw(surface)
+            item.update()
     
