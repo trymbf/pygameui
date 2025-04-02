@@ -11,7 +11,7 @@ import re
 
 pygame.init()
 
-VERSION = "2.2.1"
+VERSION = "2.2.2"
 
 class Element:
     """
@@ -1043,7 +1043,7 @@ class ProgressBar(Element):
         :param border_width: Width of the border
         :param centered: If the progress will be centered in the position
         """
-        super().__init__(position, width, height, color, border_radius, centered)
+        super().__init__(position, width, height, color, border_radius, centered=centered)
 
         # Progress attributes
         self._progress = progrss
@@ -1189,7 +1189,7 @@ class DropdownMenu(Element):
                  border_radius = 0, 
                  centered = False):
         
-        super().__init__(position, width, height, color, border_radius, centered)
+        super().__init__(position, width, height, color, border_radius, centered=centered)
 
         # Visuals
         self._color = color
@@ -1408,7 +1408,7 @@ class Table(Element):
                  border_width = 2,
                  border_radius = 0, 
                  centered = False):
-        super().__init__(position, width, height, color, border_radius, centered)
+        super().__init__(position, width, height, color, border_radius, centered=centered)
 
         # Table attributes
         self._content = content

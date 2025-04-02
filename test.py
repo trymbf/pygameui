@@ -7,8 +7,9 @@ screen = pygame.display.set_mode((500, 500))
 clock = pygame.time.Clock()
 
 # Create dropdown menu
-dropdown = pygameui.Button(
-    (250,250),
+dropdown = pygameui.Table(
+    (250, 250),
+    content=[["Option 1", "Option 2", "Option 3"], ["Option 4", "Option 5", "Option 6"]],
     centered=True
 )
 
