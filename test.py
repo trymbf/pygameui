@@ -3,15 +3,13 @@ import pygameui
 
 # Initialize
 pygame.init()
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((500, 500))
 clock = pygame.time.Clock()
 
 # Create dropdown menu
-dropdown = pygameui.Table(
-    (300, 300),
-    width=300,
-    height=100,
-    content=[["Option 1", "Option 2", "Option 3"], ["Option 4", "Option 5", "Option 6"]],
+dropdown = pygameui.Button(
+    (250,250),
+    centered=True
 )
 
 # Main loop

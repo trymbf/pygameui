@@ -888,7 +888,7 @@ class Button(Element):
         :param centered: If the button will be centered in the position
         """
 
-        super().__init__(position, width, height, color, border_radius, centered)
+        super().__init__(position, width, height, color, border_radius, border_color, border_width, centered)
 
         self._text_object = Text(
             position=self._rect.center,
