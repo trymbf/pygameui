@@ -11,7 +11,7 @@ import re
 
 pygame.init()
 
-VERSION = "2.1.0"
+VERSION = "2.2.0"
 
 class Element:
     """
@@ -23,6 +23,8 @@ class Element:
                  height:int,
                  color: tuple[int, int, int] = (255, 255, 255),
                  border_radius: int = 0,
+                 border_color: tuple[int, int, int] = None,
+                 border_width: int = 2,
                  centered: bool = False):
         """
         Create a basic element
@@ -30,11 +32,16 @@ class Element:
         :param width: Width of the element rectangle
         :param height: Height of the element rectangle
         :param color: Color of the element
+        :param border_radius: Radius of the element corners
+        :param border_color: Color of the element border, if None, the border will not be drawn
+        :param border_width: Width of the element border
         :param centered: If the element will be centered in the position
         """
         # Basic attributes
         self._rect = pygame.Rect(position, (width, height))
         self._border_radius = border_radius
+        self._border_color = border_color # If None, the border will not be drawn
+        self._border_width = border_width # Width of the border
         self._color = color
         self._display = True
         # Centered attribute, if True, the element will be centered in the position
@@ -311,6 +318,9 @@ class Element:
             return
 
         pygame.draw.rect(surface, self._color, self._rect, border_radius = self._border_radius)
+
+        if self._border_color:
+            pygame.draw.rect(surface, self._border_color, self._rect, width=self._border_width, border_radius=self._border_radius)
 
     def update(self, _=None) -> None:
         """
@@ -852,6 +862,8 @@ class Button(Element):
                  width: int = 200,
                  height: int = 50,
                  border_radius: int = 10,
+                 border_color: tuple[int, int, int] = None,
+                 border_width: int = 2,
                  label: str = "Click me.",
                  color: tuple[int, int, int] = (255, 255, 255),
                  hover_color: tuple[int, int, int] = (200, 200, 200),
@@ -894,6 +906,10 @@ class Button(Element):
         self._color = color
         self._hover_color = hover_color
         self._click_color = click_color
+
+        # Border attributes
+        self._border_color = border_color # Color of the border, set to None to disable the border
+        self._border_width = border_width
         self._border_radius = border_radius
 
         # Text attributes
@@ -981,6 +997,9 @@ class Button(Element):
             self._text_object.set_color(self._text_color)
 
         self._text_object.draw(surface)
+
+        if self._border_color:
+            pygame.draw.rect(surface, self._border_color, self._rect, width=self._border_width, border_radius=self._border_radius)
 
     def update(self,  _=None) -> None:
         """
@@ -1322,6 +1341,9 @@ class DropdownMenu(Element):
         :return: None
         """
 
+        if not self._display:
+            return
+
         self._selected_button.draw(surface)
 
         if self._is_open:
@@ -1373,5 +1395,88 @@ class DropdownMenu(Element):
         if self._selected_button.was_clicked():
             self._is_open = True
 
+class Table(Element):
+    def __init__(self, 
+                 position,
+                 content: list[list[str]], 
+                 width = 200, 
+                 height = 50, 
+                 color = (255, 255, 255), 
+                 text_color = (0, 0, 0),
+                 border_color = (200, 200, 200),
+                 border_width = 2,
+                 border_radius = 0, 
+                 centered = False):
+        super().__init__(position, width, height, color, border_radius, centered)
 
+        # Table attributes
+        self._content = content
+        self._columns = len(content[0])
+        self._rows = len(content)
+        self._cell_width = width // self._columns
+        self._cell_height = height // self._rows
+        self._cell_color = color
 
+        self._text_color = text_color
+
+        self._border_color = border_color
+        self._border_width = border_width
+
+        # Drawing
+        self._items = self._generate_table()
+
+    """
+    Setters
+    """
+    def set_content(self, content: list[list[str]]) -> None:
+        """
+        Set the content of the table
+        :param content: list[list[str]] with the new content
+        :return: None
+        """
+        self._content = content
+        self._items = self._generate_table()
+        self._columns = len(content[0])
+        self._rows = len(content)
+
+    """
+    Internal methods
+    """
+
+    def _generate_table(self) -> None:
+        """
+        Generate the table
+        :return: None
+        """
+        items_to_draw = []
+
+        self._cell_width = self._rect.width // self._columns
+        self._cell_height = self._rect.height // self._rows
+
+        for row in range(self._rows):
+            for column in range(self._columns):
+                x = self._rect.x + column * self._cell_width
+                y = self._rect.y + row * self._cell_height
+
+                # Draw the text in the cell
+                cell = Button((x, y), label=self._content[row][column], width=self._cell_width, height=self._cell_height, color=self._cell_color, border_radius=self._border_radius, border_color=self._border_color, border_width=self._border_width, text_color=self._text_color)
+                items_to_draw.append(cell)
+
+        return items_to_draw
+
+    """
+    Basic methods
+    """
+
+    def draw(self, surface: pygame.Surface) -> None:
+        """
+        Draw the table
+        :param surface: pygame.Surface where the table will be drawn
+        :return: None
+        """
+        if not self._display:
+            return
+
+        for item in self._items:
+            item.draw(surface)
+    

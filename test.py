@@ -7,16 +7,14 @@ screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 
 # Create dropdown menu
-dropdown = pygameui.DropdownMenu(
-    position=(400, 200),
-    options=["Option 1", "Option 2", "Option 3"],
-    width=250,
-    height=50,
-    color=(240, 240, 240),
-    hover_color=(220, 220, 220),
-    text_color=(50, 50, 50),
-    centered=True,
-    border_radius=5,
+dropdown = pygameui.Table(
+    (300, 300),
+    width=300,
+    height=100,
+    content=[["Option 1", "Option 2", "Option 3"], ["Option 4", "Option 5", "Option 6"]],
+    color=(255,0,0),
+    border_color=(0, 255, 0),
+    border_width=1,
 )
 
 # Main loop
@@ -33,10 +31,6 @@ while running:
 
     # Update dropdown
     dropdown.update()
-
-    # Check for selection
-    if dropdown.get_selected_option():
-        print(f"Selected: {dropdown.get_selected_option()}")
 
     # Draw elements
     dropdown.draw(screen)
