@@ -40,3 +40,4 @@ nav:
       - Input: components/input.md
       - Progress Bar: components/progress-bar.md
       - Dropdown Menu: components/dropdown-menu.md
+      - Table: components/table.md

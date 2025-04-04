@@ -7,6 +7,7 @@ Buttons provide clickable interface elements with hover effects.
 ```python
 button = pygameui.Button(
     position=(100, 100),
+    label="Click me."
 )
 ```
 
@@ -17,7 +18,9 @@ position: tuple[int, int],
 width: int = 200,
 height: int = 50,
 border_radius: int = 10,
-content: str = "Click me.",
+border_color: tuple[int, int, int] = None,
+border_width: int = 2,
+label: str = "Click me.",
 color: tuple[int, int, int] = (255, 255, 255),
 hover_color: tuple[int, int, int] = (200, 200, 200),
 click_color: tuple[int, int, int] = (150, 150, 150),
@@ -33,10 +36,12 @@ centered: bool = False
 - `width`: Width of the button
 - `height`: Height of the button
 - `border_radius`: Radius for rounded corners
-- `content`: Text displayed on the button
-- `color`: Default button backgroundcolor
-- `hover_color`: Backgroundcolor when the button is hovered over
-- `click_color`: Backgroundcolor when the button is clicked
+- `border_color`: Color of the button border, if None, the border will not be drawn
+- `border_width`: Width of the button border
+- `label`: Text displayed on the button
+- `color`: Default button background color
+- `hover_color`: Background color when the button is hovered over
+- `click_color`: Background color when the button is clicked
 - `text_color`: Color of the text when not hovered
 - `text_hover_color`: Color of the text when hovered over
 - `text_click_color`: Color of the text when clicked
@@ -47,8 +52,6 @@ centered: bool = False
 ## Methods
 
 All methods inherited from the [Element](element.md) class.
-
-(Some methods may not be applicable to the Image class, but are included for consistency.)
 
 ### Setters
 
@@ -66,13 +69,9 @@ set_text_click_color(color: tuple[int, int, int]) -> None
 - `set_color`: Set the default button background color
 - `set_hover_color`: Set the background color when the button is hovered over
 - `set_click_color`: Set the background color when the button is clicked
-- `set_text_color`: Set the color of the buttonlabel when not hovered
-- `set_text_hover_color`: Set the color of the buttonlabel when hovered over
-- `set_text_click_color`: Set the color of the buttonlabel when clicked
-
-### Mouse and Click Events
-
-See the [Mouse and Click Events](element.md#mouse-and-click-events) section in the Element documentation.
+- `set_text_color`: Set the color of the button label when not hovered
+- `set_text_hover_color`: Set the color of the button label when hovered over
+- `set_text_click_color`: Set the color of the button label when clicked
 
 ## Example
 
@@ -116,15 +115,11 @@ secondary_button = pygameui.Button(
     centered=True
 )
 
-# Track click status
-message = "Click a button!"
-
 # Main loop
 running = True
 while running:
     # Handle events
-    events = pygame.event.get()
-    for event in events:
+    for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 

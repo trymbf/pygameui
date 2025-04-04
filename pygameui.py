@@ -11,7 +11,7 @@ import re
 
 pygame.init()
 
-VERSION = "2.2.3"
+VERSION = "2.2.4"
 
 class Element:
     """
@@ -673,7 +673,7 @@ class Input(Text):
         """
         Set the filter of the input
         :param filter: str with the new filter
-        :param only_allow_filter: If true, the filter will exclude the characters in the filter, if false, the filter will only allow characters in the filter
+        :param only_allow_filter: If true, the filter only allow the characters in the filter, if false, the filter will only allow characters not in the filter
         """
         self._filter = filter
         self._filter_mode_exclude = only_allow_filter
