@@ -676,7 +676,7 @@ class Input(Text):
         :param only_allow_filter: If true, the filter only allow the characters in the filter, if false, the filter will only allow characters not in the filter
         """
         self._filter = filter
-        self._filter_mode_exclude = only_allow_filter
+        self._filter_mode_exclude = not only_allow_filter
 
     def set_hint(self, hint: str) -> None:
         """
@@ -924,6 +924,7 @@ class Button(Element):
     """
     Setters
     """
+
     def set_label(self, label: str) -> None:
         """
         Set the text of the button

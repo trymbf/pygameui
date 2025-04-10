@@ -110,7 +110,7 @@ age_input = pygameui.Input(
     centered=True
 )
 # Set a filter to only allow numbers
-age_input.set_filter("0123456789", only_allow_filter=False)
+age_input.set_filter("0123456789", only_allow_filter=True)
 age_input.set_max_length(3)
 
 # Create labels
@@ -193,4 +193,5 @@ while running:
     # Update display
     pygame.display.flip()
     clock.tick(60)
+
 ```
