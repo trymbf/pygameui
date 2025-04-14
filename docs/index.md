@@ -6,6 +6,8 @@ Python library that makes making pygame-based-UIs easy!
 
 `PygameUI` is a small Python library written in Python that makes it easier to create UI elements like buttons, texts, inputs, and more when using the Python library PyGame. The library also supplies the user with many optional features for customizing the UI elements.
 
+(Hint: Feel free to ⭐star⭐ the repo on [github](https://github.com/trymbf/pygameui)!)
+
 ## Documentation
 
 Documentation in web form is available at [https://trymbf.github.io/pygameui/](https://trymbf.github.io/pygameui/)

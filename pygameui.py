@@ -8,10 +8,11 @@
 
 import pygame
 import re
+from typing import Literal
 
 pygame.init()
 
-VERSION = "2.2.4"
+VERSION = "2.1.6"
 
 class Element:
     """
@@ -65,6 +66,20 @@ class Element:
     """
     Setters
     """
+
+    def move(self, x: int, y: int):
+        """
+        Move the position of the elment by x, y value
+        (Note moving has no effect when animating)
+        :param x: int for movement in x direction
+        :param y: int for movement in y direction
+        """
+        if self._centered:
+            self._rect.centerx += x
+            self._rect.centery += y
+        else:
+            self._rect.x += x
+            self._rect.y += y
 
     def set_position(self, position: tuple[int, int]) -> None:
         """
@@ -481,7 +496,7 @@ class Image(Element):
     """
     def __init__(self,
                  position: tuple[int, int],
-                 image_path: str,
+                 src: str,
                  width: int = 0,
                  height: int = 0,
                  scale:int = 1,
@@ -489,15 +504,15 @@ class Image(Element):
         """
         Create an image element
         :param position: Where the image will be positioned
-        :param image_path: Path to the image file
+        :param src: Path to the image file
         :param centered: If the image will be centered in the position
         :param width: Width of the image, 0 indicates that the image will keep its original width
         :param height: Height of the image, 0 indicates that the image will keep its original height
         :param scale: Factor to scale the image by compared to the original size, applies when width and height are not set
         """
         # Image attributes
-        self._image = pygame.image.load(image_path)
-        self._image_path = image_path
+        self._image = pygame.image.load(src)
+        self._image_path = src
         self._scale = scale
         self._width = width
         self._height = height
@@ -517,14 +532,14 @@ class Image(Element):
     Setters
     """
 
-    def set_image(self, image_path: str) -> None:
+    def set_image(self, src: str) -> None:
         """
         Change the image of the element
         :param image_path: str with the new image path
         :return: None
         """
         
-        self._image = pygame.image.load(image_path)
+        self._image = pygame.image.load(src)
         self._image = pygame.transform.scale(self._image, (self._width, self._height)).convert_alpha()
 
     def scale(self, scale: int) -> None:
@@ -925,6 +940,23 @@ class Button(Element):
     Setters
     """
 
+    def move(self, x: int, y: int):
+        """
+        Move the position of the elment by x, y value
+        (Note moving has no effect when animating)
+        :param x: int for movement in x direction
+        :param y: int for movement in y direction
+        """
+        super().move(x, y)
+        if self._centered:
+            # Update text element
+            self._text_object._rect.centerx += x
+            self._text_object._rect.centery += y
+        else:
+            # Update text element
+            self._text_object._rect.x += x
+            self._text_object._rect.y += y
+
     def set_label(self, label: str) -> None:
         """
         Set the text of the button
@@ -1069,6 +1101,21 @@ class ProgressBar(Element):
     """
     Setters 
     """
+
+    def move(self, x: int, y: int):
+        """
+        Move the position of the elment by x, y value
+        (Note moving has no effect when animating)
+        :param x: int for movement in x direction
+        :param y: int for movement in y direction
+        """
+        super().move(x, y)
+        if self._centered:
+            self._progress_bar.centerx += x
+            self._progress_bar.centery += y
+        else:
+            self._progress_bar.x += x
+            self._progress_bar.y += y
 
     def set_progress(self, progress: int) -> None:
         """
@@ -1233,6 +1280,18 @@ class DropdownMenu(Element):
     """
     Setters
     """
+    
+    def move(self, x: int, y: int):
+        """
+        Move the position of the elment by x, y value
+        (Note moving has no effect when animating)
+        :param x: int for movement in x direction
+        :param y: int for movement in y direction
+        """
+        super().move(x, y)
+        for button in self._options_buttons:
+            button.move(x, y)
+        self._selected_button.move(x,y)
 
     def set_options(self, options: list[str]) -> None:
         """
@@ -1449,6 +1508,17 @@ class Table(Element):
     """
     Setters
     """
+    def move(self, x: int, y: int):
+        """
+        Move the position of the elment by x, y value
+        (Note moving has no effect when animating)
+        :param x: int for movement in x direction
+        :param y: int for movement in y direction
+        """
+        super().move(x, y)
+        for button in self._items:
+            button.move(x, y)
+
     def set_content(self, content: list[list[str]]) -> None:
         """
         Set the content of the table
@@ -1480,7 +1550,7 @@ class Table(Element):
                 y = self._rect.y + row * self._cell_height
 
                 # Draw the text in the cell
-                cell = Button((x, y), label=self._content[row][column], width=self._cell_width, height=self._cell_height, color=self._cell_color, border_radius=self._border_radius, border_color=self._border_color, border_width=self._border_width, text_color=self._text_color, hover_color=self._cell_color_hover)
+                cell = Button((x, y), label=str(self._content[row][column]), width=self._cell_width, height=self._cell_height, color=self._cell_color, border_radius=self._border_radius, border_color=self._border_color, border_width=self._border_width, text_color=self._text_color, hover_color=self._cell_color_hover)
                 items_to_draw.append(cell)
 
         return items_to_draw
@@ -1501,3 +1571,123 @@ class Table(Element):
         for item in self._items:
             item.draw(surface)
             item.update()
+
+class Checkbox(Element):
+    def __init__(self, 
+                 position, 
+                 width: int = 50,
+                 height: int = 50, 
+                 style: Literal["checkmark", "cross", "circle", "square", "none"] = "checkmark",
+                 unchecked_style: Literal["checkmark", "cross", "circle", "square", "none"] ="none",
+                 mark_width: int = 5,
+                 color: tuple[int,int,int] = (100, 255, 100), 
+                 background_color: tuple[int,int,int] = (200,200,200),
+                 border_radius: int = 0, 
+                 border_color: tuple[int, int, int] = (0, 0, 0), 
+                 border_width: int = 2, 
+                 centered: bool = False):
+        super().__init__(position, width, height, background_color, border_radius, border_color, border_width, centered)
+
+        self._checked = False
+        self._disabled = False
+
+        self._checkstyles = {
+            "checkmark": pygame.Surface((width, height), pygame.SRCALPHA),
+            "cross": pygame.Surface((width, height), pygame.SRCALPHA),
+            "square": pygame.Surface((width, height), pygame.SRCALPHA),
+            "circle": pygame.Surface((width, height), pygame.SRCALPHA),
+        }
+        self._checkstyles["checkmark"].fill((0,0,0,0))
+        self._checkstyles["cross"].fill((0,0,0, 0))
+        self._checkstyles["square"].fill((0,0,0, 0))
+        self._checkstyles["circle"].fill((0,0,0, 0))
+
+        pygame.draw.line(self._checkstyles["checkmark"], color, (width//4, height//2), (width//2, height*3//4), mark_width)
+        pygame.draw.line(self._checkstyles["checkmark"], color, (width//2, height*3//4), (width*3//4, height//4), mark_width)
+        
+        pygame.draw.line(self._checkstyles["cross"], color, (width//4, height//4), (width*3//4, height*3//4), mark_width)
+        pygame.draw.line(self._checkstyles["cross"], color, (width//4, height*3//4), (width*3//4, height//4), mark_width)
+
+        square_size = min(width, height) * 0.6  # Make square 60% of the smallest dimension
+        square_x = (width - square_size) // 2   # Center horizontally 
+        square_y = (height - square_size) // 2  # Center vertically
+        pygame.draw.rect(self._checkstyles["square"], color, (square_x, square_y, square_size, square_size), mark_width)
+
+        pygame.draw.circle(self._checkstyles["circle"], color, (width//2, height//2), width//3, mark_width)
+
+        self._checked_style = style
+        self._unchecked_style = unchecked_style
+    
+    """
+    Setters
+    """
+
+    def set_checked(self, checked: bool) -> None:
+        """
+        Set the checked state of the checkbox
+        :param checked: bool with the new checked state
+        """
+        self._checked = checked
+    
+    def disable(self) -> None:
+        """
+        Disable the checkbox, allows the user to click to check it
+        """
+        self._disabled = True
+    
+    def enable(self) -> None:
+        """
+        Enable the checkbox, allows the user to click to check it
+        """
+        self._disabled = False
+
+    """
+    Getters
+    """
+
+    def is_checked(self) -> bool:
+        """
+        Get the checked state of the checkbox
+        :return: bool with the checked state
+        """
+        return self._checked
+    
+    def is_enabled(self) -> bool:
+        """
+        Get the enabled state of the checkbox
+        :return: bool with the enabled state
+        """
+        return not self._disabled
+    
+    """
+    Basic methods
+    """
+
+    def draw(self, surface: pygame.surface) -> None:
+        """
+        Draw the checkbox
+        :param surface: pygame.Surface where the checkbox will be drawn
+        """
+        if not self._display:
+            return
+
+        super().draw(surface)
+        # Draw the checkmark
+        if self._checked:
+            if not self._checked_style == "none":
+                surface.blit(self._checkstyles[self._checked_style], self._rect.topleft)
+        else:
+            if not self._unchecked_style == "none":
+                surface.blit(self._checkstyles[self._unchecked_style], self._rect.topleft)
+
+    
+    def update(self, _ = None) -> None:
+        """
+        Update the checkbox
+        :param events: list with the events
+        """
+        super().update()
+
+        # Check if the checkbox was clicked
+        if self.was_clicked() and not self._disabled:
+            self._checked = not self._checked

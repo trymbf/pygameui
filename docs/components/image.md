@@ -7,7 +7,7 @@ The Image component displays images on the screen with customizable appearance.
 ```python
 image = pygameui.Image(
     position=(100, 100),
-    image_path="path/to/image.png"
+    src="path/to/image.png"
 )
 ```
 
@@ -15,7 +15,7 @@ image = pygameui.Image(
 
 ```python
 position: tuple[int, int],
-image_path: str,
+src: str,
 width: int = 0,
 height: int = 0,
 scale: int = 1,
@@ -23,7 +23,7 @@ centered: bool = False
 ```
 
 - `position`: Tuple of (x, y) coordinates
-- `image_path`: Path to the image file
+- `src`: Path to the image file
 - `width`: Width to resize the image to, 0 indicates using original width (modified by scale)
 - `height`: Height to resize the image to, 0 indicates using original height (modified by scale)
 - `scale`: Factor to scale the image by compared to the original size, applies when width and height are not set
@@ -36,7 +36,7 @@ All methods inherited from the [Element](element.md) class.
 ### Setters
 
 ```python
-set_image(image_path: str) -> None
+set_image(src: str) -> None
 scale(scale: int) -> None
 ```
 
@@ -72,14 +72,14 @@ image_path = "path/to/your/image.png"
 # Create a basic image
 logo = pygameui.Image(
     position=(400, 200),
-    image_path=image_path,
+    src=image_path,
     centered=True
 )
 
 # Create a scaled image
 small_logo = pygameui.Image(
     position=(200, 400),
-    image_path=image_path,
+    src=image_path,
     scale=0.5,
     centered=True
 )
@@ -87,7 +87,7 @@ small_logo = pygameui.Image(
 # Create a sized image
 sized_logo = pygameui.Image(
     position=(600, 400),
-    image_path=image_path,
+    src=image_path,
     width=150,
     height=100,
     centered=True
