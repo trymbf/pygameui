@@ -12,7 +12,7 @@ from typing import Literal
 
 pygame.init()
 
-VERSION = "2.1.6"
+VERSION = "2.1.7"
 
 class Element:
     """
@@ -291,7 +291,7 @@ class Element:
 
         return False
 
-    def is_clicked(self, button: int = 1):
+    def is_clicked(self, button: int = 0):
         """
         Returns if the element is clicked.
         :param button: The button that will be used to click the element, default is left click
@@ -302,7 +302,7 @@ class Element:
 
         # Check mouse over and clicked conditions
         if self._rect.collidepoint(mouse_pos):
-            if pygame.mouse.get_pressed()[0] == button:
+            if pygame.mouse.get_pressed()[button]:
                 self._clicked = True
                 return True
 
@@ -313,11 +313,13 @@ class Element:
         Returnes true if the element was left clicked and then released
         """
         if self.is_clicked():
-            return
+            return False
 
         if self._clicked:
             self._clicked = False
             return True
+
+        return False
 
     """
     Basic methods
@@ -604,6 +606,7 @@ class Input(Text):
                  position: tuple [int, int],
                  width: int = 200,
                  height: int = 50,
+                 cursor: bool = True,
                  passive_text_color: tuple[int, int, int] = (150, 150, 150),
                  active_text_color: tuple[int, int, int] = (255, 255, 255),
                  passive_border_color: tuple[int, int, int] = (100, 100, 100),
@@ -619,6 +622,7 @@ class Input(Text):
         :param position: Where the input will be positioned
         :param width: Width of the input
         :param height: Height of the input
+        :param cursor: Enable/disable cursor in the input element.
         :param passive_text_color: Color of the text when the input is not active
         :param active_text_color: Color of the text when the input is active
         :param passive_border_color: Color of the border when the input is not active
@@ -670,7 +674,7 @@ class Input(Text):
         self._exit_keys = [pygame.K_RETURN, pygame.K_KP_ENTER, pygame.K_TAB, pygame.K_ESCAPE]
 
         # Cursor
-        self._cursor = False
+        self._cursor = cursor
         self._cursor_index = 0
 
     """
@@ -707,8 +711,6 @@ class Input(Text):
         """
         self._text = value
         self.set_content(self._text)
-
-        
 
     """
     Getters
@@ -781,10 +783,14 @@ class Input(Text):
                 continue
             # Cursor
             elif event.key == pygame.K_RIGHT:
+                if not self._cursor:
+                    continue
                 if self._cursor_index >= len(self._text):
                     continue
                 self._cursor_index += 1
             elif event.key == pygame.K_LEFT:
+                if not self._cursor:
+                    continue
                 if self._cursor_index <= 0:
                     continue
                 self._cursor_index -= 1
@@ -824,12 +830,46 @@ class Input(Text):
         text_to_cursor = Text(self.get_position(), self._text[:self._cursor_index], self._active_text_color,
                               self._font_size, self._font_family, self._centered)
 
-        cursor_position = (self._rect.x + text_to_cursor._rect.width, self._rect.y)
+        cursor_position = (self._rect.x + text_to_cursor._rect.width - 2, self._rect.y)
 
         if self._centered:
-            cursor_position = (self._rect.x + (self._rect.width - self._get_text_rect_dimensions()[0]), self._rect.centery - text_to_cursor._rect.height//2)
+            start = self._rect.centerx - super()._get_text_rect_dimensions()[0] // 2
+            result = start + text_to_cursor._rect.width - 2
+            cursor_position = (result, self._rect.y + self._rect.height//4)
+
 
         surface.blit(cursor_surface, cursor_position)
+
+    def _handle_cursor_clicks(self) -> None:
+        """
+        Handle the clicks on the cursor
+        :return: None
+        """
+        mouse_pos = pygame.mouse.get_pos()
+        if not self._rect.collidepoint(mouse_pos):
+            return
+        
+        if not self._cursor:
+            return
+
+        if not self.active:
+            return
+
+        if not pygame.mouse.get_pressed()[0]:
+            return
+
+        # Get the position of the mouse in the input
+        mouse_x = mouse_pos[0] - self._rect.x
+
+        # Get the index of the character that is closest to the mouse position
+        for i in range(len(self._text) + 1):
+            text_to_cursor = Text(self.get_position(), self._text[:i], self._active_text_color, self._font_size,
+                                  self._font_family, self._centered)
+            if text_to_cursor._rect.width >= mouse_x:
+                self._cursor_index = i
+                break
+        else:
+            self._cursor_index = len(self._text)
 
     """
     Basic methods
@@ -860,6 +900,7 @@ class Input(Text):
             self.active = True
         # Check if the input was clicked outside, if so, deactivate it
         elif self.active:
+            self._handle_cursor_clicks()
             self._handle_keys(events)
             if pygame.mouse.get_pressed()[0] == 1 and not self.is_clicked():
                 self.active = False
@@ -867,7 +908,6 @@ class Input(Text):
                     self.set_content(self._text)
                 else:
                     self.set_content(self._hint)
-
 class Button(Element):
     """
     Button element that can be displayed

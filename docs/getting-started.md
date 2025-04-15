@@ -25,6 +25,8 @@ screen = pygame.display.set_mode((800, 600)) # Set your own width and height
 # Create UI elements
 ui_element = pygameui.Element(position=(250, 250), width=200, height=50)
 
+# Control framerate
+clock = pygame.time.Clock()
 # Main loop
 running = True
 while running:
@@ -45,6 +47,9 @@ while running:
 
     # Update pygame display
     pygame.display.flip()
+
+    # Run at 60 frames pr second
+    clock.tick(60)
 ```
 
 To add more UI elements, simply create more instances of the `Element` class or its subclasses (like `Button`, `Text`, etc.) and follow the same pattern.

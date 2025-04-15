@@ -115,7 +115,7 @@ was_clicked() -> bool
 ```
 
 - `is_hovered`: Check if the mouse is hovering over the element. Returns True if hovered, False otherwise.
-- `is_clicked`: Check if the element is hovered and the provided mouse button is down. Returns True if clicked, False otherwise. The default button is 1 (left mouse button).
+- `is_clicked`: Check if the element is hovered and the provided mouse button is down. Returns True if clicked, False otherwise. The default button is 0 (left mouse button).
 - `was_clicked`: Check if the element was clicked and then released. Returns True if this happened, False otherwise.
 
 ## Example
