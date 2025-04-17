@@ -1,7 +1,7 @@
 """
 # Oh hey there! You found the source code for the PygameGUI library!
 # If you are lost and don't know how to use the library,
-# check out the documentation at https://tbf3d.github.io/pygameui/
+# check out the documentation at https://trymbf.github.io/pygameui/
 # Or if you know what you are doing, feel free to look around the code and see how it works!
 # Or even contribute to the project!
 """
@@ -12,7 +12,7 @@ from typing import Literal
 
 pygame.init()
 
-VERSION = "2.1.7"
+VERSION = "2.1.8"
 
 class Element:
     """
@@ -61,7 +61,7 @@ class Element:
         self._framerate = 60
 
         # Clicked
-        self._clicked = False
+        self._clicked = {0: False, 1: False, 2: False}
 
     """
     Setters
@@ -303,20 +303,21 @@ class Element:
         # Check mouse over and clicked conditions
         if self._rect.collidepoint(mouse_pos):
             if pygame.mouse.get_pressed()[button]:
-                self._clicked = True
                 return True
 
         return False
 
-    def was_clicked(self):
+    def was_clicked(self, button: int = 0):
         """
         Returnes true if the element was left clicked and then released
+        :param button: The button that will be used to click the element, default is left click
         """
-        if self.is_clicked():
+        if self.is_clicked(button):
+            self._clicked[button] = True
             return False
 
-        if self._clicked:
-            self._clicked = False
+        if self._clicked[button]:
+            self._clicked[button] = False
             return True
 
         return False
@@ -908,6 +909,7 @@ class Input(Text):
                     self.set_content(self._text)
                 else:
                     self.set_content(self._hint)
+
 class Button(Element):
     """
     Button element that can be displayed
@@ -974,7 +976,6 @@ class Button(Element):
 
         # States
         self._hovered = False
-        self._clicked = False
 
     """
     Setters
@@ -1059,7 +1060,7 @@ class Button(Element):
         if not self._display:
             return
 
-        if self._clicked:
+        if any(self._clicked.values()):
             pygame.draw.rect(surface, self._click_color, self._rect, border_radius=self._border_radius)
             self._text_object.set_color(self._text_click_color)
         elif self._hovered:
