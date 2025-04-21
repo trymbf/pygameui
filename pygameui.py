@@ -12,7 +12,7 @@ from typing import Literal
 
 pygame.init()
 
-VERSION = "2.1.8"
+VERSION = "2.1.9"
 
 class Element:
     """
@@ -1261,6 +1261,7 @@ class DropdownMenu(Element):
                  options: list[str], 
                  width: int = 200, 
                  height: int = 50,
+                 on_change: callable = None,
                  element_width: int = 200,
                  element_height: int = 50,
                  element_spacing: int = 2,
@@ -1292,6 +1293,8 @@ class DropdownMenu(Element):
         self._text_color = text_color
         self._text_color_hover = text_hover_color
         self._text_color_click = text_click_color
+
+        self._onchange = on_change
 
         self._font_size = font_size
         self._font_family = font_family
@@ -1404,7 +1407,7 @@ class DropdownMenu(Element):
         """
         selected_button = Button((self._rect.x, self._rect.y), 
                                  self._rect.width, self._rect.height, 
-                                 label=self._options[self._selected_option_index], 
+                                 label=str(self._options[self._selected_option_index]), 
                                  color=self._selected_option_color, 
                                  hover_color=self._selected_option_hover_color, 
                                  click_color=self._selected_option_click_color, 
@@ -1434,7 +1437,7 @@ class DropdownMenu(Element):
                 
             button = Button((x_cordinate, y_cordinate), 
                             self._element_width, self._element_height, 
-                            label=lable,
+                            label=str(lable),
                             color=self._color,
                             hover_color=self._hover_color,
                             click_color=self._click_color,
@@ -1494,6 +1497,9 @@ class DropdownMenu(Element):
                     self._selected_button = self._generate_selected_button()
                     # Close the menu after selecting an option
                     self._is_open = False
+
+                    if self._onchange:
+                        self._onchange()
                     return
             
             if self._selected_button.was_clicked():

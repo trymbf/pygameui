@@ -18,11 +18,17 @@ position: tuple[int, int],
 width: int = 200,
 height: int = 50,
 options: list[str],
+on_change: callable = None,
+element_width: int = 200,
+element_height: int = 50,  
+element_spacing: int = 2,
 max_elements_per_column: int = 5,
 wrap_reverse: bool = False,
 color: tuple[int, int, int] = (255, 255, 255),
 hover_color: tuple[int, int, int] = (200, 200, 200),
 click_color: tuple[int, int, int] = (150, 150, 150),
+font_size: int = 20,
+font_family: str = "Arial",
 text_color: tuple[int, int, int] = (0, 0, 0),
 text_hover_color: tuple[int, int, int] = (0, 0, 0),
 text_click_color: tuple[int, int, int] = (0, 0, 0),
@@ -37,23 +43,29 @@ centered: bool = False
 ```
 
 - `position`: Tuple of (x, y) coordinates
-- `width`: Width of the dropdown menu
-- `height`: Height of the dropdown menu
+- `width`: Width of the dropdown menu main button
+- `height`: Height of the dropdown menu main button
 - `options`: List of strings representing the dropdown options
+- `on_change`: Function called when the selected option changes
+- `element_width`: Width of each option button in the dropdown
+- `element_height`: Height of each option button in the dropdown
+- `element_spacing`: Spacing between option buttons
 - `max_elements_per_column`: Maximum number of options per column before wrapping
 - `wrap_reverse`: If True, wraps options in reverse order
-- `color`: Default background color of the dropdown
+- `color`: Default background color of the option buttons
 - `hover_color`: Background color when an option is hovered over
 - `click_color`: Background color when an option is clicked
+- `font_size`: Size of the text font
+- `font_family`: Font family used for text
 - `text_color`: Default text color
 - `text_hover_color`: Text color when hovered over
 - `text_click_color`: Text color when clicked
-- `selected_option_color`: Background color of the selected option
-- `selected_option_hover_color`: Background color of the selected option when hovered
-- `selected_option_click_color`: Background color of the selected option when clicked
-- `selected_option_text_color`: Text color of the selected option
-- `selected_option_text_hover_color`: Text color of the selected option when hovered
-- `selected_option_text_click_color`: Text color of the selected option when clicked
+- `selected_option_color`: Background color of the main button
+- `selected_option_hover_color`: Background color of the main button when hovered
+- `selected_option_click_color`: Background color of the main button when clicked
+- `selected_option_text_color`: Text color of the main button
+- `selected_option_text_hover_color`: Text color of the main button when hovered
+- `selected_option_text_click_color`: Text color of the main button when clicked
 - `border_radius`: Radius for rounded corners
 - `centered`: If True, the dropdown is centered on the provided position
 
