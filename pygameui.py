@@ -1344,9 +1344,9 @@ class DropdownMenu(Element):
         :return: None
         """
         self._options = options
+        self._selected_option_index = 0
         self._options_buttons = self._generate_options_buttons()
         self._selected_button = self._generate_selected_button()
-        self._selected_option_index = 0
 
     def set_selected_option(self, option: str) -> None:
         """
@@ -1405,6 +1405,7 @@ class DropdownMenu(Element):
         Return a button with the selected option
         :return: Button with the selected option
         """
+        print(self._selected_option_index)
         selected_button = Button((self._rect.x, self._rect.y), 
                                  self._rect.width, self._rect.height, 
                                  label=str(self._options[self._selected_option_index]), 
