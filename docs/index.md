@@ -33,9 +33,13 @@ Then place the PyGameUI file in the same folder as your project files.
 - **Button**
   A class for creating buttons. It extends the `Element` class and adds button-specific attributes and methods. [Learn more!](components/button.md)
 - **DropDownMenu**
-  A class for creating dropdown menus. It extends the `Element` class and adds dropdown-specific attributes and methods. [Learn more!](components/DropDownMenu.md)
+  A class for creating dropdown menus. It extends the `Element` class and adds dropdown-specific attributes and methods. [Learn more!](components/dropdown-menu.md)
+- **CheckBox**
+  A class for creating checkboxes. It extends the `Element` class and adds checkbox-specific attributes and methods. [Learn more!](components/checkbox.md)
+- **Table**
+  A class for creating tables. It extends the `Element` class and adds table-specific attributes and methods. [Learn more!](components/table.md)
 - **ProgressBar**
-  A class for creating progress bars. It extends the `Element` class and adds progress bar-specific attributes and methods. [Learn more!](components/progressbar.md)
+  A class for creating progress bars. It extends the `Element` class and adds progress bar-specific attributes and methods. [Learn more!](components/progress-bar.md)
 
 ## Getting Help
 
@@ -43,7 +47,7 @@ Then place the PyGameUI file in the same folder as your project files.
 
 ## Current Version
 
-The current version of PygameUI is **2.1.0**.
+The current version of PygameUI is **2.1.9**.
 
 ## License
 

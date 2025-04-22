@@ -6,6 +6,8 @@ repo_url: https://github.com/trymbf/PygameUI
 
 theme:
   name: material
+  logo: assets/logo.png
+  favicon: assets/logo.png
   palette:
     primary: indigo
     accent: indigo
@@ -28,6 +30,11 @@ markdown_extensions:
   - footnotes
   - toc:
       permalink: true
+
+#plugins:
+#  - with-pdf:
+#      cover_subtitle: Python library that makes making pygame-based-UIs easy!
+#      cover_logo: assets/logo.png
 
 nav:
   - Home: index.md
