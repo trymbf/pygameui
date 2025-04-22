@@ -1256,6 +1256,9 @@ class ProgressBar(Element):
         self._update_progress_bar()
         
 class DropdownMenu(Element):
+    """
+    Dropdown menu element that can be displayed
+    """
     def __init__(self, 
                  position: tuple[int, int],
                  options: list[str], 
@@ -1283,6 +1286,35 @@ class DropdownMenu(Element):
                  selected_option_text_click_color = (0, 0, 0),
                  border_radius = 0, 
                  centered = False):
+        """
+        Create a dropdown menu element
+        :param position: Where the dropdown menu will be positioned
+        :param options: List of options to be displayed in the dropdown menu
+        :param width: Width of the dropdown menu
+        :param height: Height of the dropdown menu
+        :param on_change: Function to be called when the selected option changes
+        :param element_width: Width of each option button in the dropdown
+        :param element_height: Height of each option button in the dropdown
+        :param element_spacing: Spacing between option buttons
+        :param max_elements_per_column: Maximum number of options per column before wrapping
+        :param wrap_reverse: If True, wraps options in reverse order
+        :param color: Default background color of the option buttons
+        :param hover_color: Background color when an option is hovered over
+        :param click_color: Background color when an option is clicked
+        :param font_size: Size of the text font
+        :param font_family: Font family used for text
+        :param text_color: Default text color
+        :param text_hover_color: Text color when hovered over
+        :param text_click_color: Text color when clicked
+        :param selected_option_color: Background color of the main button
+        :param selected_option_hover_color: Background color of the main button when hovered
+        :param selected_option_click_color: Background color of the main button when clicked
+        :param selected_option_text_color: Text color of the main button
+        :param selected_option_text_hover_color: Text color of the main button when hovered
+        :param selected_option_text_click_color: Text color of the main button when clicked
+        :param border_radius: Radius for rounded corners
+        :param centered: If True, the dropdown is centered on the provided position
+        """
         
         super().__init__(position, width, height, color, border_radius, centered=centered)
 
@@ -1522,6 +1554,9 @@ class DropdownMenu(Element):
             self._is_open = True
 
 class Table(Element):
+    """
+    Table element that can be displayed
+    """
     def __init__(self, 
                  position,
                  content: list[list[str]], 
@@ -1534,6 +1569,20 @@ class Table(Element):
                  border_width = 2,
                  border_radius = 0, 
                  centered = False):
+        """
+        Create a table element
+        :param position: Where the table will be positioned
+        :param content: 2D list of strings representing the table data
+        :param width: Width of the entire table
+        :param height: Height of the entire table
+        :param color: Background color of the cells
+        :param hover_color: Background color of the cells when hovered
+        :param text_color: Color of the text in cells
+        :param border_color: Color of the cell borders
+        :param border_width: Width of the cell borders
+        :param border_radius: Radius for rounded corners of cells
+        :param centered: If True, the table is centered on the provided position
+        """
         super().__init__(position, width, height, color, border_radius, centered=centered)
 
         # Table attributes
@@ -1621,6 +1670,9 @@ class Table(Element):
             item.update()
 
 class Checkbox(Element):
+    """
+    Checkbox element that can be displayed
+    """
     def __init__(self, 
                  position, 
                  width: int = 50,
@@ -1634,6 +1686,21 @@ class Checkbox(Element):
                  border_color: tuple[int, int, int] = (0, 0, 0), 
                  border_width: int = 2, 
                  centered: bool = False):
+        """
+        Create a checkbox element
+        :param position: Where the checkbox will be positioned
+        :param width: Width of the checkbox
+        :param height: Height of the checkbox
+        :param style: The style of mark when checked ("checkmark", "cross", "circle", "square", or "none")
+        :param unchecked_style: The style of mark when unchecked ("checkmark", "cross", "circle", "square", or "none")
+        :param mark_width: Width of the mark lines/borders
+        :param color: Color of the mark
+        :param background_color: Color of the checkbox background
+        :param border_radius: Radius for rounded corners
+        :param border_color: Color of the checkbox border
+        :param border_width: Width of the border
+        :param centered: If True, the checkbox is centered on the provided position
+        """
         super().__init__(position, width, height, background_color, border_radius, border_color, border_width, centered)
 
         self._checked = False
