@@ -6,8 +6,8 @@ repo_url: https://github.com/trymbf/PygameUI
 
 theme:
   name: material
-  logo: assets/logo.png
-  favicon: assets/logo.png
+  logo: assets/imgs/logo.png
+  favicon: assets/imgs/logo.png
   palette:
     primary: indigo
     accent: indigo
@@ -39,7 +39,9 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
-  - Components: 
+  - Components:
+      - Index: components/index.md
+      - Overview: components/overview.md
       - Element: components/element.md
       - Text: components/text.md
       - Button: components/button.md
@@ -49,3 +51,11 @@ nav:
       - Progress Bar: components/progress-bar.md
       - Dropdown Menu: components/dropdown-menu.md
       - Table: components/table.md
+  - Examples:
+      - Index: examples/index.md
+      - Button Example: examples/button.md
+      - Input Form Example: examples/form.md
+      - Animation Demo: examples/animation.md
+      - Simple Game: examples/game.md
+  - Troubleshooting: troubleshooting.md
+  - API Reference: api-reference.md

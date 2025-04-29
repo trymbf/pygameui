@@ -18,7 +18,9 @@ Start by downloading the PyGameUI python file from the [releases page](https://g
 
 Then place the PyGameUI file in the same folder as your project files.
 
-![gif of putting the file in the same folder](https://trymbf.github.io/pygameui/assets//gifs//add_pygameui.gif)
+![gif of putting the file in the same folder](assets/gifs/add_pygameui.gif)
+
+(See the [getting started guide](getting-started.md) for more details)
 
 ## Available Elements
 
@@ -47,7 +49,7 @@ Then place the PyGameUI file in the same folder as your project files.
 
 ## Current Version
 
-The current version of PygameUI is **2.1.9**.
+The current version of PygameUI is **2.2.0**.
 
 ## License
 

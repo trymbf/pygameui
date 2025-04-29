@@ -1,42 +1,95 @@
 # PyGameUI
 
-Python library that makes making pygame-based-UIs easy!
+![PygameUI Logo](https://trymbf.github.io/pygameui/assets/logo.png)
 
-## Short overview
+A lightweight Python library that makes creating UI elements in Pygame quick and easy.
 
-`PygameUI` is a small Python library written in Python that makes it easier to create UI elements like buttons, texts, inputs, and more when using the Python library PyGame. The library also supplies the user with many optional features for customizing the UI elements.
+[![Version](https://img.shields.io/badge/version-2.1.9-blue.svg)](https://github.com/trymbf/pygameui/releases)
+[![License](https://img.shields.io/github/license/trymbf/pygameui.svg)](LICENSE)
 
-PyGameUI is not that efficient, so I would not use it on larger games (not that most people would make large games in Python).
+## Overview
 
-Still, if you are looking for a library that makes small projects and games a lot less of a headache, I would definitely recommend you give PyGameUI a try!
+`PygameUI` is a Python library that simplifies the creation of UI elements like buttons, text, inputs, and more when using Pygame. The library provides many customization options while keeping the implementation straightforward.
+
+### Key Features
+
+- 🎮 **Easy Integration** - Works seamlessly with existing Pygame projects
+- 🎨 **Customizable Components** - Extensive styling options for all UI elements
+- ✨ **Animation Support** - Built-in animations for UI elements
+- 🧩 **Modular Design** - Mix and match components to create complex UI layouts
+
+## Quick Start
+
+```python
+import pygame
+import pygameui
+
+# Initialize
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+
+# Create a button
+button = pygameui.Button(
+    position=(400, 300),
+    label="Click Me!",
+    color=(100, 150, 250),
+    hover_color=(120, 170, 255),
+    centered=True
+)
+
+# Main loop
+running = True
+while running:
+    # Handle events
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            running = False
+            
+    # Update and draw button
+    button.update(events)
+    
+    if button.was_clicked():
+        print("Button clicked!")
+        
+    # Draw
+    screen.fill((30, 30, 30))
+    button.draw(screen)
+    pygame.display.flip()
+```
 
 ## Documentation
 
->Documentation in web form is available at https://trymbf.github.io/pygameui/
+Full documentation is available at [https://trymbf.github.io/pygameui/](https://trymbf.github.io/pygameui/)
+
+- [Getting Started Guide](https://trymbf.github.io/pygameui/getting-started)
+- [Components Reference](https://trymbf.github.io/pygameui/components/element)
 
 ## Installation
-Start by downloading the PyGameUI python file from the [releases page](https://github.com/trymbf/pygameui/releases).
 
-Then place the PyGameUI file in the same folder as your project files.
+1. Download the PyGameUI Python file from the [releases page](https://github.com/trymbf/pygameui/releases).
+2. Place the file in your project directory.
+3. Import it with `import pygameui`.
 
-![gif of putting the file in the same folder](https://trymbf.github.io/pygameui/assets//gifs//add_pygameui.gif)
+![Installation Example](https://trymbf.github.io/pygameui/assets/gifs/add_pygameui.gif)
 
-## Available Elements
+## Available Components
 
-- **Element**
-  The base class for all UI elements. It provides basic functionality such as setting position, drawing, and updating. [Learn more!](docs/components/element.md)
-- **Text**
-  A class for displaying text. It extends the `Element` class and adds text-specific attributes and methods. [Learn more!](docs/components/text.md)
-- **Image**
-  A class for displaying images. It extends the `Element` class and adds image-specific attributes and methods. [Learn more!](docs/components/image.md)
-- **Input**
-  A class for creating input fields. It extends the `Text` class and adds input-specific attributes and methods. [Learn more!](docs/components/input.md)
-- **Button**
-  A class for creating buttons. It extends the `Element` class and adds button-specific attributes and methods. [Learn more!](docs/components/button.md)
-
-## Learn more in the docs!
-- [Getting Started](docs/getting-started.md)
-- [Components Guide](docs/components/index.md)
+- **Element** - Base class for all UI elements with positioning and animation
+- **Text** - Text display with customizable fonts and styling
+- **Button** - Interactive buttons with hover and click states
+- **Image** - Display and manipulate images
+- **Input** - Text input fields with customizable filters
+- **Checkbox** - Toggle controls with various styles
+- **ProgressBar** - Visual indicators for progress or completion
+- **DropdownMenu** - Selectable dropdown menus
+- **Table** - Grid-based data display
 
 ## Getting Help
-- [GitHub Issues](https://github.com/trymbf/pygameui/issues)
+
+- [GitHub Issues](https://github.com/trymbf/pygameui/issues) - Report bugs or request features
+- [Documentation](https://trymbf.github.io/pygameui/) - Comprehensive guides and examples
+
+## License
+
+This project is licensed under the terms included in the [LICENSE](LICENSE) file.

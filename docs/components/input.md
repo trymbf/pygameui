@@ -5,11 +5,25 @@ The Input component provides a text input field for user interaction.
 ## Basic Usage
 
 ```python
+# Create the input field
 input_field = pygameui.Input(
     position=(100, 100),
+    width=300,
+    height=40,
     hint="Enter your name..."
 )
+
+# In the main loop
+events = pygame.event.get()
+# Important: Input component requires events to handle typing
+input_field.update(events)  
+input_field.draw(screen)
+
+# Getting the current value
+text_value = input_field.get_value()
 ```
+
+**Important**: The Input component requires event handling to work properly. Always pass the events list to the update method.
 
 ## Properties
 

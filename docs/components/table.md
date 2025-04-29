@@ -5,6 +5,7 @@ Tables allow for displaying data in a grid format with rows and columns.
 ## Basic Usage
 
 ```python
+# Create a table with data
 table = pygameui.Table(
     position=(100, 100),
     content=[
@@ -12,7 +13,13 @@ table = pygameui.Table(
         ["Row 1 Col 1", "Row 1 Col 2", "Row 1 Col 3"],
         ["Row 2 Col 1", "Row 2 Col 2", "Row 2 Col 3"]
     ],
+    width=400,
+    height=200
 )
+
+# In the main loop
+table.update(events)  # events parameter for API consistency
+table.draw(screen)
 ```
 
 ## Properties
@@ -30,22 +37,29 @@ border_width: int = 2,
 border_radius: int = 0, 
 centered: bool = False
 ```
-
-- `position`: Tuple of (x, y) coordinates
-- `content`: 2D list of strings representing the table data
-- `width`: Width of the entire table
-- `height`: Height of the entire table
-- `color`: Background color of the cells
-- `hover_color`: Background color of the cells when hovered
-- `text_color`: Color of the text in cells
-- `border_color`: Color of the cell borders
-- `border_width`: Width of the cell borders
-- `border_radius`: Radius for rounded corners of cells
-- `centered`: If True, the table is centered on the provided position
+- `position`: Tuple of (x, y) coordinates where the table will be positioned
+- `content`: 2D list of strings representing the table data (rows and columns)
+- `width`: Width of the entire table in pixels
+- `height`: Height of the entire table in pixels
+- `color`: Background color of the cells as RGB tuple (r, g, b)
+- `hover_color`: Background color of the cells when hovered as RGB tuple
+- `text_color`: Color of the text in cells as RGB tuple
+- `border_color`: Color of the cell borders as RGB tuple
+- `border_width`: Width of the cell borders in pixels
+- `border_radius`: Radius for rounded corners of cells in pixels
+- `centered`: If True, the table is centered on the provided position; otherwise, the top-left corner is at the position
 
 ## Methods
 
 All methods inherited from the [Element](element.md) class.
+
+### Update Method
+
+```python
+update(events=None) -> None
+```
+
+- `update`: Updates the table and its elements. The `events` parameter is included for API consistency with other components but is not used directly by the Table class itself.
 
 ### Setters
 
@@ -53,7 +67,7 @@ All methods inherited from the [Element](element.md) class.
 set_content(content: list[list[str]]) -> None
 ```
 
-- `set_content`: Updates the table with new content
+- `set_content`: Updates the table with new content. The content should be a 2D list of strings where each inner list represents a row of data.
 
 ## Example
 
@@ -95,18 +109,30 @@ data_table = pygameui.Table(
 running = True
 while running:
     # Handle events
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
             running = False
 
     # Reset screen
     screen.fill((30, 30, 30))  # Dark background
 
-    # Update table
-    data_table.update()
+    # Update table with events for API consistency
+    data_table.update(events)
 
     # Draw table
     data_table.draw(screen)
+
+    # Display instructions
+    title = pygameui.Text(
+        position=(400, 100),
+        content="Data Table Example",
+        color=(255, 255, 255),
+        font_size=30,
+        centered=True
+    )
+    title.update()
+    title.draw(screen)
 
     # Update display
     pygame.display.flip()

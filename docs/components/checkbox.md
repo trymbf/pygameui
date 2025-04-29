@@ -7,8 +7,19 @@ Checkboxes provide toggleable interface elements with various styles for indicat
 ```python
 checkbox = pygameui.Checkbox(
     position=(100, 100),
-    style="checkmark"
+    width=50,
+    height=50,
+    style="checkmark",
+    background_color=(220, 220, 220)
 )
+
+# In the main loop
+checkbox.update(events)  # events parameter for API consistency
+checkbox.draw(screen)
+
+# Check the checkbox state
+if checkbox.is_checked():
+    print("Checkbox is checked!")
 ```
 
 ## Properties
@@ -117,24 +128,55 @@ square_box = pygameui.Checkbox(
     centered=True
 )
 
+# Text labels for checkboxes
+checkbox_labels = [
+    pygameui.Text((200, 250), "Checkmark", (255, 255, 255), centered=True),
+    pygameui.Text((300, 250), "Cross", (255, 255, 255), centered=True),
+    pygameui.Text((400, 250), "Circle", (255, 255, 255), centered=True),
+    pygameui.Text((500, 250), "Square", (255, 255, 255), centered=True)
+]
+
 # Main loop
 running = True
 while running:
     # Handle events
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
             running = False
 
     # Reset screen
     screen.fill((30, 30, 30))  # Dark background
 
-    # Update checkboxes
-    for checkbox in [checkmark_box, cross_box, circle_box, square_box]:
-        checkbox.update()
-
-    # Draw checkboxes
-    for checkbox in [checkmark_box, cross_box, circle_box, square_box]:
+    # Update checkboxes with events for proper interaction
+    checkboxes = [checkmark_box, cross_box, circle_box, square_box]
+    for checkbox in checkboxes:
+        checkbox.update(events)
+        
+        # Display status for each checkbox
+        if checkbox.is_checked():
+            status_text = f"{checkbox._checked_style} is ON"
+        else:
+            status_text = f"{checkbox._checked_style} is OFF"
+            
+        # Draw checkboxes and status
         checkbox.draw(screen)
+
+    # Draw labels
+    for label in checkbox_labels:
+        label.update()
+        label.draw(screen)
+        
+    # Display instructions
+    instructions = pygameui.Text(
+        (400, 100), 
+        "Click on checkboxes to toggle them", 
+        (200, 200, 200),
+        font_size=24,
+        centered=True
+    )
+    instructions.update()
+    instructions.draw(screen)
 
     # Update display
     pygame.display.flip()

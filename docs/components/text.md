@@ -5,10 +5,17 @@ The Text component displays text on the screen with customizable appearance.
 ## Basic Usage
 
 ```python
+# Create a text element
 text = pygameui.Text(
     position=(100, 100),
-    content="Hello, World!"
+    content="Hello, World!",
+    color=(255, 255, 255),  # White text
+    font_size=24
 )
+
+# In the main loop
+text.update(events)  # events parameter is included for API consistency
+text.draw(screen)
 ```
 
 ## Properties
@@ -27,17 +34,25 @@ centered: bool = False
 
 - `position`: Tuple of (x, y) coordinates
 - `content`: The text to display
-- `color`: RGB tuple for text color
-- `font_size`: Size of the font
-- `font_family`: Font family to use
-- `width`: Width of the text element, 0 indicates that the width will be the width of the text
-- `height`: Height of the text element, 0 indicates that the height will be the height of the text
-- `anti_aliasing`: Whether to use anti-aliasing for the text
-- `centered`: If True, the text is centered on the provided position
+- `color`: RGB tuple for text color (r, g, b)
+- `font_size`: Size of the font in pixels
+- `font_family`: Font family to use (should be available on the system)
+- `width`: Width of the text element in pixels, 0 indicates auto-width based on content
+- `height`: Height of the text element in pixels, 0 indicates auto-height based on content
+- `anti_aliasing`: Whether to use anti-aliasing for smoother text rendering
+- `centered`: If True, the text is centered on the provided position; otherwise, the top-left corner is at the position
 
 ## Methods
 
 All methods inherited from the [Element](element.md) class.
+
+### Update Method
+
+```python
+update(events=None) -> None
+```
+
+- `update`: Updates the text element's state including animations. The `events` parameter is included for API consistency with other components but is not used by the Text class.
 
 ### Setters
 
@@ -48,10 +63,10 @@ set_font_size(font_size: int) -> None
 set_font_family(font_family: str) -> None
 ```
 
-- `set_content`: Change the displayed text
-- `set_color`: Change the color of the text
-- `set_font_size`: Change the size of the font
-- `set_font_family`: Change the font family
+- `set_content`: Change the displayed text. Non-string content will be converted to string automatically.
+- `set_color`: Change the color of the text as RGB tuple (r, g, b)
+- `set_font_size`: Change the size of the font in pixels
+- `set_font_family`: Change the font family (must be available on the system)
 
 ### Getters
 
@@ -60,89 +75,3 @@ get_content() -> str
 ```
 
 - `get_content`: Get the current text content
-
-## Example
-
-A simple example demonstrating text with different styles.
-
-```python
-import pygame
-import pygameui
-
-# Initialize
-pygame.init()
-screen = pygame.display.set_mode((800, 600))
-clock = pygame.time.Clock()
-
-# Create different text elements
-title = pygameui.Text(
-    position=(400, 100),
-    content="PygameUI Text Demo",
-    color=(255, 255, 255),
-    font_size=40,
-    font_family="Arial",
-    centered=True
-)
-
-subtitle = pygameui.Text(
-    position=(400, 180),
-    content="Easy text rendering with PygameUI",
-    color=(180, 180, 180),
-    font_size=24,
-    font_family="Arial",
-    centered=True
-)
-
-body_text = pygameui.Text(
-    position=(400, 280),
-    content="This component allows you to easily display and\nupdate text in your Pygame applications.",
-    color=(220, 220, 220),
-    font_size=18,
-    font_family="Arial",
-    centered=True
-)
-
-# Create a text that will change color
-animated_text = pygameui.Text(
-    position=(400, 400),
-    content="Text color can be changed dynamically!",
-    color=(255, 255, 0),
-    font_size=20,
-    font_family="Arial",
-    centered=True
-)
-
-# Main loop
-running = True
-while running:
-    # Handle events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # Animate text color
-    t = pygame.time.get_ticks()
-    r = int(127 * (1 + (pygame.math.Vector2(1, 0).rotate(t / 10)).x))
-    g = int(127 * (1 + (pygame.math.Vector2(1, 0).rotate(t / 10 + 120)).x))
-    b = int(127 * (1 + (pygame.math.Vector2(1, 0).rotate(t / 10 + 240)).x))
-    animated_text.set_color((r, g, b))
-
-    # Reset screen
-    screen.fill((30, 30, 30))  # Dark background
-
-    # Update text elements
-    title.update()
-    subtitle.update()
-    body_text.update()
-    animated_text.update()
-
-    # Draw text elements
-    title.draw(screen)
-    subtitle.draw(screen)
-    body_text.draw(screen)
-    animated_text.draw(screen)
-
-    # Update display
-    pygame.display.flip()
-    clock.tick(60)
-```

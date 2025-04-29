@@ -5,10 +5,21 @@ The `DropdownMenu` provides a dropdown interface for selecting one option from a
 ## Basic Usage
 
 ```python
+# Create a dropdown menu
 dropdown = pygameui.DropdownMenu(
     position=(100, 100),
     options=["Option 1", "Option 2", "Option 3"],
+    width=200,
+    height=50
 )
+
+# In the main loop
+events = pygame.event.get()
+dropdown.update(events)  # Pass events for proper interaction
+dropdown.draw(screen)
+
+# Get the selected option
+selected_option = dropdown.get_selected_option()
 ```
 
 ## Properties
@@ -139,7 +150,7 @@ while running:
     screen.fill((30, 30, 30))  # Dark background
 
     # Update dropdown
-    dropdown.update()
+    dropdown.update(events)
 
     # Check for selection
     if dropdown.get_selected_option():

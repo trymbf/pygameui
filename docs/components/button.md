@@ -7,8 +7,18 @@ Buttons provide clickable interface elements with hover effects.
 ```python
 button = pygameui.Button(
     position=(100, 100),
-    label="Click me."
+    label="Click me.",
+    width=200,
+    height=50
 )
+
+# In the main loop
+button.update(events)  # Pass events list for proper interaction handling
+button.draw(screen)
+
+# Check for clicks
+if button.was_clicked():
+    print("Button was clicked!")
 ```
 
 ## Properties
@@ -53,6 +63,16 @@ centered: bool = False
 
 All methods inherited from the [Element](element.md) class.
 
+### Update Method
+
+```python
+update(events=None) -> None
+```
+
+- `update`: Updates the button state based on mouse interaction and animations.
+  The `events` parameter should be a list of pygame events, though it's not used directly by the Button class.
+  Calling this method is essential for proper button interaction and animation handling.
+
 ### Setters
 
 ```python
@@ -73,75 +93,15 @@ set_text_click_color(color: tuple[int, int, int]) -> None
 - `set_text_hover_color`: Set the color of the button label when hovered over
 - `set_text_click_color`: Set the color of the button label when clicked
 
-## Example
-
-Simple example of buttons with different styles and functionality.
+### Mouse Interaction Methods
 
 ```python
-import pygame
-import pygameui
-
-# Initialize
-pygame.init()
-screen = pygame.display.set_mode((800, 600))
-clock = pygame.time.Clock()
-
-# Create buttons
-primary_button = pygameui.Button(
-    position=(400, 200),
-    label="Primary Button",
-    width=250,
-    height=60,
-    color=(75, 145, 250),         # Blue
-    hover_color=(95, 165, 255),   # Lighter blue
-    click_color=(55, 125, 235),   # Darker blue
-    text_color=(255, 255, 255),   # White text
-    font_size=24,
-    border_radius=15,
-    centered=True
-)
-
-secondary_button = pygameui.Button(
-    position=(400, 300),
-    label="Secondary Button",
-    width=250,
-    height=60,
-    color=(240, 240, 240),        # Light gray
-    hover_color=(220, 220, 220),  # Medium gray
-    click_color=(200, 200, 200),  # Darker gray
-    text_color=(50, 50, 50),      # Dark text
-    font_size=24,
-    border_radius=15,
-    centered=True
-)
-
-# Main loop
-running = True
-while running:
-    # Handle events
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # Reset screen
-    screen.fill((30, 30, 30))  # Dark background
-
-    # Update buttons
-    primary_button.update()
-    secondary_button.update()
-
-    # Check for button clicks
-    if primary_button.was_clicked():
-        print("Primary button clicked!")
-
-    if secondary_button.was_clicked():
-        print("Secondary button clicked!")
-
-    # Draw elements
-    primary_button.draw(screen)
-    secondary_button.draw(screen)
-
-    # Update display
-    pygame.display.flip()
-    clock.tick(60)
+is_hovered() -> bool
+is_clicked(button: int = 0) -> bool
+was_clicked(button: int = 0) -> bool
 ```
+
+- `is_hovered`: Check if the mouse is currently hovering over the button
+- `is_clicked`: Check if the button is currently being pressed (mouse button held down)
+- `was_clicked`: Check if the button was clicked (mouse pressed and released on the button)
+  For all mouse methods, the `button` parameter specifies which mouse button to check (0=left, 1=middle, 2=right)

@@ -12,11 +12,11 @@ from typing import Literal
 
 pygame.init()
 
-VERSION = "2.1.9"
+VERSION = "2.2.0"
 
 class Element:
     """
-    Basic element that can be displayed
+    Basic element consisting of a customizable rectangle/square.
     """
     def __init__(self,
                  position: tuple[int, int],
@@ -26,17 +26,17 @@ class Element:
                  border_radius: int = 0,
                  border_color: tuple[int, int, int] = None,
                  border_width: int = 2,
-                 centered: bool = False):
+                 centered: bool = False) -> None:
         """
         Create a basic element
-        :param position: Where the element will be positioned
-        :param width: Width of the element rectangle
-        :param height: Height of the element rectangle
-        :param color: Color of the element
-        :param border_radius: Radius of the element corners
-        :param border_color: Color of the element border, if None, the border will not be drawn
-        :param border_width: Width of the element border
-        :param centered: If the element will be centered in the position
+        :param position: Where the element will be positioned (x, y coordinates)
+        :param width: Width of the element rectangle in pixels
+        :param height: Height of the element rectangle in pixels
+        :param color: Color of the element as RGB tuple (r, g, b)
+        :param border_radius: Radius of the element corners in pixels
+        :param border_color: Color of the element border as RGB tuple (r, g, b), if None, the border will not be drawn
+        :param border_width: Width of the element border in pixels
+        :param centered: If True, the element will be centered at the provided position, otherwise the topleft will be at the position
         """
         # Basic attributes
         self._rect = pygame.Rect(position, (width, height))
@@ -67,7 +67,7 @@ class Element:
     Setters
     """
 
-    def move(self, x: int, y: int):
+    def move(self, x: int, y: int) -> None:
         """
         Move the position of the elment by x, y value
         (Note moving has no effect when animating)
@@ -182,11 +182,11 @@ class Element:
              loop: bool = False) -> None:
 
         """
-        Sets and starts movement of the element
-        :param start_position: Where the element will start to move from
-        :param end_position: Where the element will move to
-        :param time: How much time in ms the element will take to move from start_position to end_position
-        :param loop: If the element will loop the movement
+        Sets and starts smooth movement animation of the element between two positions.
+        :param start_position: Where the element will start to move from (x, y coordinates)
+        :param end_position: Where the element will move to (x, y coordinates)
+        :param time: Duration of movement in milliseconds
+        :param loop: If True, the element will continuously move back and forth between positions
         :return: None
         """
         # Calculate the number of frames
@@ -218,13 +218,13 @@ class Element:
              ratio: float = 1) -> None:
 
         """
-        Sets and starts jumping of the element, the element will jump from start_position to end_position
-        :param start_position: Where the element will start to jump from
-        :param end_position: Where the element will jump to
-        :param time: How much time in ms the element will take to jump from start_position to end_position
-        :param loop: If the element will continuously jump from start_position to end_position
-        :param ratio: Float between 0 and 1. The less the ratio, the less time the element will spend in the start_position
-        :return:
+        Sets and starts jumping animation of the element between two positions.
+        :param start_position: Where the element will start to jump from (x, y coordinates)
+        :param end_position: Where the element will jump to (x, y coordinates)
+        :param time: Duration between jumps in milliseconds
+        :param loop: If True, the element will continuously jump back and forth between positions
+        :param ratio: Float between 0 and 1. The lower the ratio, the less time the element will spend at start_position
+        :return: None
         """
         # Calculate the number of frames
         num_frames = time // (1000 // self._framerate)
@@ -275,42 +275,27 @@ class Element:
     Mouse and clicking methods
     """
 
-    def is_hovered(self):
+    def is_hovered(self) -> bool:
         """
-        Returns if the element is hovered.
-
-        Returns:
-            bool: True if the element is hovered, False otherwise.
+        Check if the mouse is hovering over the element
+        :return: True if the mouse is hovering, False otherwise
         """
-        # Get mouse pos
         mouse_pos = pygame.mouse.get_pos()
+        return self._rect.collidepoint(mouse_pos)
 
-        # Check mouse over and clicked conditions
-        if self._rect.collidepoint(mouse_pos):
-            return True
-
-        return False
-
-    def is_clicked(self, button: int = 0):
+    def is_clicked(self, button: int = 0) -> bool:
         """
-        Returns if the element is clicked.
-        :param button: The button that will be used to click the element, default is left click
-        :return: True if the element is clicked, False otherwise
+        Check if the element is hovered and the mouse button is down
+        :param button: The mouse button to check (0=left, 1=middle, 2=right)
+        :return: True if the button is clicked, False otherwise
         """
-        # Get mouse pos
-        mouse_pos = pygame.mouse.get_pos()
+        return self.is_hovered() and pygame.mouse.get_pressed()[button]
 
-        # Check mouse over and clicked conditions
-        if self._rect.collidepoint(mouse_pos):
-            if pygame.mouse.get_pressed()[button]:
-                return True
-
-        return False
-
-    def was_clicked(self, button: int = 0):
+    def was_clicked(self, button: int = 0) -> bool:
         """
-        Returnes true if the element was left clicked and then released
-        :param button: The button that will be used to click the element, default is left click
+        Check if the element was clicked and then released
+        :param button: The mouse button to check (0=left, 1=middle, 2=right)
+        :return: True if the button was clicked and released, False otherwise
         """
         if self.is_clicked(button):
             self._clicked[button] = True
@@ -340,16 +325,17 @@ class Element:
         if self._border_color:
             pygame.draw.rect(surface, self._border_color, self._rect, width=self._border_width, border_radius=self._border_radius)
 
-    def update(self, _=None) -> None:
+    def update(self, events=None) -> None:
         """
-        Update the element
+        Update the element's state, movement, and animations
+        :param events: Optional list of pygame events (not used in base Element class but included for API consistency)
         :return: None
         """
         self._update_movement()
 
 class Text(Element):
     """
-    Text element that can be displayed
+    Used to display backgroundless text in the screen
     """
     def __init__(self,
                  position: tuple[int, int],
@@ -360,7 +346,7 @@ class Text(Element):
                  width: int = 0,
                  height: int = 0,
                  anti_aliasing: bool = True,
-                 centered: bool = False):
+                 centered: bool = False) -> None:
         """
         Create a text element
         :param position: Where the text will be positioned
@@ -398,10 +384,10 @@ class Text(Element):
     def set_content(self, content: str) -> None:
         """
         Change the text of the element
-        :param content: str with the new text
+        :param content: Content to be displayed. Will be converted to string if not already a string.
         :return: None
         """
-        self._content = content
+        self._content = str(content)
         self._text_surface = self._render_text()
 
     def set_color(self, color: tuple[int, int, int]) -> None:
@@ -432,7 +418,7 @@ class Text(Element):
         self._font_family = font_family
         self._text_surface = self._render_text()
 
-        """
+    """
     Getters
     """
 
@@ -469,7 +455,7 @@ class Text(Element):
 '       """
 
         font = pygame.font.SysFont(self._font_family, self._font_size)
-        text_surface = font.render(self._content, self._anti_aliasing, self._color)
+        text_surface = font.render(str(self._content), self._anti_aliasing, self._color)
         return text_surface
     
     """
@@ -495,7 +481,7 @@ class Text(Element):
 
 class Image(Element):
     """
-    Image element that can be displayed
+    Image element for displaying images in the screen   
     """
     def __init__(self,
                  position: tuple[int, int],
@@ -503,7 +489,7 @@ class Image(Element):
                  width: int = 0,
                  height: int = 0,
                  scale:int = 1,
-                 centered: bool = False):
+                 centered: bool = False) -> None:
         """
         Create an image element
         :param position: Where the image will be positioned
@@ -529,16 +515,14 @@ class Image(Element):
 
         super().__init__(position, self._image.get_width(), self._image.get_height(), centered=centered)
 
-
-
     """
     Setters
     """
 
     def set_image(self, src: str) -> None:
         """
-        Change the image of the element
-        :param image_path: str with the new image path
+        Change the image displayed by the element
+        :param src: Path to the new image file
         :return: None
         """
         
@@ -547,8 +531,8 @@ class Image(Element):
 
     def scale(self, scale: int) -> None:
         """
-        Change the scale of the image
-        :param scale: int with the new scale
+        Scale the image by a factor relative to original size
+        :param scale: Scale factor to apply to the image (1 = original size, 2 = double size, etc.)
         :return: None
         """
         self._scale = scale
@@ -599,9 +583,17 @@ class Image(Element):
 
         surface.blit(self._image, self._rect)
 
+    def update(self, events=None) -> None:
+        """
+        Update the image element
+        :param events: Optional list of pygame events (not used in Image class but included for API consistency)
+        :return: None
+        """
+        super().update()
+
 class Input(Text):
     """
-    Input element that can be displayed
+    Textbox element that can be used to get user input
     """
     def __init__(self,
                  position: tuple [int, int],
@@ -617,7 +609,7 @@ class Input(Text):
                  font_size: int = 20,
                  font_family: str = "Arial",
                  hint: str = "",
-                 centered: bool = False):
+                 centered: bool = False) -> None:
         """
         Create an input element
         :param position: Where the input will be positioned
@@ -717,7 +709,7 @@ class Input(Text):
     Getters
     """
 
-    def get_value(self):
+    def get_value(self) -> str:
         """
         Get the text of the input
         """
@@ -726,7 +718,8 @@ class Input(Text):
     """
     Internal methods
     """
-    def _allow_key(self, key: str):
+
+    def _allow_key(self, key: str) -> bool:
         """
         Check if the key is allowed by the filter
         :param key: str with the key to be checked
@@ -749,7 +742,8 @@ class Input(Text):
     def _handle_keys(self, events: list) -> None:
         """
         Handle the typing of the input
-        :param events: list with the events
+        :param events: List of pygame events to process for keyboard input
+        :return: None
         """
         for event in events:
             if event.type != pygame.KEYDOWN: # We only want to handle key down events
@@ -817,7 +811,7 @@ class Input(Text):
 
         self.set_content(self._text)
 
-    def _draw_cursor(self, surface: pygame.Surface):
+    def _draw_cursor(self, surface: pygame.Surface) -> None:
         """
         Draw the cursor
         :param surface: pygame.Surface where the cursor will be drawn
@@ -876,11 +870,12 @@ class Input(Text):
     Basic methods
     """
 
-    def draw(self, surface: pygame.surface):
+    def draw(self, surface: pygame.Surface) -> None:
         """
         Draw the input and the cursor
         :param surface: pygame.Surface where the input will be drawn
         """
+
         super().draw(surface)
 
         if self.active:
@@ -912,7 +907,7 @@ class Input(Text):
 
 class Button(Element):
     """
-    Button element that can be displayed
+    Clickable button that also displays text
     """
     def __init__(self,
                  position: tuple[int, int],
@@ -930,7 +925,7 @@ class Button(Element):
                  text_click_color: tuple[int, int, int] = (0, 0, 0),
                  font_size: int = 20,
                  font_family: str = "Arial",
-                 centered: bool = False):
+                 centered: bool = False) -> None:
         """
         Create a button element
         :param position: Where the button will be positioned
@@ -981,7 +976,7 @@ class Button(Element):
     Setters
     """
 
-    def move(self, x: int, y: int):
+    def move(self, x: int, y: int) -> None:
         """
         Move the position of the elment by x, y value
         (Note moving has no effect when animating)
@@ -1001,7 +996,8 @@ class Button(Element):
     def set_label(self, label: str) -> None:
         """
         Set the text of the button
-        :param label: str with the new text
+        :param label: Text to display on the button
+        :return: None
         """
         self._label = label
         self._text_object.set_content(label)
@@ -1044,19 +1040,22 @@ class Button(Element):
 
     def set_text_click_color(self, color: tuple[int, int, int]) -> None:
         """
-        Set the click color of the text
-        :param color: tuple[int, int, int]
+        Set the color of the text when the button is clicked
+        :param color: RGB tuple (r, g, b) for the text color when clicked
+        :return: None
         """
         self._text_click_color = color
 
     """
     Basic methods
     """
+
     def draw(self, surface: pygame.Surface) -> None:
         """
         Draw the button
         :param surface: pygame.Surface where the button will be drawn
         """
+
         if not self._display:
             return
 
@@ -1087,13 +1086,13 @@ class Button(Element):
 
 class ProgressBar(Element):
     """
-    Progress element that can be displayed
+    Its a progress bar
     """
     def __init__(self,
                  position: tuple[int, int],
                  width: int = 200,
                  height: int = 50,
-                 progrss: int = 0,
+                 progress: int = 0,
                  max_progress: int = 100,
                  min_progress: int = 0,
                  color: tuple[int, int, int] = (150, 255, 150),
@@ -1101,7 +1100,7 @@ class ProgressBar(Element):
                  border_radius: int = 0,
                  border_color: tuple[int, int, int] = (200, 200, 200),
                  border_width: int = 2,
-                 centered: bool = False):
+                 centered: bool = False) -> None:
         """
         Create a progress element
         :param position: Where the progress will be positioned
@@ -1120,7 +1119,7 @@ class ProgressBar(Element):
         super().__init__(position, width, height, color, border_radius, centered=centered)
 
         # Progress attributes
-        self._progress = progrss
+        self._progress = progress
         self._max_progress = max_progress
         self._min_progress = min_progress
 
@@ -1133,8 +1132,6 @@ class ProgressBar(Element):
 
         # Border attributes
         self._border_color = border_color
-        self._border_radius = border_radius
-        self._border_width = border_width
 
         # Background attributes
         self._background_color = background_color
@@ -1143,7 +1140,7 @@ class ProgressBar(Element):
     Setters 
     """
 
-    def move(self, x: int, y: int):
+    def move(self, x: int, y: int) -> None:
         """
         Move the position of the elment by x, y value
         (Note moving has no effect when animating)
@@ -1193,10 +1190,10 @@ class ProgressBar(Element):
         
         self._update_progress_bar()
 
-    def change_progress(self, amount: int) -> None:
+    def change_progress(self, amount: float) -> None:
         """
         Change the progress amount
-        :param amount: int with the amount to change the progress by
+        :param amount: Float or int with the amount to change the progress by
         :return: None
         """
         self._progress += amount
@@ -1206,6 +1203,7 @@ class ProgressBar(Element):
     """
     Getters
     """
+    
     def get_progress(self) -> int:
         """
         Get the progress amount
@@ -1223,7 +1221,6 @@ class ProgressBar(Element):
         :return: None
         """
         self._progress_bar.width = int(self._rect.width * (self._progress / self._max_progress))
-
 
     """
     Basic methods
@@ -1247,9 +1244,10 @@ class ProgressBar(Element):
         if self._border_color:
             pygame.draw.rect(surface, self._border_color, self._rect, self._border_width, border_radius=self._border_radius)
     
-    def update(self, _=None) -> None:
+    def update(self, events=None) -> None:
         """
-        Update the progress bar
+        Update the progress bar state
+        :param events: Optional list of pygame events (not used in ProgressBar class but included for API consistency)
         :return: None
         """
         super().update()
@@ -1257,7 +1255,7 @@ class ProgressBar(Element):
         
 class DropdownMenu(Element):
     """
-    Dropdown menu element that can be displayed
+    Dropdown menu element for displaying a list of options
     """
     def __init__(self, 
                  position: tuple[int, int],
@@ -1285,7 +1283,7 @@ class DropdownMenu(Element):
                  selected_option_text_hover_color = (0, 0, 0),
                  selected_option_text_click_color = (0, 0, 0),
                  border_radius = 0, 
-                 centered = False):
+                 centered = False) -> None:
         """
         Create a dropdown menu element
         :param position: Where the dropdown menu will be positioned
@@ -1334,7 +1332,7 @@ class DropdownMenu(Element):
         self._selected_option_color = selected_option_color
         self._selected_option_text_color = selected_option_text_color
         self._selected_option_hover_color = selected_option_hover_color
-        self._selected_option_click_color = selected_option_click_color
+        self._selected_option_click_color = selected_option_text_color
         self._selected_option_text_hover_color = selected_option_text_hover_color
         self._selected_option_text_click_color = selected_option_text_click_color
 
@@ -1357,7 +1355,7 @@ class DropdownMenu(Element):
     Setters
     """
     
-    def move(self, x: int, y: int):
+    def move(self, x: int, y: int) -> None:
         """
         Move the position of the elment by x, y value
         (Note moving has no effect when animating)
@@ -1407,6 +1405,7 @@ class DropdownMenu(Element):
     """
     Getters
     """
+
     def get_selected_option(self) -> str:
         """
         Get the selected option
@@ -1437,7 +1436,6 @@ class DropdownMenu(Element):
         Return a button with the selected option
         :return: Button with the selected option
         """
-        print(self._selected_option_index)
         selected_button = Button((self._rect.x, self._rect.y), 
                                  self._rect.width, self._rect.height, 
                                  label=str(self._options[self._selected_option_index]), 
@@ -1458,7 +1456,7 @@ class DropdownMenu(Element):
         """
         options_buttons = []
 
-        for index, lable in enumerate(self._options):
+        for index, label in enumerate(self._options):
             multiplier_x = index // self._max_elements_per_column
             offset_x = self._element_spacing + self._element_width * multiplier_x * self._wrap_direction + self._element_spacing * (multiplier_x-1)
 
@@ -1470,7 +1468,7 @@ class DropdownMenu(Element):
                 
             button = Button((x_cordinate, y_cordinate), 
                             self._element_width, self._element_height, 
-                            label=str(lable),
+                            label=str(label),
                             color=self._color,
                             hover_color=self._hover_color,
                             click_color=self._click_color,
@@ -1555,7 +1553,7 @@ class DropdownMenu(Element):
 
 class Table(Element):
     """
-    Table element that can be displayed
+    Table element for displaying a grid of data
     """
     def __init__(self, 
                  position,
@@ -1568,7 +1566,7 @@ class Table(Element):
                  border_color = (200, 200, 200),
                  border_width = 2,
                  border_radius = 0, 
-                 centered = False):
+                 centered = False) -> None:
         """
         Create a table element
         :param position: Where the table will be positioned
@@ -1605,7 +1603,8 @@ class Table(Element):
     """
     Setters
     """
-    def move(self, x: int, y: int):
+
+    def move(self, x: int, y: int) -> None:
         """
         Move the position of the elment by x, y value
         (Note moving has no effect when animating)
@@ -1667,11 +1666,19 @@ class Table(Element):
 
         for item in self._items:
             item.draw(surface)
+
+    def update(self, events=None) -> None:
+        """
+        Update the table and its elements
+        :param events: Optional pygame events list, kept for API consistency
+        :return: None
+        """
+        for item in self._items:
             item.update()
 
 class Checkbox(Element):
     """
-    Checkbox element that can be displayed
+    Checkbox, clickable, it can be checked or unchecked, and it can be disabled or enabled
     """
     def __init__(self, 
                  position, 
@@ -1685,14 +1692,19 @@ class Checkbox(Element):
                  border_radius: int = 0, 
                  border_color: tuple[int, int, int] = (0, 0, 0), 
                  border_width: int = 2, 
-                 centered: bool = False):
+                 centered: bool = False) -> None:
         """
         Create a checkbox element
         :param position: Where the checkbox will be positioned
         :param width: Width of the checkbox
         :param height: Height of the checkbox
-        :param style: The style of mark when checked ("checkmark", "cross", "circle", "square", or "none")
-        :param unchecked_style: The style of mark when unchecked ("checkmark", "cross", "circle", "square", or "none")
+        :param style: The style of mark when checked:
+            - "checkmark": A checkmark symbol (✓)
+            - "cross": An X symbol (✗)
+            - "circle": A circle (○)
+            - "square": A square (□)
+            - "none": No mark shown
+        :param unchecked_style: The style of mark when unchecked (same options as style)
         :param mark_width: Width of the mark lines/borders
         :param color: Color of the mark
         :param background_color: Color of the checkbox background
@@ -1701,6 +1713,7 @@ class Checkbox(Element):
         :param border_width: Width of the border
         :param centered: If True, the checkbox is centered on the provided position
         """
+
         super().__init__(position, width, height, background_color, border_radius, border_color, border_width, centered)
 
         self._checked = False
@@ -1796,10 +1809,11 @@ class Checkbox(Element):
                 surface.blit(self._checkstyles[self._unchecked_style], self._rect.topleft)
 
     
-    def update(self, _ = None) -> None:
+    def update(self, events=None) -> None:
         """
-        Update the checkbox
-        :param events: list with the events
+        Update the checkbox state and handle click events
+        :param events: Optional pygame events list, kept for API consistency
+        :return: None
         """
         super().update()
 

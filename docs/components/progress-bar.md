@@ -5,18 +5,26 @@ Progress bars provide visual representation of progress or completion status.
 ## Basic Usage
 
 ```python
+# Create a progress bar
 progress_bar = pygameui.ProgressBar(
     position=(100, 100),
     width=200,
     height=30,
-    progrss=50,
+    progress=50,  # Initial progress value
     max_progress=100,
-    color=(150, 255, 150),
+    color=(150, 255, 150),  # Green progress fill
     background_color=(100, 100, 100),
-    border_color=(200, 200, 200),
-    border_width=2,
     centered=True
 )
+
+# In the main loop
+progress_bar.update(events)  # events parameter for API consistency
+progress_bar.draw(screen)
+
+# Change progress values
+progress_bar.change_progress(5)  # Increase by 5
+# or
+progress_bar.set_progress(75)    # Set to specific value
 ```
 
 ## Properties
@@ -25,7 +33,7 @@ progress_bar = pygameui.ProgressBar(
 position: tuple[int, int],
 width: int = 200,
 height: int = 50,
-progrss: int = 0,
+progress: int = 0,
 max_progress: int = 100,
 min_progress: int = 0,
 color: tuple[int, int, int] = (150, 255, 150),
@@ -39,7 +47,7 @@ centered: bool = False
 - `position`: Tuple of (x, y) coordinates
 - `width`: Width of the progress bar
 - `height`: Height of the progress bar
-- `progrss`: Initial progress value
+- `progress`: Initial progress value
 - `max_progress`: Maximum value for the progress bar
 - `min_progress`: Minimum value for the progress bar
 - `color`: Color of the progress bar fill
@@ -98,6 +106,14 @@ progressbar = pygameui.ProgressBar(
     centered=True
 )
 
+instruction_text = pygameui.Text(
+    (400, 200),  # Centered in the screen
+    content="Press left/right arrow keys to change progress",
+    color=(255, 255, 255),  # White text
+    font_size=24,
+    centered=True
+)
+
 # Main loop
 running = True
 while running:
@@ -106,7 +122,7 @@ while running:
     for event in events:
         if event.type == pygame.QUIT:
             running = False
-   
+
     keys_down = pygame.key.get_pressed()
     # Move progressbar with arrow keys
     if keys_down[pygame.K_RIGHT]:
@@ -116,12 +132,13 @@ while running:
 
     # Reset screen
     screen.fill((30, 30, 30))  # Darker background for contrast
-  
     # Update element, moves, checks actions etc
+    instruction_text.update()
     progressbar.update()
 
     # Draw element on screen
     progressbar.draw(screen)
+    instruction_text.draw(screen)
 
     # Update pygame display
     pygame.display.flip()
