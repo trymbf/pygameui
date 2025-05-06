@@ -2,6 +2,8 @@
 
 This example demonstrates how to create a complete registration form with validation using PygameUI.
 
+![Input Form Example](../assets/imgs/forms_example.png)
+
 ## Features Demonstrated
 
 - Creating and styling input fields

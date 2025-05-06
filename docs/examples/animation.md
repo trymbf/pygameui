@@ -2,6 +2,8 @@
 
 This example demonstrates how to use PygameUI's built-in animation capabilities as well as implementing custom animations.
 
+![Animation Demo](../assets/imgs/animation_example.png)
+
 ## Features Demonstrated
 
 - Flow animation (smooth movement)

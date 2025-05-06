@@ -2,6 +2,8 @@
 
 This example demonstrates how to create and interact with different styles of buttons in PygameUI.
 
+![Button Example](../assets/imgs/button_example.png)
+
 ## Features Demonstrated
 
 - Creating buttons with different styles
