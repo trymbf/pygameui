@@ -12,7 +12,7 @@ from typing import Literal
 
 pygame.init()
 
-VERSION = "2.2.0"
+VERSION = "2.2.1"
 
 class Element:
     """
@@ -116,6 +116,14 @@ class Element:
         """
         self._color = color
 
+    def set_border_color(self, color: tuple[int, int, int]) -> None:
+        """
+        Set the border color of the element
+        :param color: tuple[int, int, int] with the new border color
+        :return: None
+        """
+        self._border_color = color
+
     def set_border_radius(self, radius: int) -> None:
         """
         Set the border radius of the element
@@ -123,6 +131,14 @@ class Element:
         :return: None
         """
         self._border_radius = radius
+
+    def set_border_width(self, width: int) -> None:
+        """
+        Set the border width of the element
+        :param border_width: int with the new border width
+        :return: None
+        """
+        self._border_width = width
 
     def set_animate(self, state: bool) -> None:
         """

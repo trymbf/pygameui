@@ -68,6 +68,8 @@ set_position(position: tuple[int,int]) -> None
 set_framerate(framerate: int) -> None
 set_display(display: bool) -> None
 set_color(color: tuple[int, int, int]) -> None
+set_border_color(color: tuple[int, int, int]) -> None
+set_border_width(width: int) -> None  
 set_border_radius(radius: int) -> None
 set_animate(state: bool) -> None
 ```
@@ -76,6 +78,8 @@ set_animate(state: bool) -> None
 - `set_framerate`: Set the framerate for the element's animations (affects speed)
 - `set_display`: If set to True, the element is drawn when element.draw is called
 - `set_color`: Set the color of the element as RGB tuple
+- `set_border_color`: Set the color of the element's border as RGB tuple
+- `set_border_width`: Set the width of the element's border in pixels
 - `set_border_radius`: Set the border radius of the element in pixels
 - `set_animate`: If set to True, animations set on the element will be performed when update is called
 
