@@ -4,7 +4,7 @@
 
 A lightweight Python library that makes creating UI elements in Pygame quick and easy.
 
-[![Version](https://img.shields.io/badge/version-2.1.9-blue.svg)](https://github.com/trymbf/pygameui/releases)
+[![Version](https://img.shields.io/badge/version-2.2.1-blue.svg)](https://github.com/trymbf/pygameui/releases)
 [![License](https://img.shields.io/github/license/trymbf/pygameui.svg)](LICENSE)
 
 ## Overview
