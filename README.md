@@ -1,6 +1,6 @@
 # PyGameUI
 
-![PygameUI Logo](https://trymbf.github.io/pygameui/docs/assets/imgs/logo.png)
+![PygameUI Logo](/docs/assets/imgs/logo.png)
 
 A lightweight Python library that makes creating UI elements in Pygame quick and easy.
 
