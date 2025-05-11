@@ -1,6 +1,11 @@
 # PyGameUI
 
-Python library that makes making pygame-based-UIs easy!
+![PygameUI Logo](assets/imgs/logo.png)
+
+A lightweight Python library that makes creating UI elements in Pygame quick and easy.
+
+[![Version](https://img.shields.io/badge/version-2.2.1-blue.svg)](https://github.com/trymbf/pygameui/releases)
+[![License](https://img.shields.io/github/license/trymbf/pygameui.svg)](LICENSE)
 
 ## Short overview
 
@@ -11,6 +16,10 @@ Python library that makes making pygame-based-UIs easy!
 ## Documentation
 
 Documentation in web form is available at [https://trymbf.github.io/pygameui/](https://trymbf.github.io/pygameui/)
+
+Documentation in markdown form is available in the `docs` folder of the repository.   
+
+You can also download the documentation as a PDF file from the [releases page](https://github.com/trymbf/pygameui/releases)
 
 ## Installation
 
@@ -49,7 +58,7 @@ Then place the PyGameUI file in the same folder as your project files.
 
 ## Current Version
 
-The current version of PygameUI is **2.2.0**.
+The current version of PygameUI is **2.2.1**.
 
 ## License
 
