@@ -351,7 +351,7 @@ class Element:
 
 class Text(Element):
     """
-    Used to display backgroundless text in the screen
+    Used to display backgroundless text in the screen, innherited from Element class.
     """
     def __init__(self,
                  position: tuple[int, int],
@@ -424,7 +424,7 @@ class Text(Element):
         """
         self._font_size = font_size
         self._text_surface = self._render_text()
-    
+
     def set_font_family(self, font_family: str) -> None:
         """
         Change the font family of the text
@@ -473,7 +473,7 @@ class Text(Element):
         font = pygame.font.SysFont(self._font_family, self._font_size)
         text_surface = font.render(str(self._content), self._anti_aliasing, self._color)
         return text_surface
-    
+
     """
     Basic methods
     """
@@ -497,7 +497,7 @@ class Text(Element):
 
 class Image(Element):
     """
-    Image element for displaying images in the screen   
+    Image element for displaying images in the screen, innherited from Element class.
     """
     def __init__(self,
                  position: tuple[int, int],
@@ -541,7 +541,7 @@ class Image(Element):
         :param src: Path to the new image file
         :return: None
         """
-        
+
         self._image = pygame.image.load(src)
         self._image = pygame.transform.scale(self._image, (self._width, self._height)).convert_alpha()
 
@@ -557,14 +557,14 @@ class Image(Element):
     """
     Getters
     """
-    
+
     def get_image(self) -> pygame.Surface:
         """
         Get the image of the element
         :return: pygame.Surface with the image
         """
         return self._image
-    
+
     def get_scale(self) -> int:
         """
         Get the scale of the image
@@ -609,7 +609,7 @@ class Image(Element):
 
 class Input(Text):
     """
-    Textbox element that can be used to get user input
+    Textbox element that can be used to get user input, innherited from Text class.
     """
     def __init__(self,
                  position: tuple [int, int],
@@ -651,7 +651,7 @@ class Input(Text):
                          width=width,
                          height=height,
                          centered=centered)
-        
+
         # Initialize the pygame scrap module
         # This module is used to copy and paste text from the clipboard
         pygame.scrap.init()
@@ -712,7 +712,7 @@ class Input(Text):
         :param hint: str with the new hint
         """
         self._hint = hint
-    
+
     def set_value(self, value: str) -> None:
         """
         Set the text of the input
@@ -773,7 +773,7 @@ class Input(Text):
                 for char in pasted_text:
                     if not self._allow_key(char):
                         pasted_text = pasted_text.replace(char, "")
-                
+
                 if self._max_length and len(pasted_text) + len(self._text) > self._max_length:
                     pasted_text = pasted_text[:self._max_length - len(self._text)]
 
@@ -859,7 +859,7 @@ class Input(Text):
         mouse_pos = pygame.mouse.get_pos()
         if not self._rect.collidepoint(mouse_pos):
             return
-        
+
         if not self._cursor:
             return
 
@@ -923,7 +923,8 @@ class Input(Text):
 
 class Button(Element):
     """
-    Clickable button that also displays text
+    Clickable button that also displays text, innherited from Element class.
+    Aggrigates a Text object to display the text in the button.
     """
     def __init__(self,
                  position: tuple[int, int],
@@ -1031,14 +1032,14 @@ class Button(Element):
         :param color: tuple[int, int, int]
         """
         self._hover_color = color
-    
+
     def set_click_color(self, color: tuple[int, int, int]) -> None:
         """
         Set the click color of the button
         :param color: tuple[int, int, int]
         """
         self._click_color = color
-    
+
     def set_text_color(self, color: tuple[int, int, int]) -> None:
         """
         Set the text color of the button
@@ -1046,7 +1047,7 @@ class Button(Element):
         """
         self._text_color = color
         self._text_object.set_color(color)
-    
+
     def set_text_hover_color(self, color: tuple[int, int, int]) -> None:
         """
         Set the hover color of the text
@@ -1102,7 +1103,7 @@ class Button(Element):
 
 class ProgressBar(Element):
     """
-    Its a progress bar
+    Its a progress bar, innherited from Element class.
     """
     def __init__(self,
                  position: tuple[int, int],
@@ -1148,12 +1149,14 @@ class ProgressBar(Element):
 
         # Border attributes
         self._border_color = border_color
+        self._border_width = border_width
+        self._border_radius = border_radius
 
         # Background attributes
         self._background_color = background_color
 
     """
-    Setters 
+    Setters
     """
 
     def move(self, x: int, y: int) -> None:
@@ -1182,16 +1185,16 @@ class ProgressBar(Element):
             self._progress = self._max_progress
         elif self._progress < self._min_progress:
             self._progress = self._min_progress
-        
+
         self._update_progress_bar()
-    
+
     def set_max_progress(self, max_progress: int) -> None:
         """
         Set the maximum progress amount
         :param max_progress: int with the new maximum progress amount
         """
         self._max_progress = max_progress
-        
+
         self._update_progress_bar()
 
     def set_min_progress(self, min_progress: int) -> None:
@@ -1203,7 +1206,7 @@ class ProgressBar(Element):
         # Update the progress bar width
         if self._progress < self._min_progress:
             self._progress = self._min_progress
-        
+
         self._update_progress_bar()
 
     def change_progress(self, amount: float) -> None:
@@ -1219,7 +1222,7 @@ class ProgressBar(Element):
     """
     Getters
     """
-    
+
     def get_progress(self) -> int:
         """
         Get the progress amount
@@ -1230,7 +1233,7 @@ class ProgressBar(Element):
     """
     Internal methods
     """
-    
+
     def _update_progress_bar(self) -> None:
         """
         Update the progress bar width
@@ -1259,7 +1262,7 @@ class ProgressBar(Element):
         # Draw the border
         if self._border_color:
             pygame.draw.rect(surface, self._border_color, self._rect, self._border_width, border_radius=self._border_radius)
-    
+
     def update(self, events=None) -> None:
         """
         Update the progress bar state
@@ -1268,15 +1271,16 @@ class ProgressBar(Element):
         """
         super().update()
         self._update_progress_bar()
-        
+
 class DropdownMenu(Element):
     """
-    Dropdown menu element for displaying a list of options
+    Dropdown menu element for displaying a list of options, innherited from Element class.
+    Aggrigates a Button object to display the dropdown items.
     """
-    def __init__(self, 
+    def __init__(self,
                  position: tuple[int, int],
-                 options: list[str], 
-                 width: int = 200, 
+                 options: list[str],
+                 width: int = 200,
                  height: int = 50,
                  on_change: callable = None,
                  element_width: int = 200,
@@ -1298,7 +1302,7 @@ class DropdownMenu(Element):
                  selected_option_text_color = (0, 0, 0),
                  selected_option_text_hover_color = (0, 0, 0),
                  selected_option_text_click_color = (0, 0, 0),
-                 border_radius = 0, 
+                 border_radius = 0,
                  centered = False) -> None:
         """
         Create a dropdown menu element
@@ -1329,7 +1333,7 @@ class DropdownMenu(Element):
         :param border_radius: Radius for rounded corners
         :param centered: If True, the dropdown is centered on the provided position
         """
-        
+
         super().__init__(position, width, height, color, border_radius, centered=centered)
 
         # Visuals
@@ -1370,7 +1374,7 @@ class DropdownMenu(Element):
     """
     Setters
     """
-    
+
     def move(self, x: int, y: int) -> None:
         """
         Move the position of the elment by x, y value
@@ -1402,10 +1406,10 @@ class DropdownMenu(Element):
         """
         if option not in self._options:
             raise ValueError("Selected option is not in the options list")
-        
+
         self._selected_option_index = self._options.index(option)
         self._selected_button = self._generate_selected_button()
-    
+
     def set_selected_index(self, index: int) -> None:
         """
         Set the selected option of the drop down menu
@@ -1414,7 +1418,7 @@ class DropdownMenu(Element):
         """
         if index < 0 or index >= len(self._options):
             raise ValueError("Selected option index is out of range")
-        
+
         self._selected_option_index = index
         self._selected_button = self._generate_selected_button()
 
@@ -1435,7 +1439,7 @@ class DropdownMenu(Element):
         :return: int with the selected option index
         """
         return self._selected_option_index
-    
+
     def get_options(self) -> list[str]:
         """
         Get the options of the drop down menu
@@ -1452,19 +1456,19 @@ class DropdownMenu(Element):
         Return a button with the selected option
         :return: Button with the selected option
         """
-        selected_button = Button((self._rect.x, self._rect.y), 
-                                 self._rect.width, self._rect.height, 
-                                 label=str(self._options[self._selected_option_index]), 
-                                 color=self._selected_option_color, 
-                                 hover_color=self._selected_option_hover_color, 
-                                 click_color=self._selected_option_click_color, 
+        selected_button = Button((self._rect.x, self._rect.y),
+                                 self._rect.width, self._rect.height,
+                                 label=str(self._options[self._selected_option_index]),
+                                 color=self._selected_option_color,
+                                 hover_color=self._selected_option_hover_color,
+                                 click_color=self._selected_option_click_color,
                                  text_color=self._selected_option_text_color,
                                  text_click_color=self._selected_option_text_click_color,
                                  text_hover_color=self._selected_option_text_hover_color,
                                  border_radius=self._border_radius)
 
         return selected_button
-    
+
     def _generate_options_buttons(self) -> list[Button]:
         """
         Generate the buttons for the options
@@ -1478,12 +1482,12 @@ class DropdownMenu(Element):
 
             multiplier_y = index - index // self._max_elements_per_column * self._max_elements_per_column
             offset_y = self._rect.height + self._element_height * multiplier_y + self._element_spacing * (multiplier_y+1)
-            
+
             x_cordinate = self._rect.x + offset_x
             y_cordinate = self._rect.y + offset_y
-                
-            button = Button((x_cordinate, y_cordinate), 
-                            self._element_width, self._element_height, 
+
+            button = Button((x_cordinate, y_cordinate),
+                            self._element_width, self._element_height,
                             label=str(label),
                             color=self._color,
                             hover_color=self._hover_color,
@@ -1498,11 +1502,11 @@ class DropdownMenu(Element):
             options_buttons.append(button)
 
         return options_buttons
-    
+
     """
     Basic methods
     """
-    
+
     def draw(self, surface: pygame.Surface) -> None:
         """
         Draw the drop down menu
@@ -1548,7 +1552,7 @@ class DropdownMenu(Element):
                     if self._onchange:
                         self._onchange()
                     return
-            
+
             if self._selected_button.was_clicked():
                 self._is_open = False
                 return
@@ -1559,7 +1563,7 @@ class DropdownMenu(Element):
                 for button in self._options_buttons:
                     if button.is_hovered():
                         return
-                    
+
                 self._is_open = False
                 return
 
@@ -1569,19 +1573,20 @@ class DropdownMenu(Element):
 
 class Table(Element):
     """
-    Table element for displaying a grid of data
+    Table element for displaying a grid of data, innherited from Element class.
+    Aggrigates a Button object to display the table cells.
     """
-    def __init__(self, 
+    def __init__(self,
                  position,
-                 content: list[list[str]], 
-                 width = 200, 
-                 height = 50, 
+                 content: list[list[str]],
+                 width = 200,
+                 height = 50,
                  color = (255, 255, 255),
                  hover_color = (200, 200, 200),
                  text_color = (0, 0, 0),
                  border_color = (200, 200, 200),
                  border_width = 2,
-                 border_radius = 0, 
+                 border_radius = 0,
                  centered = False) -> None:
         """
         Create a table element
@@ -1694,20 +1699,20 @@ class Table(Element):
 
 class Checkbox(Element):
     """
-    Checkbox, clickable, it can be checked or unchecked, and it can be disabled or enabled
+    Checkbox, clickable, it can be checked or unchecked, and it can be disabled or enabled, innherited from Element class.
     """
-    def __init__(self, 
-                 position, 
+    def __init__(self,
+                 position,
                  width: int = 50,
-                 height: int = 50, 
+                 height: int = 50,
                  style: Literal["checkmark", "cross", "circle", "square", "none"] = "checkmark",
                  unchecked_style: Literal["checkmark", "cross", "circle", "square", "none"] ="none",
                  mark_width: int = 5,
-                 color: tuple[int,int,int] = (100, 255, 100), 
+                 color: tuple[int,int,int] = (100, 255, 100),
                  background_color: tuple[int,int,int] = (200,200,200),
-                 border_radius: int = 0, 
-                 border_color: tuple[int, int, int] = (0, 0, 0), 
-                 border_width: int = 2, 
+                 border_radius: int = 0,
+                 border_color: tuple[int, int, int] = (0, 0, 0),
+                 border_width: int = 2,
                  centered: bool = False) -> None:
         """
         Create a checkbox element
@@ -1748,12 +1753,12 @@ class Checkbox(Element):
 
         pygame.draw.line(self._checkstyles["checkmark"], color, (width//4, height//2), (width//2, height*3//4), mark_width)
         pygame.draw.line(self._checkstyles["checkmark"], color, (width//2, height*3//4), (width*3//4, height//4), mark_width)
-        
+
         pygame.draw.line(self._checkstyles["cross"], color, (width//4, height//4), (width*3//4, height*3//4), mark_width)
         pygame.draw.line(self._checkstyles["cross"], color, (width//4, height*3//4), (width*3//4, height//4), mark_width)
 
         square_size = min(width, height) * 0.6  # Make square 60% of the smallest dimension
-        square_x = (width - square_size) // 2   # Center horizontally 
+        square_x = (width - square_size) // 2   # Center horizontally
         square_y = (height - square_size) // 2  # Center vertically
         pygame.draw.rect(self._checkstyles["square"], color, (square_x, square_y, square_size, square_size), mark_width)
 
@@ -1761,7 +1766,7 @@ class Checkbox(Element):
 
         self._checked_style = style
         self._unchecked_style = unchecked_style
-    
+
     """
     Setters
     """
@@ -1772,13 +1777,13 @@ class Checkbox(Element):
         :param checked: bool with the new checked state
         """
         self._checked = checked
-    
+
     def disable(self) -> None:
         """
         Disable the checkbox, allows the user to click to check it
         """
         self._disabled = True
-    
+
     def enable(self) -> None:
         """
         Enable the checkbox, allows the user to click to check it
@@ -1795,14 +1800,14 @@ class Checkbox(Element):
         :return: bool with the checked state
         """
         return self._checked
-    
+
     def is_enabled(self) -> bool:
         """
         Get the enabled state of the checkbox
         :return: bool with the enabled state
         """
         return not self._disabled
-    
+
     """
     Basic methods
     """
@@ -1824,7 +1829,7 @@ class Checkbox(Element):
             if not self._unchecked_style == "none":
                 surface.blit(self._checkstyles[self._unchecked_style], self._rect.topleft)
 
-    
+
     def update(self, events=None) -> None:
         """
         Update the checkbox state and handle click events
